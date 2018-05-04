@@ -16,7 +16,7 @@ import javafx.stage.Stage;
  *
  * @author matte
  */
-public class Scoreboard {
+public final class Scoreboard {
 
     private final TableView table;
     private final TableColumn<Object, String> nomesquadra;
@@ -37,12 +37,14 @@ public class Scoreboard {
         punteggio = new TableColumn<>("Punteggio");
 
         nomesquadra.setCellValueFactory(new PropertyValueFactory<>("nomesquadra"));
+        membro1.setCellValueFactory(new PropertyValueFactory<>("membro1"));
+        membro2.setCellValueFactory(new PropertyValueFactory<>("membro2"));
         punteggio.setCellValueFactory(new PropertyValueFactory<>("punteggio"));
         
-        nomesquadra.prefWidthProperty().bind(table.widthProperty().divide((double)6.0));
-        membro1.prefWidthProperty().bind(table.widthProperty().divide((double)3.0));
-        membro2.prefWidthProperty().bind(table.widthProperty().divide((double)3.0));
-        punteggio.prefWidthProperty().bind(table.widthProperty().divide((double)6.0));
+        nomesquadra.prefWidthProperty().bind(table.widthProperty().divide(6.0));
+        membro1.prefWidthProperty().bind(table.widthProperty().divide(3.0));
+        membro2.prefWidthProperty().bind(table.widthProperty().divide(3.0));
+        punteggio.prefWidthProperty().bind(table.widthProperty().divide(6.0));
 
         resizeFont(24);
         
@@ -51,8 +53,9 @@ public class Scoreboard {
     }
     
     public void decrementFont() {
+        --pointer;
         if (pointer > 0 && pointer < fontsizes.length) {
-            resizeFont(fontsizes[--pointer]);
+            resizeFont(fontsizes[pointer]);
         } else {
             CTFChallenge.getTxt().appendText("Impossibile settare la grandezza desiderata\n");
             ++pointer;
@@ -60,8 +63,9 @@ public class Scoreboard {
     }
     
     public void incrementFont() {
+        ++pointer;
         if (pointer > 0 && pointer < fontsizes.length) {
-            resizeFont(fontsizes[++pointer]);
+            resizeFont(fontsizes[pointer]);
         } else {
             CTFChallenge.getTxt().appendText("Impossibile settare la grandezza desiderata\n");
             --pointer;
@@ -77,7 +81,6 @@ public class Scoreboard {
             punteggio.setStyle(style);
             giocatori.setStyle(style);
             CTFChallenge.getTxt().appendText("Grandezza del font settata a " + size +  "\n");
-
         } else {
             CTFChallenge.getTxt().appendText("Grandezza del font non valida!" + "\n");
         }

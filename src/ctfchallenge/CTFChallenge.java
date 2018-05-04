@@ -14,6 +14,8 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.geometry.HPos;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -40,6 +42,7 @@ public class CTFChallenge extends Application {
     public void start(Stage primaryStage) {
         // Una seconda stage per una seconda finestra
         Stage scoreboardWindow = new Stage();
+        
         // Bottoni
         Button addTeam = new Button("Nuova squadra");
         Button removeTeam = new Button("Rimuovi squadra");
@@ -47,14 +50,12 @@ public class CTFChallenge extends Application {
         Button gameOn = new Button("Inizia la partita");
         Button sendResults = new Button("Invia i risultati");
         Button incrementFont = new Button("+");
-                Button decrementFont = new Button("-");
-                
-        Scoreboard scoreboard = new Scoreboard();
-              
-
+        Button decrementFont = new Button("-");
+        
         // Queste due classi raggruppano le scelte dei vincitori
         RadioButtons buttons = new RadioButtons();
         ComboBoxBlock comboBoxBlock = new ComboBoxBlock();
+        Scoreboard scoreboard = new Scoreboard();
 
         // mainPane per tutto, scoreBoardPane per la finestra esterna
         GridPane mainPane = new GridPane();
@@ -79,15 +80,21 @@ public class CTFChallenge extends Application {
         setColumnRowIndex(removeTeam, 2, 1);
         setColumnRowIndex(refreshScore, 3, 1);
         setColumnRowIndex(gameOn, 4, 1);
-          setColumnRowIndex(incrementFont, 1, 27);
-                setColumnRowIndex(decrementFont, 1, 28);
+        setColumnRowIndex(incrementFont, 5, 1);
+        setColumnRowIndex(decrementFont, 6, 1);
         setColumnRowIndex(sendResults, 10, 13);
         setColumnRowIndex(txt, 1, 2);
+        
         GridPane.setColumnSpan(txt, 4);
         GridPane.setRowSpan(txt, 25);
+        GridPane.setHalignment(decrementFont, HPos.LEFT);
+        GridPane.setHalignment(incrementFont, HPos.RIGHT);
+        
         // Un po' di padding non fa male
         mainPane.setHgap(8);
         mainPane.setVgap(8);
+
+       
 
         // Bottone addTeam
         addTeam.setOnAction((ActionEvent event) -> {
@@ -99,20 +106,20 @@ public class CTFChallenge extends Application {
             removeTeamActions(removeTeam);
         });
 
+        // Bottoni per i font della tabella
+        incrementFont.setOnAction((ActionEvent event) -> {
+            scoreboard.incrementFont();
+        });
+
+        decrementFont.setOnAction((ActionEvent event) -> {
+            scoreboard.decrementFont();
+        });
+        
         // Bottone di refresh // TODO Find other workaround
         refreshScore.setOnAction((ActionEvent event) -> {
             scoreboard.refreshScoreboard(scoreboardPane, scoreboardWindow);
             backupData();
             refreshCount++;
-        });
-        
-        
-        incrementFont.setOnAction((ActionEvent event) -> {
-            scoreboard.incrementFont();
-        });
-        
-        decrementFont.setOnAction((ActionEvent event) -> {
-            scoreboard.decrementFont();
         });
 
         // Bottone per iniziare il match
@@ -123,8 +130,7 @@ public class CTFChallenge extends Application {
                 removeTeam.setDisable(true);
                 buttons.setRadioButtons(mainPane);
                 comboBoxBlock.setComboBox(mainPane);
-                
-                               
+
                 mainPane.getChildren().addAll(sendResults, incrementFont, decrementFont);
             }
             if (numeroes >= 1 && numeroes <= 5) {
@@ -176,13 +182,14 @@ public class CTFChallenge extends Application {
 
         // Infine mostro le due finestre
         primaryStage.setMaximized(false);
-        primaryStage.setWidth(600);
+        primaryStage.setWidth(1100);
         primaryStage.setHeight(600);
         primaryStage.setTitle("CTFChallenge");
         primaryStage.setScene(primary);
         primaryStage.show();
 
         scoreboardWindow.setTitle("Classifica");
+        scoreboardWindow.setMaxHeight(true);
         scoreboardWindow.setScene(scoreboardScene);
     }
 
@@ -268,11 +275,14 @@ public class CTFChallenge extends Application {
      * @param column L'indice della colonna
      * @param row L'indice della riga
      */
-    public void setColumnRowIndex(Node node, int column, int row) {
+    public static void setColumnRowIndex(Node node, int column, int row) {
         GridPane.setColumnIndex(node, column);
         GridPane.setRowIndex(node, row);
     }
 
+    /**
+     * Metodo che fa un backup dei dati su backup.txt ogni volta che viene chiamato sovrascrivendo il precedente.
+     */
     public void backupData() {
         try {
             BufferedWriter fileOut = new BufferedWriter(new FileWriter("backup.txt"));
@@ -294,6 +304,10 @@ public class CTFChallenge extends Application {
 
     }
 
+    /**
+     * Metodo che gestisce il bottone addTeam.
+     * @param removeTeam Il bottone removeTeam che deve essere nel caso attivato se le squadre sono >0.
+     */
     public void addTeamActions(Button removeTeam) {
         String member1 = null, member2 = null, nome = null;
         Squadra tmp;
@@ -318,6 +332,10 @@ public class CTFChallenge extends Application {
         }
     }
 
+    /**
+     * Metodo che gestisce il bottone removeTeam.
+     * @param removeTeam Il bottone sulla quale agisce il metodo.
+     */
     public void removeTeamActions(Button removeTeam) {
         if (Squadra.getNumerosquadre() != 0) {
             int id = Integer.parseInt(optionDialog("ID della"
@@ -343,6 +361,10 @@ public class CTFChallenge extends Application {
         launch(args);
     }
 
+    /**
+     * Metodo getter per il parametro statico squadre.
+     * @return Una ObservableList delle squadre della partita.
+     */
     public static ObservableList<Squadra> getSquadre() {
         return squadre;
     }
