@@ -38,15 +38,11 @@ public class Scoreboard {
 
         nomesquadra.setCellValueFactory(new PropertyValueFactory<>("nomesquadra"));
         punteggio.setCellValueFactory(new PropertyValueFactory<>("punteggio"));
-
-        nomesquadra.setMinWidth(250);
-        nomesquadra.setMaxWidth(350);
-        membro1.setMinWidth(250);
-        membro1.setMaxWidth(350);
-        membro2.setMinWidth(250);
-        membro2.setMaxWidth(350);
-        punteggio.setMinWidth(250);
-        punteggio.setMaxWidth(350);
+        
+        nomesquadra.prefWidthProperty().bind(table.widthProperty().divide((double)6.0));
+        membro1.prefWidthProperty().bind(table.widthProperty().divide((double)3.0));
+        membro2.prefWidthProperty().bind(table.widthProperty().divide((double)3.0));
+        punteggio.prefWidthProperty().bind(table.widthProperty().divide((double)6.0));
 
         resizeFont(24);
         
@@ -59,6 +55,7 @@ public class Scoreboard {
             resizeFont(fontsizes[--pointer]);
         } else {
             CTFChallenge.getTxt().appendText("Impossibile settare la grandezza desiderata\n");
+            ++pointer;
         }
     }
     
@@ -67,12 +64,13 @@ public class Scoreboard {
             resizeFont(fontsizes[++pointer]);
         } else {
             CTFChallenge.getTxt().appendText("Impossibile settare la grandezza desiderata\n");
+            --pointer;
         }
     }
 
     public void resizeFont(int size) {
         if (size > 0 && size < 100) {
-            String style = ("-fx-font: " + size + "px Arial;");
+            String style = ("-fx-font: " + size + "px Arial; -fx-alignment: CENTER");
             nomesquadra.setStyle(style);
             membro1.setStyle(style);
             membro2.setStyle(style);

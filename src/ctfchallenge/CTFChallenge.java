@@ -79,8 +79,8 @@ public class CTFChallenge extends Application {
         setColumnRowIndex(removeTeam, 2, 1);
         setColumnRowIndex(refreshScore, 3, 1);
         setColumnRowIndex(gameOn, 4, 1);
-          setColumnRowIndex(incrementFont, 1, 26);
-                setColumnRowIndex(decrementFont, 2, 26);
+          setColumnRowIndex(incrementFont, 1, 27);
+                setColumnRowIndex(decrementFont, 1, 28);
         setColumnRowIndex(sendResults, 10, 13);
         setColumnRowIndex(txt, 1, 2);
         GridPane.setColumnSpan(txt, 4);
