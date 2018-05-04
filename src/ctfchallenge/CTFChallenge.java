@@ -46,6 +46,11 @@ public class CTFChallenge extends Application {
         Button refreshScore = new Button("Aggiorna la classifica");
         Button gameOn = new Button("Inizia la partita");
         Button sendResults = new Button("Invia i risultati");
+        Button incrementFont = new Button("+");
+                Button decrementFont = new Button("-");
+                
+        Scoreboard scoreboard = new Scoreboard();
+              
 
         // Queste due classi raggruppano le scelte dei vincitori
         RadioButtons buttons = new RadioButtons();
@@ -55,7 +60,7 @@ public class CTFChallenge extends Application {
         GridPane mainPane = new GridPane();
         StackPane scoreboardPane = new StackPane();
 
-        Scene primary = new Scene(mainPane);       
+        Scene primary = new Scene(mainPane);
         Scene scoreboardScene = new Scene(scoreboardPane);
 
         // Disegno la tabella e inizializzo alcuni attributi
@@ -74,6 +79,8 @@ public class CTFChallenge extends Application {
         setColumnRowIndex(removeTeam, 2, 1);
         setColumnRowIndex(refreshScore, 3, 1);
         setColumnRowIndex(gameOn, 4, 1);
+          setColumnRowIndex(incrementFont, 1, 26);
+                setColumnRowIndex(decrementFont, 2, 26);
         setColumnRowIndex(sendResults, 10, 13);
         setColumnRowIndex(txt, 1, 2);
         GridPane.setColumnSpan(txt, 4);
@@ -94,9 +101,18 @@ public class CTFChallenge extends Application {
 
         // Bottone di refresh // TODO Find other workaround
         refreshScore.setOnAction((ActionEvent event) -> {
-            Scoreboard.refreshScoreboard(scoreboardPane, scoreboardWindow);
+            scoreboard.refreshScoreboard(scoreboardPane, scoreboardWindow);
             backupData();
             refreshCount++;
+        });
+        
+        
+        incrementFont.setOnAction((ActionEvent event) -> {
+            scoreboard.incrementFont();
+        });
+        
+        decrementFont.setOnAction((ActionEvent event) -> {
+            scoreboard.decrementFont();
         });
 
         // Bottone per iniziare il match
@@ -107,7 +123,9 @@ public class CTFChallenge extends Application {
                 removeTeam.setDisable(true);
                 buttons.setRadioButtons(mainPane);
                 comboBoxBlock.setComboBox(mainPane);
-                mainPane.getChildren().addAll(sendResults);                
+                
+                               
+                mainPane.getChildren().addAll(sendResults, incrementFont, decrementFont);
             }
             if (numeroes >= 1 && numeroes <= 5) {
                 txt.appendText("Inizio esercizio " + numeroes + "\n");
@@ -177,9 +195,10 @@ public class CTFChallenge extends Application {
         return result.get();
     }
 
-
     /**
-     * Funzione ausiliaria per assegnare i punti agli esercizi. Sono supportati fino a 5 esercizi.
+     * Funzione ausiliaria per assegnare i punti agli esercizi. Sono supportati
+     * fino a 5 esercizi.
+     *
      * @param i L'indice dell'esercizio di cui ottenere il punteggio.
      * @return Il punteggio dell'esercizio desiderato.
      */
@@ -209,9 +228,12 @@ public class CTFChallenge extends Application {
     }
 
     /**
-     * Funzione ausiliaria statica che trasforma un numero cardinale nella sua versione ordinale scritta in String.
+     * Funzione ausiliaria statica che trasforma un numero cardinale nella sua
+     * versione ordinale scritta in String.
+     *
      * @param i Il numero da 1 a 5 da trasformare in String.
-     * @return Una String con la prima lettera maiuscola, rappresentante l'input.
+     * @return Una String con la prima lettera maiuscola, rappresentante
+     * l'input.
      */
     public static String intToText(int i) {
         String res;
@@ -239,7 +261,9 @@ public class CTFChallenge extends Application {
     }
 
     /**
-     * Metodo che si occupa di settare in maniera veloce gli indici di riga e colonna in una GridPane.
+     * Metodo che si occupa di settare in maniera veloce gli indici di riga e
+     * colonna in una GridPane.
+     *
      * @param node Il nodo (appartenente a GridPane)
      * @param column L'indice della colonna
      * @param row L'indice della riga
@@ -322,4 +346,9 @@ public class CTFChallenge extends Application {
     public static ObservableList<Squadra> getSquadre() {
         return squadre;
     }
+
+    public static TextArea getTxt() {
+        return txt;
+    }
+
 }

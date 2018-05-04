@@ -18,15 +18,18 @@ import javafx.stage.Stage;
  */
 public class Scoreboard {
 
-    private final TableView<Object> table;
+    private final TableView table;
     private final TableColumn<Object, String> nomesquadra;
     private final TableColumn<Object, TableColumn<Object, String>> giocatori;
     private final TableColumn<Object, String> membro1;
     private final TableColumn<Object, String> membro2;
     private final TableColumn<Object, String> punteggio;
+    
+    private final int fontsizes[] = {6, 7, 8, 9, 10, 11, 12, 14, 16, 18, 21, 24, 36, 48, 60, 72, 84, 96};
+    private int pointer = 11; // Pt = 24
 
     public Scoreboard() {
-        table = new TableView<>();
+        table = new TableView();
         nomesquadra = new TableColumn<>("Nome squadra");
         giocatori = new TableColumn<>("Giocatori");
         membro1 = new TableColumn<>("Membro 1");
@@ -34,8 +37,6 @@ public class Scoreboard {
         punteggio = new TableColumn<>("Punteggio");
 
         nomesquadra.setCellValueFactory(new PropertyValueFactory<>("nomesquadra"));
-        membro1.setCellValueFactory(new PropertyValueFactory<>("membro1"));
-        membro2.setCellValueFactory(new PropertyValueFactory<>("membro2"));
         punteggio.setCellValueFactory(new PropertyValueFactory<>("punteggio"));
 
         nomesquadra.setMinWidth(250);
@@ -46,26 +47,51 @@ public class Scoreboard {
         membro2.setMaxWidth(350);
         punteggio.setMinWidth(250);
         punteggio.setMaxWidth(350);
-        
-        nomesquadra.setStyle("-fx-font: 30px Arial;");
-        membro1.setStyle("-fx-font: 30px Arial;");
-        membro2.setStyle("-fx-font: 30px Arial;");
-        punteggio.setStyle("-fx-font: 30px Arial;");
-        giocatori.setStyle("-fx-font: 30px Arial;");
-        
-        
+
+        resizeFont(24);
         
         giocatori.getColumns().addAll(membro1, membro2);
         table.getColumns().addAll(nomesquadra, giocatori, punteggio);
+    }
+    
+    public void decrementFont() {
+        if (pointer > 0 && pointer < fontsizes.length) {
+            resizeFont(fontsizes[--pointer]);
+        } else {
+            CTFChallenge.getTxt().appendText("Impossibile settare la grandezza desiderata\n");
+        }
+    }
+    
+    public void incrementFont() {
+        if (pointer > 0 && pointer < fontsizes.length) {
+            resizeFont(fontsizes[++pointer]);
+        } else {
+            CTFChallenge.getTxt().appendText("Impossibile settare la grandezza desiderata\n");
+        }
+    }
+
+    public void resizeFont(int size) {
+        if (size > 0 && size < 100) {
+            String style = ("-fx-font: " + size + "px Arial;");
+            nomesquadra.setStyle(style);
+            membro1.setStyle(style);
+            membro2.setStyle(style);
+            punteggio.setStyle(style);
+            giocatori.setStyle(style);
+            CTFChallenge.getTxt().appendText("Grandezza del font settata a " + size +  "\n");
+
+        } else {
+            CTFChallenge.getTxt().appendText("Grandezza del font non valida!" + "\n");
+        }
+
     }
 
     public TableView getTable() {
         return table;
     }
 
-    public static void refreshScoreboard(Pane scoreboardPane, Stage scoreboardWindow) {
-        TableView table = new Scoreboard().getTable();
-        table.setItems(getSquadre());
+    public void refreshScoreboard(Pane scoreboardPane, Stage scoreboardWindow) {
+        table.setItems(CTFChallenge.getSquadre());
         if (!(scoreboardPane.getChildren().contains(table))) {
             scoreboardPane.getChildren().add(table);
             scoreboardWindow.show();
