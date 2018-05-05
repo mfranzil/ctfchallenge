@@ -6,9 +6,6 @@
 package ctfchallenge;
 
 import java.util.Collection;
-import java.util.Iterator;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 
 /**
  *
@@ -16,11 +13,11 @@ import javafx.beans.property.StringProperty;
  */
 public class Squadra {
 
-    private final StringProperty membro1;
-    private final StringProperty membro2;
-    private final StringProperty nomesquadra;
-    private       StringProperty punteggio;
-       
+    private final String membro1;
+    private final String membro2;
+    private final String nomesquadra;
+    private int punteggio;
+
     private final int id;
     private static int numerosquadre = 0;
 
@@ -32,24 +29,22 @@ public class Squadra {
      */
     public Squadra(String membro1, String membro2, String nomesquadra) {
         this.id = ++numerosquadre;
-        this.nomesquadra = new SimpleStringProperty(nomesquadra);
-        this.membro1 = new SimpleStringProperty(membro1);
-        this.membro2 = new SimpleStringProperty(membro2);
-        this.punteggio = new SimpleStringProperty(Integer.toString(0));
+        this.nomesquadra = nomesquadra;
+        this.membro1 = membro1;
+        this.membro2 = membro2;
+        this.punteggio = 0;
     }
-    
-    
+
     /**
      * Metodo che ritorna l'ID di una Squadra dato il suo nome
+     *
      * @param nome Il nome della String
      * @param collection La collection da cui cercare.
      * @return
      */
     public static int nameToId(String nome, Collection<Squadra> collection) {
         int res = -1;
-        Iterator<Squadra> iter = collection.iterator();
-        while (iter.hasNext()) {
-            Squadra temp = iter.next();
+        for (Squadra temp : collection) {
             if (temp.getNomesquadra().equals(nome)) {
                 res = temp.getId();
                 break;
@@ -66,12 +61,13 @@ public class Squadra {
     @Override
     public boolean equals(Object o) {
         boolean res;
-        if (o == null)
+        if (o == null) {
             res = false;
-        else if (!(o instanceof Squadra)) // else if (var.getClass() != this.getClass())
+        } else if (!(o instanceof Squadra)) { // else if (var.getClass() != this.getClass())
             res = false;
-        else
-            res = membro1.equals(((Squadra) o).membro1) && membro2.equals(((Squadra) o).membro2);
+        } else {
+            res = membro1.equals(((Squadra) o).getMembro1()) && membro2.equals(((Squadra) o).getMembro2());
+        }
         return res;
     }
 
@@ -93,7 +89,7 @@ public class Squadra {
      */
     @Override
     public String toString() {
-        return membro1.get() + ", " + membro2.get();
+        return membro1 + ", " + membro2;
     }
 
     /**
@@ -101,7 +97,7 @@ public class Squadra {
      * @return
      */
     public String getMembro1() {
-        return membro1.get();
+        return membro1;
     }
 
     /**
@@ -109,7 +105,7 @@ public class Squadra {
      * @return
      */
     public String getMembro2() {
-        return membro2.get();
+        return membro2;
     }
 
     /**
@@ -132,26 +128,18 @@ public class Squadra {
      *
      * @return
      */
-    public String getPunteggio() {
-        return punteggio.get();
-    }
-
-    /**
-     *
-     * @return
-     */
     public String getNomesquadra() {
-        return nomesquadra.get();
+        return nomesquadra;
     }
 
-    /**
-     *
-     * @param punteggio
-     */
-    public void setPunteggio(StringProperty punteggio) {
+    public int getPunteggio() {
+        return punteggio;
+    }
+
+    public void setPunteggio(int punteggio) {
         this.punteggio = punteggio;
     }
-    
+
     
     
 }

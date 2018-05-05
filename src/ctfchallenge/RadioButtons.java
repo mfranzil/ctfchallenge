@@ -44,19 +44,13 @@ public class RadioButtons {
             perso_tmp.setToggleGroup(radio_btn_tmp);
             perso_tmp.setSelected(true);
             if (i < media) {
-                GridPane.setColumnIndex(vinto_tmp, 5);
-                GridPane.setRowIndex(vinto_tmp, 3 + (3 * i));
-                GridPane.setColumnIndex(perso_tmp, 5);
-                GridPane.setRowIndex(perso_tmp, 4 + (3 * i));
-                GridPane.setColumnIndex(radio_text_tmp, 5);
-                GridPane.setRowIndex(radio_text_tmp, 2 + (3 * i));
+                CTFChallenge.setColumnRowIndex(radio_text_tmp, 5, 2 + (3 * i));
+                CTFChallenge.setColumnRowIndex(vinto_tmp,      5, 3 + (3 * i));
+                CTFChallenge.setColumnRowIndex(perso_tmp,      5, 4 + (3 * i));
             } else {
-                GridPane.setColumnIndex(vinto_tmp, 8);
-                GridPane.setRowIndex(vinto_tmp, 3 + (3 * (i - media)));
-                GridPane.setColumnIndex(perso_tmp, 8);
-                GridPane.setRowIndex(perso_tmp, 4 + (3 * (i - media)));
-                GridPane.setColumnIndex(radio_text_tmp, 8);
-                GridPane.setRowIndex(radio_text_tmp, 2 + (3 * (i - media)));
+                CTFChallenge.setColumnRowIndex(radio_text_tmp, 8, 2 + (3 * (i - media)));
+                CTFChallenge.setColumnRowIndex(vinto_tmp,      8, 3 + (3 * (i - media)));
+                CTFChallenge.setColumnRowIndex(perso_tmp,      8, 4 + (3 * (i - media)));
             }
             vinto.add(vinto_tmp);
             perso.add(perso_tmp);

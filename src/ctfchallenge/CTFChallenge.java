@@ -3,19 +3,16 @@ package ctfchallenge;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.application.Platform;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.geometry.HPos;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -35,14 +32,13 @@ public class CTFChallenge extends Application {
 
     private static final ObservableList<Squadra> squadre = FXCollections.observableArrayList();
     private static int numeroes = 0;
-    private static int refreshCount = 0;
     private static final TextArea txt = new TextArea();
 
     @Override
     public void start(Stage primaryStage) {
         // Una seconda stage per una seconda finestra
         Stage scoreboardWindow = new Stage();
-        
+
         // Bottoni
         Button addTeam = new Button("Nuova squadra");
         Button removeTeam = new Button("Rimuovi squadra");
@@ -51,7 +47,7 @@ public class CTFChallenge extends Application {
         Button sendResults = new Button("Invia i risultati");
         Button incrementFont = new Button("+");
         Button decrementFont = new Button("-");
-        
+
         // Queste due classi raggruppano le scelte dei vincitori
         RadioButtons buttons = new RadioButtons();
         ComboBoxBlock comboBoxBlock = new ComboBoxBlock();
@@ -67,6 +63,7 @@ public class CTFChallenge extends Application {
         // Disegno la tabella e inizializzo alcuni attributi
         txt.setEditable(false);
         removeTeam.setDisable(true);
+
         // Se chiudo una finestra si chiudono tutte
         scoreboardWindow.setOnCloseRequest((WindowEvent event) -> {
             Platform.exit();
@@ -84,17 +81,15 @@ public class CTFChallenge extends Application {
         setColumnRowIndex(decrementFont, 6, 1);
         setColumnRowIndex(sendResults, 10, 13);
         setColumnRowIndex(txt, 1, 2);
-        
+
         GridPane.setColumnSpan(txt, 4);
         GridPane.setRowSpan(txt, 25);
         GridPane.setHalignment(decrementFont, HPos.LEFT);
         GridPane.setHalignment(incrementFont, HPos.RIGHT);
-        
+
         // Un po' di padding non fa male
         mainPane.setHgap(8);
         mainPane.setVgap(8);
-
-       
 
         // Bottone addTeam
         addTeam.setOnAction((ActionEvent event) -> {
@@ -114,12 +109,18 @@ public class CTFChallenge extends Application {
         decrementFont.setOnAction((ActionEvent event) -> {
             scoreboard.decrementFont();
         });
-        
+
         // Bottone di refresh // TODO Find other workaround
         refreshScore.setOnAction((ActionEvent event) -> {
-            scoreboard.refreshScoreboard(scoreboardPane, scoreboardWindow);
+            if (!(scoreboardPane.getChildren().contains(scoreboard))) {
+                scoreboard.setItems(getSquadre());
+                scoreboardPane.getChildren().add(scoreboard);
+                scoreboardWindow.show();
+            } else {
+                scoreboard.refresh();
+            }
+
             backupData();
-            refreshCount++;
         });
 
         // Bottone per iniziare il match
@@ -151,8 +152,7 @@ public class CTFChallenge extends Application {
             for (int i = 0; i < getSquadre().size(); i++) {
                 RadioButton temp = (RadioButton) buttons.getRadio_btn().get(i).getSelectedToggle();
                 if (temp.getText().equals("Completato")) {
-                    getSquadre().get(i).setPunteggio(new SimpleStringProperty(
-                            String.valueOf(Integer.parseInt(getSquadre().get(i).getPunteggio()) + punteggioEs(numeroes))));
+                    getSquadre().get(i).setPunteggio(getSquadre().get(i).getPunteggio() + punteggioEs(numeroes));
                     txt.appendText("La squadra " + getSquadre().get(i).getNomesquadra()
                             + " ottiene " + punteggioEs(numeroes) + " punti\n");
                 }
@@ -161,8 +161,7 @@ public class CTFChallenge extends Application {
                 String object_name = (comboBoxBlock.getCbox().get(i).getValue());
                 if (object_name != null) {
                     Squadra temp = getSquadre().get(Squadra.nameToId(object_name, getSquadre()) - 1);
-                    temp.setPunteggio(new SimpleStringProperty(String.valueOf(
-                            Integer.parseInt(temp.getPunteggio()) + 5 - i)));
+                    temp.setPunteggio(temp.getPunteggio() + 5 - i);
                     txt.appendText("La squadra " + temp.getNomesquadra()
                             + " ottiene " + (5 - i) + " punti bonus\n");
                 }
@@ -189,10 +188,14 @@ public class CTFChallenge extends Application {
         primaryStage.show();
 
         scoreboardWindow.setTitle("Classifica");
-        scoreboardWindow.setMaxHeight(true);
         scoreboardWindow.setScene(scoreboardScene);
     }
 
+    /**
+     * Finestrella per chiedere una String customizzata senza grafica basata su JavaFX.
+     * @param question La domanda da porre nella finestra
+     * @return Una string contenente la risposta.
+     */
     private String optionDialog(String question) {
         TextInputDialog dialog = new TextInputDialog();
         dialog.setHeaderText(question);
@@ -202,6 +205,84 @@ public class CTFChallenge extends Application {
         return result.get();
     }
 
+    /**
+     * Metodo che fa un backup dei dati su backup.txt ogni volta che viene
+     * chiamato sovrascrivendo il precedente.
+     */
+    public void backupData() {
+        try (BufferedWriter fileOut = new BufferedWriter(new FileWriter("backup.txt"))) {
+            fileOut.write("LOG:\n" + txt.getText() + "\nSCOREBOARD:\n");
+            fileOut.write("ID Squadra\t\tNome squadra\t\tMembro 1\t\tMembro 2\t\tPunteggio\n");
+            System.out.println("Logging in progress...");
+            for (Squadra temp : squadre) {
+                String data = temp.getId() + "\t\t" + temp.getNomesquadra() + "\t\t"
+                        + temp.getMembro1() + "\t\t" + temp.getMembro2() + "\t\t" + temp.getPunteggio() + "\n";
+                fileOut.write(data);
+                System.out.print(data);
+            }
+
+        } catch (IOException ex) {
+            Logger.getLogger(CTFChallenge.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+    /**
+     * Metodo che gestisce il bottone addTeam.
+     *
+     * @param removeTeam Il bottone removeTeam che deve essere nel caso attivato
+     * se le squadre sono >0.
+     */
+    public void addTeamActions(Button removeTeam) {
+        String member1 = null, member2 = null, nome = null;
+        Squadra tmp;
+        try {
+            member1 = optionDialog("Nome del primo membro?");
+            member2 = optionDialog("Nome del secondo membro?");
+            nome = optionDialog("Nome della squadra");
+        } catch (Exception e) {
+            txt.appendText("ERRORE! Prova a reinserire la squadra!");
+            Logger.getLogger(CTFChallenge.class.getName()).log(Level.SEVERE, null, e);
+        }
+        if (member1 != null && member2 != null && nome != null) {
+            tmp = new Squadra(member1, member2, nome);
+            txt.appendText("Nuova squadra creata:\nID: "
+                    + tmp.getId() + " (nome squadra: " + tmp.getNomesquadra()
+                    + ")\nMembri: " + tmp + "\n");
+            getSquadre().add(tmp);
+        }
+        if (Squadra.getNumerosquadre() > 0) {
+            removeTeam.setDisable(false);
+        }
+    }
+
+    /**
+     * Metodo che gestisce il bottone removeTeam.
+     *
+     * @param removeTeam Il bottone sulla quale agisce il metodo.
+     */
+    public void removeTeamActions(Button removeTeam) {
+        if (Squadra.getNumerosquadre() != 0) {
+            int id = Integer.parseInt(optionDialog("ID della"
+                    + " squadra da cancellare"));
+            Squadra tmp = getSquadre().remove(id - 1);
+            if (tmp != null) {
+                txt.appendText("Squadra con ID " + id
+                        + " rimossa con successo\n");
+            } else {
+                txt.appendText("Nessuna squadra trovata "
+                        + "con questo ID (" + id + ")\n");
+            }
+        } else {
+            txt.appendText("Nessuna squadra da rimuovere!" + "\n");
+        }
+
+        if (getSquadre().isEmpty()) {
+            removeTeam.setDisable(true);
+        }
+    }
+    
+    
     /**
      * Funzione ausiliaria per assegnare i punti agli esercizi. Sono supportati
      * fino a 5 esercizi.
@@ -279,83 +360,7 @@ public class CTFChallenge extends Application {
         GridPane.setColumnIndex(node, column);
         GridPane.setRowIndex(node, row);
     }
-
-    /**
-     * Metodo che fa un backup dei dati su backup.txt ogni volta che viene chiamato sovrascrivendo il precedente.
-     */
-    public void backupData() {
-        try {
-            BufferedWriter fileOut = new BufferedWriter(new FileWriter("backup.txt"));
-            fileOut.write("LOG:\n" + txt.getText() + "\nSCOREBOARD:\n");
-            fileOut.write("ID Squadra\t\tNome squadra\t\tMembro 1\t\tMembro 2\t\tPunteggio\n");
-            System.out.println("Logging in progress...");
-            Iterator<Squadra> iter = squadre.iterator();
-            while (iter.hasNext()) {
-                Squadra temp = iter.next();
-                String data = temp.getId() + "\t\t" + temp.getNomesquadra() + "\t\t"
-                        + temp.getMembro1() + "\t\t" + temp.getMembro2() + "\t\t" + temp.getPunteggio() + "\n";
-                fileOut.write(data);
-                System.out.print(data);
-            }
-            fileOut.close();
-        } catch (IOException ex) {
-            Logger.getLogger(CTFChallenge.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-    }
-
-    /**
-     * Metodo che gestisce il bottone addTeam.
-     * @param removeTeam Il bottone removeTeam che deve essere nel caso attivato se le squadre sono >0.
-     */
-    public void addTeamActions(Button removeTeam) {
-        String member1 = null, member2 = null, nome = null;
-        Squadra tmp;
-        try {
-            member1 = optionDialog("Nome del primo membro?");
-            member2 = optionDialog("Nome del secondo membro?");
-            nome = optionDialog("Nome della squadra");
-        } catch (Exception e) {
-            txt.appendText("ERRORE! Prova a reinserire la squadra!");
-            Logger.getLogger(CTFChallenge.class.getName()).log(Level.SEVERE, null, e);
-        }
-        if (member1 != null && member2 != null && nome != null) {
-            tmp = new Squadra(member1, member2, nome);
-            //squadre.put(tmp.getId(), tmp);
-            txt.appendText("Nuova squadra creata:\nID: "
-                    + tmp.getId() + " (nome squadra: " + tmp.getNomesquadra()
-                    + ")\nMembri: " + tmp + "\n");
-            getSquadre().add(tmp);
-        }
-        if (Squadra.getNumerosquadre() > 0) {
-            removeTeam.setDisable(false);
-        }
-    }
-
-    /**
-     * Metodo che gestisce il bottone removeTeam.
-     * @param removeTeam Il bottone sulla quale agisce il metodo.
-     */
-    public void removeTeamActions(Button removeTeam) {
-        if (Squadra.getNumerosquadre() != 0) {
-            int id = Integer.parseInt(optionDialog("ID della"
-                    + " squadra da cancellare"));
-            Squadra tmp = getSquadre().remove(id - 1);
-            if (tmp != null) {
-                txt.appendText("Squadra con ID " + id
-                        + " rimossa con successo\n");
-            } else {
-                txt.appendText("Nessuna squadra trovata "
-                        + "con questo ID (" + id + ")\n");
-            }
-        } else {
-            txt.appendText("Nessuna squadra da rimuovere!" + "\n");
-        }
-
-        if (getSquadre().isEmpty()) {
-            removeTeam.setDisable(true);
-        }
-    }
+    
 
     public static void main(String[] args) {
         launch(args);
@@ -363,6 +368,7 @@ public class CTFChallenge extends Application {
 
     /**
      * Metodo getter per il parametro statico squadre.
+     *
      * @return Una ObservableList delle squadre della partita.
      */
     public static ObservableList<Squadra> getSquadre() {
