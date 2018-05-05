@@ -139,7 +139,21 @@ public class Squadra {
     public void setPunteggio(int punteggio) {
         this.punteggio = punteggio;
     }
-
     
+    public void incrementPunteggio(int increment) {
+        this.punteggio += increment;
+    }
+    
+    
+    public static Squadra getSquadraFromName(String name, Collection<Squadra> squadre) {
+        Squadra res = null;
+        for (Squadra i : squadre) {
+            if (name.equals(i.getNomesquadra())) {
+                res = i;
+                break;
+            }
+        }
+        return res;
+    }
     
 }

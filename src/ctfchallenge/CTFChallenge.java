@@ -3,11 +3,11 @@ package ctfchallenge;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
-import static javafx.application.Application.launch;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -16,7 +16,6 @@ import javafx.geometry.HPos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.GridPane;
@@ -36,7 +35,7 @@ public class CTFChallenge extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        // Una seconda stage per una seconda finestra
+        // Una seconda stage per una seconda finestra della scoreboard
         Stage scoreboardWindow = new Stage();
 
         // Bottoni
@@ -60,7 +59,7 @@ public class CTFChallenge extends Application {
         Scene primary = new Scene(mainPane);
         Scene scoreboardScene = new Scene(scoreboardPane);
 
-        // Disegno la tabella e inizializzo alcuni attributi
+        // Disegno la textarea dei log e rendo removeteam disabilitato di base
         txt.setEditable(false);
         removeTeam.setDisable(true);
 
@@ -79,8 +78,8 @@ public class CTFChallenge extends Application {
         setColumnRowIndex(gameOn, 4, 1);
         setColumnRowIndex(incrementFont, 5, 1);
         setColumnRowIndex(decrementFont, 6, 1);
-        setColumnRowIndex(sendResults, 10, 13);
         setColumnRowIndex(txt, 1, 2);
+        setColumnRowIndex(sendResults, 10, 13);
 
         GridPane.setColumnSpan(txt, 4);
         GridPane.setRowSpan(txt, 25);
@@ -110,7 +109,7 @@ public class CTFChallenge extends Application {
             scoreboard.decrementFont();
         });
 
-        // Bottone di refresh // TODO Find other workaround
+        // Bottone di refresh
         refreshScore.setOnAction((ActionEvent event) -> {
             if (!(scoreboardPane.getChildren().contains(scoreboard))) {
                 scoreboard.setItems(getSquadre());
@@ -129,7 +128,7 @@ public class CTFChallenge extends Application {
             if (numeroes == 1) {
                 addTeam.setDisable(true);
                 removeTeam.setDisable(true);
-                buttons.setRadioButtons(mainPane);
+                buttons.setRadioButtons(mainPane, squadre);
                 comboBoxBlock.setComboBox(mainPane);
 
                 mainPane.getChildren().addAll(sendResults, incrementFont, decrementFont);
@@ -139,7 +138,7 @@ public class CTFChallenge extends Application {
                 gameOn.setText("Prossimo esercizio");
                 sendResults.setDisable(false);
             } else {
-                txt.appendText("PARTITA FINITA!\nVince la squadra ");
+                victoryHandler();
                 sendResults.setDisable(true);
             }
             refreshScore.fire();
@@ -149,24 +148,8 @@ public class CTFChallenge extends Application {
 
         // Bottone per inviare i risultati
         sendResults.setOnAction((ActionEvent onFinish) -> {
-            for (int i = 0; i < getSquadre().size(); i++) {
-                RadioButton temp = (RadioButton) buttons.getRadio_btn().get(i).getSelectedToggle();
-                if (temp.getText().equals("Completato")) {
-                    getSquadre().get(i).setPunteggio(getSquadre().get(i).getPunteggio() + punteggioEs(numeroes));
-                    txt.appendText("La squadra " + getSquadre().get(i).getNomesquadra()
-                            + " ottiene " + punteggioEs(numeroes) + " punti\n");
-                }
-            }
-            for (int i = 0; i < 5; i++) {
-                String object_name = (comboBoxBlock.getCbox().get(i).getValue());
-                if (object_name != null) {
-                    Squadra temp = getSquadre().get(Squadra.nameToId(object_name, getSquadre()) - 1);
-                    temp.setPunteggio(temp.getPunteggio() + 5 - i);
-                    txt.appendText("La squadra " + temp.getNomesquadra()
-                            + " ottiene " + (5 - i) + " punti bonus\n");
-                }
-            }
-
+            buttons.sendResults(squadre, punteggioEs(numeroes));
+            comboBoxBlock.sendResults();
             refreshScore.fire();
             gameOn.setDisable(false);
             if (numeroes == 5) {
@@ -192,7 +175,9 @@ public class CTFChallenge extends Application {
     }
 
     /**
-     * Finestrella per chiedere una String customizzata senza grafica basata su JavaFX.
+     * Finestrella per chiedere una String customizzata senza grafica basata su
+     * JavaFX.
+     *
      * @param question La domanda da porre nella finestra
      * @return Una string contenente la risposta.
      */
@@ -281,8 +266,37 @@ public class CTFChallenge extends Application {
             removeTeam.setDisable(true);
         }
     }
-    
-    
+
+    public ArrayList<Squadra> getLeader() {
+        int punteggio_temp = 0;
+        ArrayList<Squadra> temp = new ArrayList<>();
+        for (Squadra i : squadre) {
+            if (i.getPunteggio() > punteggio_temp) {
+                punteggio_temp = i.getPunteggio();
+                temp.add(i);
+            }
+        }
+        return temp;
+    }
+
+    public void victoryHandler() {
+        ArrayList<Squadra> winners = getLeader();
+        switch (winners.size()) {
+            case 0:
+                txt.appendText("Sembra che non abbia vinto nessuno....guarda la classifica per ottenere il vincitore.\n");
+                break;
+            case 1:
+                txt.appendText("PARTITA FINITA!\nVince la squadra " + winners.get(0));
+                break;
+            default:
+                txt.appendText("PARTITA FINITA\nVincono le squadre: \n");
+                winners.forEach((i) -> {
+                    txt.appendText(i.getNomesquadra() + "\n");
+                });
+                break;
+        }
+    }
+
     /**
      * Funzione ausiliaria per assegnare i punti agli esercizi. Sono supportati
      * fino a 5 esercizi.
@@ -360,7 +374,6 @@ public class CTFChallenge extends Application {
         GridPane.setColumnIndex(node, column);
         GridPane.setRowIndex(node, row);
     }
-    
 
     public static void main(String[] args) {
         launch(args);
@@ -377,6 +390,10 @@ public class CTFChallenge extends Application {
 
     public static TextArea getTxt() {
         return txt;
+    }
+
+    public static int getNumeroes() {
+        return numeroes;
     }
 
 }

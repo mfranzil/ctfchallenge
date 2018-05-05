@@ -5,10 +5,9 @@
  */
 package ctfchallenge;
 
+import static ctfchallenge.CTFChallenge.getSquadre;
 import java.util.ArrayList;
-import java.util.Iterator;
 import javafx.scene.control.ComboBox;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 
@@ -21,6 +20,8 @@ public class ComboBoxBlock {
     private final ArrayList<Text> cbox_text;
     private final ArrayList<ComboBox<String>> cbox;
 
+    public final int MAX_TEAMS_BONUS = 5;
+
     /**
      *
      */
@@ -29,26 +30,42 @@ public class ComboBoxBlock {
         cbox = new ArrayList<>();
     }
 
-    void setComboBox(Pane gridView) {
-        for (int i = 0; i < 5; i++) {
-            ComboBox<String> p_box_temp = new ComboBox<>();
-            Text p_temp = new Text(CTFChallenge.intToText(i + 1) + " classificato");
-            cbox.add(p_box_temp);
-            cbox_text.add(p_temp);
-        }
-        Iterator<Squadra> iter;
-        for (int i = 0; i < 5; i++) {
-            GridPane.setColumnIndex(cbox_text.get(i), 10);
-            GridPane.setColumnIndex(cbox.get(i), 10);
-            GridPane.setRowIndex(cbox_text.get(i), 2 + (2 * i));
-            GridPane.setRowIndex(cbox.get(i), 3 + (2 * i));
-            iter = CTFChallenge.getSquadre().iterator();
-            while (iter.hasNext()) {
-                String temp = (iter.next()).getNomesquadra();
-                cbox.get(i).getItems().add(temp);
+    public void setComboBox(Pane gridView) {
+        // Inizializzo i combobox e le scritte
+        for (int i = 0; i < MAX_TEAMS_BONUS; i++) {
+            ComboBox<String> cbox_temp = new ComboBox<>();
+            Text cbox_text_temp = new Text(CTFChallenge.intToText(i + 1) + " classificato");
+            
+            CTFChallenge.setColumnRowIndex(cbox_text_temp, 10, 2 + (2 * i));
+            CTFChallenge.setColumnRowIndex(cbox_temp, 10, 3 + (2 * i));
+            
+            for (Squadra temp : CTFChallenge.getSquadre()) {
+                cbox.get(i).getItems().add(temp.getNomesquadra());
             }
+            
+            cbox.add(cbox_temp);
+            cbox_text.add(cbox_text_temp);
             gridView.getChildren().addAll(cbox_text.get(i), cbox.get(i));
         }
+    }
+
+    public void sendResults() {
+        for (int i = 0; i < cbox.size(); i++) {
+            String object_name = (cbox.get(i).getValue());
+            if (object_name != null) {
+                Squadra temp = Squadra.getSquadraFromName(object_name, CTFChallenge.getSquadre());
+                temp.setPunteggio(temp.getPunteggio() + 5 - i);
+                CTFChallenge.getTxt().appendText("La squadra " + temp.getNomesquadra()
+                        + " ottiene " + (5 - i) + " punti bonus\n");
+            }
+        }
+        clearAll();
+    }
+
+    public void clearAll() {
+        cbox.forEach((i) -> {
+            i.getSelectionModel().clearSelection();
+        });
     }
 
     /**

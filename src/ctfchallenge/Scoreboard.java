@@ -52,6 +52,7 @@ public final class Scoreboard extends TableView<Squadra> {
         --pointer;
         if (pointer >= 0 && pointer <= fontsizes.length) {
             resizeFont(fontsizes[pointer]);
+            refresh();
         } else {
             CTFChallenge.getTxt().appendText("Impossibile settare la grandezza desiderata\n");
             ++pointer;
@@ -62,6 +63,7 @@ public final class Scoreboard extends TableView<Squadra> {
         ++pointer;
         if (pointer >= 0 && pointer <= fontsizes.length) {
             resizeFont(fontsizes[pointer]);
+            refresh();
         } else {
             CTFChallenge.getTxt().appendText("Impossibile settare la grandezza desiderata\n");
             --pointer;
@@ -82,5 +84,4 @@ public final class Scoreboard extends TableView<Squadra> {
         }
 
     }
-
 }
