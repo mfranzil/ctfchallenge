@@ -1,21 +1,20 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package ctfchallenge;
 
-import static ctfchallenge.CTFChallenge.getSquadre;
 import java.util.ArrayList;
+import javafx.geometry.Insets;
 import javafx.scene.control.ComboBox;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
+import static ctfchallenge.CTFChallenge.txt;
+
 
 /**
  *
  * @author matte
  */
-public class ComboBoxBlock {
+public class ComboBoxBlock extends GridPane {
 
     private final ArrayList<Text> cbox_text;
     private final ArrayList<ComboBox<String>> cbox;
@@ -28,6 +27,12 @@ public class ComboBoxBlock {
     public ComboBoxBlock() {
         cbox_text = new ArrayList<>();
         cbox = new ArrayList<>();
+        
+        setStyle("-fx-background-color: #cce5ff;");
+        setPadding(new Insets(15, 12, 15, 12));
+        setHgap(8);
+        setVgap(8);
+        getColumnConstraints().add(new ColumnConstraints(250));
     }
 
     public void setComboBox(Pane gridView) {
@@ -36,12 +41,14 @@ public class ComboBoxBlock {
             ComboBox<String> cbox_temp = new ComboBox<>();
             Text cbox_text_temp = new Text(CTFChallenge.intToText(i + 1) + " classificato");
             
-            CTFChallenge.setColumnRowIndex(cbox_text_temp, 10, 2 + (2 * i));
-            CTFChallenge.setColumnRowIndex(cbox_temp, 10, 3 + (2 * i));
+            /*CTFChallenge.setColumnRowIndex(cbox_text_temp, 10, 2 + (2 * i));
+            CTFChallenge.setColumnRowIndex(cbox_temp, 10, 3 + (2 * i));*/
+            CTFChallenge.setColumnRowIndex(cbox_text_temp, 0, 0 + (2 * i));
+            CTFChallenge.setColumnRowIndex(cbox_temp, 0, 1 + (2 * i));
             
-            for (Squadra temp : CTFChallenge.getSquadre()) {
-                cbox.get(i).getItems().add(temp.getNomesquadra());
-            }
+            SquadreHandler.squadreList.forEach((temp) -> {
+                cbox_temp.getItems().add(temp.getNomesquadra());
+            });
             
             cbox.add(cbox_temp);
             cbox_text.add(cbox_text_temp);
@@ -53,9 +60,9 @@ public class ComboBoxBlock {
         for (int i = 0; i < cbox.size(); i++) {
             String object_name = (cbox.get(i).getValue());
             if (object_name != null) {
-                Squadra temp = Squadra.getSquadraFromName(object_name, CTFChallenge.getSquadre());
+                Squadra temp = Squadra.getSquadraFromName(object_name, SquadreHandler.squadreList);
                 temp.setPunteggio(temp.getPunteggio() + 5 - i);
-                CTFChallenge.getTxt().appendText("La squadra " + temp.getNomesquadra()
+                txt.appendText("La squadra " + temp.getNomesquadra()
                         + " ottiene " + (5 - i) + " punti bonus\n");
             }
         }

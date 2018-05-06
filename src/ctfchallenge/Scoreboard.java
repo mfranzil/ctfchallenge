@@ -1,13 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package ctfchallenge;
 
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import static ctfchallenge.CTFChallenge.txt;
 
 /**
  *
@@ -54,7 +50,7 @@ public final class Scoreboard extends TableView<Squadra> {
             resizeFont(fontsizes[pointer]);
             refresh();
         } else {
-            CTFChallenge.getTxt().appendText("Impossibile settare la grandezza desiderata\n");
+            txt.appendText("Impossibile settare la grandezza desiderata\n");
             ++pointer;
         }
     }
@@ -65,7 +61,7 @@ public final class Scoreboard extends TableView<Squadra> {
             resizeFont(fontsizes[pointer]);
             refresh();
         } else {
-            CTFChallenge.getTxt().appendText("Impossibile settare la grandezza desiderata\n");
+            txt.appendText("Impossibile settare la grandezza desiderata\n");
             --pointer;
         }
     }
@@ -78,9 +74,9 @@ public final class Scoreboard extends TableView<Squadra> {
             membro2.setStyle(style);
             punteggio.setStyle(style);
             giocatori.setStyle(style);
-            CTFChallenge.getTxt().appendText("Grandezza del font settata a " + size +  "\n");
+            txt.appendText("Grandezza del font settata a " + size +  "\n");
         } else {
-            CTFChallenge.getTxt().appendText("Grandezza del font non valida!" + "\n");
+            txt.appendText("Grandezza del font non valida!" + "\n");
         }
 
     }

@@ -3,21 +3,16 @@ package ctfchallenge;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.geometry.HPos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -29,149 +24,58 @@ import javafx.stage.WindowEvent;
  */
 public class CTFChallenge extends Application {
 
-    private static final ObservableList<Squadra> squadre = FXCollections.observableArrayList();
-    private static int numeroes = 0;
-    private static final TextArea txt = new TextArea();
+    public static int numeroes = 0;
+    public static final TextArea txt = new TextArea();
 
     @Override
     public void start(Stage primaryStage) {
         // Una seconda stage per una seconda finestra della scoreboard
         Stage scoreboardWindow = new Stage();
-
-        // Bottoni
-        Button addTeam = new Button("Nuova squadra");
-        Button removeTeam = new Button("Rimuovi squadra");
-        Button refreshScore = new Button("Aggiorna la classifica");
-        Button gameOn = new Button("Inizia la partita");
-        Button sendResults = new Button("Invia i risultati");
-        Button incrementFont = new Button("+");
-        Button decrementFont = new Button("-");
-
-        // Queste due classi raggruppano le scelte dei vincitori
+        
+        // mainPane per tutto, scoreBoardPane per la finestra esterna
+        BorderPane mainPane = new BorderPane();
+        StackPane scoreboardPane = new StackPane();
+        
+        Scene mainScene = new Scene(mainPane);
+        Scene scoreboardScene = new Scene(scoreboardPane);
+       
+        // Queste classi verranno inserite nel borderpane
         RadioButtons buttons = new RadioButtons();
         ComboBoxBlock comboBoxBlock = new ComboBoxBlock();
+        SquadreHandler squadreHandler = new SquadreHandler();
         Scoreboard scoreboard = new Scoreboard();
+        Toolbar toolBar = new Toolbar(buttons, comboBoxBlock, squadreHandler, scoreboard);
 
-        // mainPane per tutto, scoreBoardPane per la finestra esterna
-        GridPane mainPane = new GridPane();
-        StackPane scoreboardPane = new StackPane();
+        scoreboard.setItems(squadreHandler.squadreList);
+        scoreboardPane.getChildren().add(scoreboard);
+        
+        mainPane.setTop(toolBar);
+        mainPane.setLeft(txt);
+        mainPane.setCenter(buttons);
+        mainPane.setRight(comboBoxBlock);
 
-        Scene primary = new Scene(mainPane);
-        Scene scoreboardScene = new Scene(scoreboardPane);
-
-        // Disegno la textarea dei log e rendo removeteam disabilitato di base
         txt.setEditable(false);
-        removeTeam.setDisable(true);
 
         // Se chiudo una finestra si chiudono tutte
-        scoreboardWindow.setOnCloseRequest((WindowEvent event) -> {
-            Platform.exit();
-        });
         primaryStage.setOnCloseRequest((WindowEvent event) -> {
             Platform.exit();
         });
-
-        // Allineo tutti gli oggetti
-        setColumnRowIndex(addTeam, 1, 1);
-        setColumnRowIndex(removeTeam, 2, 1);
-        setColumnRowIndex(refreshScore, 3, 1);
-        setColumnRowIndex(gameOn, 4, 1);
-        setColumnRowIndex(incrementFont, 5, 1);
-        setColumnRowIndex(decrementFont, 6, 1);
-        setColumnRowIndex(txt, 1, 2);
-        setColumnRowIndex(sendResults, 10, 13);
-
-        GridPane.setColumnSpan(txt, 4);
-        GridPane.setRowSpan(txt, 25);
-        GridPane.setHalignment(decrementFont, HPos.LEFT);
-        GridPane.setHalignment(incrementFont, HPos.RIGHT);
-
-        // Un po' di padding non fa male
-        mainPane.setHgap(8);
-        mainPane.setVgap(8);
-
-        // Bottone addTeam
-        addTeam.setOnAction((ActionEvent event) -> {
-            addTeamActions(removeTeam);
+                
+        scoreboardWindow.setOnCloseRequest((WindowEvent event) -> {
+            Platform.exit();
         });
-
-        // Bottone removeTeam
-        removeTeam.setOnAction((ActionEvent event) -> {
-            removeTeamActions(removeTeam);
-        });
-
-        // Bottoni per i font della tabella
-        incrementFont.setOnAction((ActionEvent event) -> {
-            scoreboard.incrementFont();
-        });
-
-        decrementFont.setOnAction((ActionEvent event) -> {
-            scoreboard.decrementFont();
-        });
-
-        // Bottone di refresh
-        refreshScore.setOnAction((ActionEvent event) -> {
-            if (!(scoreboardPane.getChildren().contains(scoreboard))) {
-                scoreboard.setItems(getSquadre());
-                scoreboardPane.getChildren().add(scoreboard);
-                scoreboardWindow.show();
-            } else {
-                scoreboard.refresh();
-            }
-
-            backupData();
-        });
-
-        // Bottone per iniziare il match
-        gameOn.setOnAction((ActionEvent event) -> {
-            numeroes++;
-            if (numeroes == 1) {
-                addTeam.setDisable(true);
-                removeTeam.setDisable(true);
-                buttons.setRadioButtons(mainPane, squadre);
-                comboBoxBlock.setComboBox(mainPane);
-
-                mainPane.getChildren().addAll(sendResults, incrementFont, decrementFont);
-            }
-            if (numeroes >= 1 && numeroes <= 5) {
-                txt.appendText("Inizio esercizio " + numeroes + "\n");
-                gameOn.setText("Prossimo esercizio");
-                sendResults.setDisable(false);
-            } else {
-                victoryHandler();
-                sendResults.setDisable(true);
-            }
-            refreshScore.fire();
-            gameOn.setDisable(true);
-            primaryStage.sizeToScene();
-        });
-
-        // Bottone per inviare i risultati
-        sendResults.setOnAction((ActionEvent onFinish) -> {
-            buttons.sendResults(squadre, punteggioEs(numeroes));
-            comboBoxBlock.sendResults();
-            refreshScore.fire();
-            gameOn.setDisable(false);
-            if (numeroes == 5) {
-                gameOn.setText("Termina partita");
-            }
-            sendResults.setDisable(true);
-
-        });
-
-        // Aggiungo ai pane quanto serve
-        mainPane.getChildren().addAll(addTeam, removeTeam, refreshScore, gameOn, txt);
 
         // Infine mostro le due finestre
         primaryStage.setMaximized(false);
         primaryStage.setWidth(1100);
         primaryStage.setHeight(600);
         primaryStage.setTitle("CTFChallenge");
-        primaryStage.setScene(primary);
+        primaryStage.setScene(mainScene);
         primaryStage.show();
 
         scoreboardWindow.setTitle("Classifica");
         scoreboardWindow.setScene(scoreboardScene);
+        scoreboardWindow.show();
     }
 
     /**
@@ -181,7 +85,7 @@ public class CTFChallenge extends Application {
      * @param question La domanda da porre nella finestra
      * @return Una string contenente la risposta.
      */
-    private String optionDialog(String question) {
+    public static String optionDialog(String question) {
         TextInputDialog dialog = new TextInputDialog();
         dialog.setHeaderText(question);
         dialog.setTitle("CTF");
@@ -194,12 +98,12 @@ public class CTFChallenge extends Application {
      * Metodo che fa un backup dei dati su backup.txt ogni volta che viene
      * chiamato sovrascrivendo il precedente.
      */
-    public void backupData() {
+    public static void backupData() {
         try (BufferedWriter fileOut = new BufferedWriter(new FileWriter("backup.txt"))) {
             fileOut.write("LOG:\n" + txt.getText() + "\nSCOREBOARD:\n");
             fileOut.write("ID Squadra\t\tNome squadra\t\tMembro 1\t\tMembro 2\t\tPunteggio\n");
             System.out.println("Logging in progress...");
-            for (Squadra temp : squadre) {
+            for (Squadra temp : SquadreHandler.squadreList) {
                 String data = temp.getId() + "\t\t" + temp.getNomesquadra() + "\t\t"
                         + temp.getMembro1() + "\t\t" + temp.getMembro2() + "\t\t" + temp.getPunteggio() + "\n";
                 fileOut.write(data);
@@ -210,91 +114,6 @@ public class CTFChallenge extends Application {
             Logger.getLogger(CTFChallenge.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-    }
-
-    /**
-     * Metodo che gestisce il bottone addTeam.
-     *
-     * @param removeTeam Il bottone removeTeam che deve essere nel caso attivato
-     * se le squadre sono >0.
-     */
-    public void addTeamActions(Button removeTeam) {
-        String member1 = null, member2 = null, nome = null;
-        Squadra tmp;
-        try {
-            member1 = optionDialog("Nome del primo membro?");
-            member2 = optionDialog("Nome del secondo membro?");
-            nome = optionDialog("Nome della squadra");
-        } catch (Exception e) {
-            txt.appendText("ERRORE! Prova a reinserire la squadra!");
-            Logger.getLogger(CTFChallenge.class.getName()).log(Level.SEVERE, null, e);
-        }
-        if (member1 != null && member2 != null && nome != null) {
-            tmp = new Squadra(member1, member2, nome);
-            txt.appendText("Nuova squadra creata:\nID: "
-                    + tmp.getId() + " (nome squadra: " + tmp.getNomesquadra()
-                    + ")\nMembri: " + tmp + "\n");
-            getSquadre().add(tmp);
-        }
-        if (Squadra.getNumerosquadre() > 0) {
-            removeTeam.setDisable(false);
-        }
-    }
-
-    /**
-     * Metodo che gestisce il bottone removeTeam.
-     *
-     * @param removeTeam Il bottone sulla quale agisce il metodo.
-     */
-    public void removeTeamActions(Button removeTeam) {
-        if (Squadra.getNumerosquadre() != 0) {
-            int id = Integer.parseInt(optionDialog("ID della"
-                    + " squadra da cancellare"));
-            Squadra tmp = getSquadre().remove(id - 1);
-            if (tmp != null) {
-                txt.appendText("Squadra con ID " + id
-                        + " rimossa con successo\n");
-            } else {
-                txt.appendText("Nessuna squadra trovata "
-                        + "con questo ID (" + id + ")\n");
-            }
-        } else {
-            txt.appendText("Nessuna squadra da rimuovere!" + "\n");
-        }
-
-        if (getSquadre().isEmpty()) {
-            removeTeam.setDisable(true);
-        }
-    }
-
-    public ArrayList<Squadra> getLeader() {
-        int punteggio_temp = 0;
-        ArrayList<Squadra> temp = new ArrayList<>();
-        for (Squadra i : squadre) {
-            if (i.getPunteggio() > punteggio_temp) {
-                punteggio_temp = i.getPunteggio();
-                temp.add(i);
-            }
-        }
-        return temp;
-    }
-
-    public void victoryHandler() {
-        ArrayList<Squadra> winners = getLeader();
-        switch (winners.size()) {
-            case 0:
-                txt.appendText("Sembra che non abbia vinto nessuno....guarda la classifica per ottenere il vincitore.\n");
-                break;
-            case 1:
-                txt.appendText("PARTITA FINITA!\nVince la squadra " + winners.get(0));
-                break;
-            default:
-                txt.appendText("PARTITA FINITA\nVincono le squadre: \n");
-                winners.forEach((i) -> {
-                    txt.appendText(i.getNomesquadra() + "\n");
-                });
-                break;
-        }
     }
 
     /**
@@ -378,22 +197,4 @@ public class CTFChallenge extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-
-    /**
-     * Metodo getter per il parametro statico squadre.
-     *
-     * @return Una ObservableList delle squadre della partita.
-     */
-    public static ObservableList<Squadra> getSquadre() {
-        return squadre;
-    }
-
-    public static TextArea getTxt() {
-        return txt;
-    }
-
-    public static int getNumeroes() {
-        return numeroes;
-    }
-
 }

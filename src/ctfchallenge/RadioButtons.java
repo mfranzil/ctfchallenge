@@ -1,23 +1,21 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package ctfchallenge;
 
 import java.util.ArrayList;
 import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
 import javafx.scene.control.Labeled;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
+import static ctfchallenge.CTFChallenge.txt;
 
 /**
  *
  * @author matte
  */
-public class RadioButtons {
+public class RadioButtons extends GridPane {
 
     private final ArrayList<ToggleGroup> radio_btn;
     private final ArrayList<Text> radio_text;
@@ -32,6 +30,13 @@ public class RadioButtons {
         radio_text = new ArrayList<>();
         vinto = new ArrayList<>();
         perso = new ArrayList<>();
+        
+        setStyle("-fx-background-color: #cce5ff;");
+        setHgap(8);
+        setVgap(8);
+        setPadding(new Insets(15, 12, 15, 12));
+        
+        
     }
 
     void setRadioButtons(Pane gridView, ObservableList<Squadra> squadre) {
@@ -46,13 +51,13 @@ public class RadioButtons {
             perso_tmp.setSelected(true);
 
             if (i < media) {
-                CTFChallenge.setColumnRowIndex(radio_text_tmp, 5, 2 + (3 * i));
-                CTFChallenge.setColumnRowIndex(vinto_tmp, 5, 3 + (3 * i));
-                CTFChallenge.setColumnRowIndex(perso_tmp, 5, 4 + (3 * i));
+                CTFChallenge.setColumnRowIndex(radio_text_tmp, 0, 0 + (3 * i));
+                CTFChallenge.setColumnRowIndex(vinto_tmp, 0, 1 + (3 * i));
+                CTFChallenge.setColumnRowIndex(perso_tmp, 0, 2 + (3 * i));
             } else {
-                CTFChallenge.setColumnRowIndex(radio_text_tmp, 8, 2 + (3 * (i - media)));
-                CTFChallenge.setColumnRowIndex(vinto_tmp, 8, 3 + (3 * (i - media)));
-                CTFChallenge.setColumnRowIndex(perso_tmp, 8, 4 + (3 * (i - media)));
+                CTFChallenge.setColumnRowIndex(radio_text_tmp, 3, 0 + (3 * (i - media)));
+                CTFChallenge.setColumnRowIndex(vinto_tmp, 3, 1 + (3 * (i - media)));
+                CTFChallenge.setColumnRowIndex(perso_tmp, 3, 2 + (3 * (i - media)));
             }
 
             vinto.add(vinto_tmp);
@@ -69,19 +74,8 @@ public class RadioButtons {
             Squadra current = squadre.get(i);
             if (label.equals("Completato")) {
                 current.incrementPunteggio(punteggio);
-                CTFChallenge.getTxt().appendText(
-                        "La squadra " + current.getNomesquadra() + " ottiene " + punteggio + " punti\n");
+                txt.appendText("La squadra " + current.getNomesquadra() + " ottiene " + punteggio + " punti\n");
             }
         }
-        
     }
-
-    /**
-     *
-     * @return
-     */
-    public ArrayList<ToggleGroup> getRadio_btn() {
-        return radio_btn;
-    }
-
 }
