@@ -45,7 +45,7 @@ public class CTFChallenge extends Application {
         SquadreHandler squadreHandler = new SquadreHandler();
         Scoreboard scoreboard = new Scoreboard();
         Toolbar toolBar = new Toolbar(buttons, comboBoxBlock, squadreHandler, scoreboard);
-
+        
         scoreboard.setItems(squadreHandler.squadreList);
         scoreboardPane.getChildren().add(scoreboard);
         
@@ -98,18 +98,18 @@ public class CTFChallenge extends Application {
      * Metodo che fa un backup dei dati su backup.txt ogni volta che viene
      * chiamato sovrascrivendo il precedente.
      */
-    public static void backupData() {
-        try (BufferedWriter fileOut = new BufferedWriter(new FileWriter("backup.txt"))) {
+    public static void backupData(SquadreHandler squadreHandler) {
+        try {
+            BufferedWriter fileOut = new BufferedWriter(new FileWriter("backup.txt"));
             fileOut.write("LOG:\n" + txt.getText() + "\nSCOREBOARD:\n");
             fileOut.write("ID Squadra\t\tNome squadra\t\tMembro 1\t\tMembro 2\t\tPunteggio\n");
             System.out.println("Logging in progress...");
-            for (Squadra temp : SquadreHandler.squadreList) {
+            for (Squadra temp : squadreHandler.squadreList) {
                 String data = temp.getId() + "\t\t" + temp.getNomesquadra() + "\t\t"
                         + temp.getMembro1() + "\t\t" + temp.getMembro2() + "\t\t" + temp.getPunteggio() + "\n";
                 fileOut.write(data);
                 System.out.print(data);
             }
-
         } catch (IOException ex) {
             Logger.getLogger(CTFChallenge.class.getName()).log(Level.SEVERE, null, ex);
         }

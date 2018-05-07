@@ -21,9 +21,6 @@ public class ComboBoxBlock extends GridPane {
 
     public final int MAX_TEAMS_BONUS = 5;
 
-    /**
-     *
-     */
     public ComboBoxBlock() {
         cbox_text = new ArrayList<>();
         cbox = new ArrayList<>();
@@ -35,18 +32,15 @@ public class ComboBoxBlock extends GridPane {
         getColumnConstraints().add(new ColumnConstraints(250));
     }
 
-    public void setComboBox(Pane gridView) {
-        // Inizializzo i combobox e le scritte
+    public void setComboBox(Pane gridView, SquadreHandler squadreHandler) {
         for (int i = 0; i < MAX_TEAMS_BONUS; i++) {
             ComboBox<String> cbox_temp = new ComboBox<>();
             Text cbox_text_temp = new Text(CTFChallenge.intToText(i + 1) + " classificato");
             
-            /*CTFChallenge.setColumnRowIndex(cbox_text_temp, 10, 2 + (2 * i));
-            CTFChallenge.setColumnRowIndex(cbox_temp, 10, 3 + (2 * i));*/
             CTFChallenge.setColumnRowIndex(cbox_text_temp, 0, 0 + (2 * i));
             CTFChallenge.setColumnRowIndex(cbox_temp, 0, 1 + (2 * i));
             
-            SquadreHandler.squadreList.forEach((temp) -> {
+            squadreHandler.squadreList.forEach((temp) -> {
                 cbox_temp.getItems().add(temp.getNomesquadra());
             });
             
@@ -56,11 +50,11 @@ public class ComboBoxBlock extends GridPane {
         }
     }
 
-    public void sendResults() {
+    public void sendResults(SquadreHandler squadreHandler) {
         for (int i = 0; i < cbox.size(); i++) {
             String object_name = (cbox.get(i).getValue());
             if (object_name != null) {
-                Squadra temp = Squadra.getSquadraFromName(object_name, SquadreHandler.squadreList);
+                Squadra temp = Squadra.getSquadraFromName(object_name, squadreHandler.squadreList);
                 temp.setPunteggio(temp.getPunteggio() + 5 - i);
                 txt.appendText("La squadra " + temp.getNomesquadra()
                         + " ottiene " + (5 - i) + " punti bonus\n");
@@ -69,18 +63,9 @@ public class ComboBoxBlock extends GridPane {
         clearAll();
     }
 
-    public void clearAll() {
+    private void clearAll() {
         cbox.forEach((i) -> {
             i.getSelectionModel().clearSelection();
         });
     }
-
-    /**
-     *
-     * @return
-     */
-    public ArrayList<ComboBox<String>> getCbox() {
-        return cbox;
-    }
-
 }

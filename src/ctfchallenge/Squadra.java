@@ -8,9 +8,9 @@ import java.util.Collection;
  */
 public class Squadra {
 
-    private final String membro1;
-    private final String membro2;
-    private final String nomesquadra;
+    private String membro1;
+    private String membro2;
+    private String nomesquadra;
     private int punteggio;
 
     private final int id;
@@ -78,51 +78,26 @@ public class Squadra {
         return hash;
     }
 
-    /**
-     *
-     * @return
-     */
     @Override
     public String toString() {
         return membro1 + ", " + membro2;
     }
-
-    /**
-     *
-     * @return
-     */
     public String getMembro1() {
         return membro1;
     }
 
-    /**
-     *
-     * @return
-     */
     public String getMembro2() {
         return membro2;
     }
 
-    /**
-     *
-     * @return
-     */
     public int getId() {
         return id;
     }
 
-    /**
-     *
-     * @return
-     */
     public static int getNumerosquadre() {
         return numerosquadre;
     }
 
-    /**
-     *
-     * @return
-     */
     public String getNomesquadra() {
         return nomesquadra;
     }
@@ -130,16 +105,27 @@ public class Squadra {
     public int getPunteggio() {
         return punteggio;
     }
-
-    public void setPunteggio(int punteggio) {
-        this.punteggio = punteggio;
-    }
     
     public void incrementPunteggio(int increment) {
         this.punteggio += increment;
     }
+
+    public void setMembro1(String membro1) {
+        this.membro1 = membro1;
+    }
+
+    public void setMembro2(String membro2) {
+        this.membro2 = membro2;
+    }
+
+    public void setNomesquadra(String nomesquadra) {
+        this.nomesquadra = nomesquadra;
+    }
     
-    
+    public void setPunteggio(int punteggio) {
+        this.punteggio = punteggio;
+    }
+
     public static Squadra getSquadraFromName(String name, Collection<Squadra> squadre) {
         Squadra res = null;
         for (Squadra i : squadre) {

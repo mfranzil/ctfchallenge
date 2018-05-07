@@ -16,7 +16,7 @@ import static ctfchallenge.CTFChallenge.txt;
  */
 public class SquadreHandler {
 
-    public static final ObservableList<Squadra> squadreList = FXCollections.observableArrayList();
+    public final ObservableList<Squadra> squadreList = FXCollections.observableArrayList();
 
     public ArrayList<Squadra> getLeader() {
         int punteggio_temp = 0;
