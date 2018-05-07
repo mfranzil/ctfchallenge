@@ -7,6 +7,11 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import static ctfchallenge.CTFChallenge.txt;
 
 
+/**
+ * @since 07/05/2018
+ * @version 1.0
+ * @author Matteo Franzil
+ */
 public final class Scoreboard extends TableView<Squadra> {
 
     private final TableColumn<Squadra, String> nomesquadra;
@@ -18,6 +23,9 @@ public final class Scoreboard extends TableView<Squadra> {
     private final int fontsizes[] = {6, 7, 8, 9, 10, 11, 12, 14, 16, 18, 21, 24, 36, 48, 60, 72, 84, 96};
     private int pointer = 11; // Pt = 24
 
+    /**
+     *
+     */
     @SuppressWarnings("unchecked")
     public Scoreboard() {
         nomesquadra = new TableColumn<>("Nome squadra");
@@ -42,6 +50,9 @@ public final class Scoreboard extends TableView<Squadra> {
         getColumns().addAll(nomesquadra, giocatori, punteggio);
     }
     
+    /**
+     *
+     */
     public void decrementFont() {
         --pointer;
         if (pointer >= 0 && pointer <= fontsizes.length) {
@@ -53,6 +64,9 @@ public final class Scoreboard extends TableView<Squadra> {
         }
     }
     
+    /**
+     *
+     */
     public void incrementFont() {
         ++pointer;
         if (pointer >= 0 && pointer <= fontsizes.length) {
@@ -64,6 +78,10 @@ public final class Scoreboard extends TableView<Squadra> {
         }
     }
 
+    /**
+     *
+     * @param size
+     */
     public void resizeFont(int size) {
         if (size > 0 && size < 100) {
             String style = ("-fx-font: " + size + "px Arial; -fx-alignment: CENTER");

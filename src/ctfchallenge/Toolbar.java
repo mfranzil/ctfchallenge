@@ -6,18 +6,16 @@ import static ctfchallenge.CTFChallenge.numeroes;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.event.ActionEvent;
-import javafx.geometry.HPos;
 import javafx.geometry.Insets;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.text.Text;
-import javafx.stage.Stage;
 
 
+/**
+ * @since 07/05/2018
+ * @version 1.0
+ * @author Matteo Franzil
+ */
 public class Toolbar extends HBox {
 
     private Button addTeam = new Button("Nuova squadra");
@@ -29,6 +27,13 @@ public class Toolbar extends HBox {
     private Button decrementFont = new Button("-");
     private final Button editTeam = new Button("Modifica squadra");
 
+    /**
+     *
+     * @param buttons
+     * @param comboBoxBlock
+     * @param squadreHandler
+     * @param scoreboard
+     */
     public Toolbar(RadioButtons buttons, ComboBoxBlock comboBoxBlock, SquadreHandler squadreHandler, Scoreboard scoreboard) {
         setPadding(new Insets(15, 12, 15, 12));
         setSpacing(10);
@@ -97,6 +102,10 @@ public class Toolbar extends HBox {
         });
     }
 
+    /**
+     * 
+     * @param squadreHandler 
+     */
     private void addTeamActions(SquadreHandler squadreHandler) {
         String member1 = null;
         String member2 = null;
@@ -120,7 +129,11 @@ public class Toolbar extends HBox {
             editTeam.setDisable(false);
         }
     }
-
+    
+    /**
+     * 
+     * @param squadreHandler 
+     */
     private void editTeamActions(SquadreHandler squadreHandler) { // TODO move to another method
         String id = CTFChallenge.optionDialog("Nome della squadra da modificare");
         Squadra tmp = Squadra.getSquadraFromName(id, squadreHandler.squadreList);
@@ -131,6 +144,10 @@ public class Toolbar extends HBox {
         }
     }
 
+    /**
+     * 
+     * @param squadreHandler 
+     */
     private void removeTeamActions(SquadreHandler squadreHandler) {
         if (Squadra.getNumerosquadre() != 0) {
             String id = CTFChallenge.optionDialog("Nome della squadra da cancellare");

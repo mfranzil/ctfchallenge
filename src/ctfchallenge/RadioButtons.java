@@ -12,6 +12,11 @@ import javafx.scene.text.Text;
 import static ctfchallenge.CTFChallenge.txt;
 
 
+/**
+ * @since 07/05/2018
+ * @version 1.0
+ * @author Matteo Franzil
+ */
 public class RadioButtons extends GridPane {
 
     private final ArrayList<ToggleGroup> radio_btn;
@@ -36,7 +41,12 @@ public class RadioButtons extends GridPane {
         
     }
 
-    void setRadioButtons(Pane gridView, ObservableList<Squadra> squadre) {
+    /**
+     * 
+     * @param gridView
+     * @param squadre 
+     */
+    public void setRadioButtons(Pane gridView, ObservableList<Squadra> squadre) {
         int media = (int) Math.floor(squadre.size() / 2);
         for (int i = 0; i < squadre.size(); i++) {
             RadioButton vinto_tmp = new RadioButton("Completato");
@@ -65,6 +75,11 @@ public class RadioButtons extends GridPane {
         }
     }
 
+    /**
+     *
+     * @param squadre
+     * @param punteggio
+     */
     public void sendResults(ObservableList<Squadra> squadre, int punteggio) {
         for (int i = 0; i < squadre.size(); i++) {
             String label = ((Labeled) radio_btn.get(i).getSelectedToggle()).getText();

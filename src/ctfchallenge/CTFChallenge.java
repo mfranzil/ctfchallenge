@@ -24,6 +24,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
+
 /**
  * @since 07/05/2018
  * @version 1.0
@@ -31,7 +32,14 @@ import javafx.stage.WindowEvent;
  */
 public class CTFChallenge extends Application {
 
+    /**
+     *
+     */
     public static int numeroes = 0;
+
+    /**
+     *
+     */
     public static final TextArea txt = new TextArea();
 
     @Override
@@ -83,7 +91,7 @@ public class CTFChallenge extends Application {
             final Stage dialog = new Stage();
             dialog.initModality(Modality.APPLICATION_MODAL);
             HBox root = new HBox();
-            root.setPrefSize(200, 50);
+            root.setPrefSize(150, 50);
             root.setAlignment(Pos.CENTER);
 
             Button okBtn = new Button("Sì");
@@ -107,7 +115,7 @@ public class CTFChallenge extends Application {
             dialog.setScene(dialogScene);
             dialog.setTitle("Esci?");
             dialog.show();
-        });
+        }); 
         primaryStage.show();
 
         scoreboardWindow.setTitle("Classifica");
@@ -140,6 +148,7 @@ public class CTFChallenge extends Application {
     /**
      * Metodo che fa un backup dei dati su backup.txt ogni volta che viene
      * chiamato sovrascrivendo il precedente.
+     * @param squadreHandler
      */
     public static void backupData(SquadreHandler squadreHandler) {
         try {
@@ -237,6 +246,10 @@ public class CTFChallenge extends Application {
         GridPane.setRowIndex(node, row);
     }
 
+    /**
+     *
+     * @param args
+     */
     public static void main(String[] args) {
         launch(args);
     }

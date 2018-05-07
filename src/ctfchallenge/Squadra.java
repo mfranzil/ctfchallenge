@@ -3,7 +3,11 @@ package ctfchallenge;
 
 import java.util.Collection;
 
-
+/**
+ * @since 07/05/2018
+ * @version 1.0
+ * @author Matteo Franzil
+ */
 public class Squadra {
 
     private String membro1;
@@ -76,54 +80,109 @@ public class Squadra {
         return hash;
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public String toString() {
         return membro1 + ", " + membro2;
     }
+
+    /**
+     *
+     * @return
+     */
     public String getMembro1() {
         return membro1;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getMembro2() {
         return membro2;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getId() {
         return id;
     }
 
+    /**
+     *
+     * @return
+     */
     public static int getNumerosquadre() {
         return numerosquadre;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getNomesquadra() {
         return nomesquadra;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getPunteggio() {
         return punteggio;
     }
     
+    /**
+     *
+     * @param increment
+     */
     public void incrementPunteggio(int increment) {
         this.punteggio += increment;
     }
 
+    /**
+     *
+     * @param membro1
+     */
     public void setMembro1(String membro1) {
         this.membro1 = membro1;
     }
 
+    /**
+     *
+     * @param membro2
+     */
     public void setMembro2(String membro2) {
         this.membro2 = membro2;
     }
 
+    /**
+     *
+     * @param nomesquadra
+     */
     public void setNomesquadra(String nomesquadra) {
         this.nomesquadra = nomesquadra;
     }
     
+    /**
+     *
+     * @param punteggio
+     */
     public void setPunteggio(int punteggio) {
         this.punteggio = punteggio;
     }
 
+    /**
+     *
+     * @param name
+     * @param squadre
+     * @return
+     */
     public static Squadra getSquadraFromName(String name, Collection<Squadra> squadre) {
         Squadra res = null;
         for (Squadra i : squadre) {

@@ -12,10 +12,18 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-
-
+/**
+ * @since 07/05/2018
+ * @version 1.0
+ * @author Matteo Franzil
+ */
 public class EditStage {
 
+    /**
+     *
+     * @param squadreHandler
+     * @param tmp
+     */
     public EditStage(SquadreHandler squadreHandler, Squadra tmp) {
         Stage editStage = new Stage();
             GridPane editPane = new GridPane();

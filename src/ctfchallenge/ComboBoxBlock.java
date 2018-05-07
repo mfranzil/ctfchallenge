@@ -1,6 +1,5 @@
 package ctfchallenge;
 
-
 import java.util.ArrayList;
 import javafx.geometry.Insets;
 import javafx.scene.control.ComboBox;
@@ -11,13 +10,24 @@ import javafx.scene.text.Text;
 import static ctfchallenge.CTFChallenge.txt;
 
 
+/**
+ * @since 07/05/2018
+ * @version 1.0
+ * @author Matteo Franzil
+ */
 public class ComboBoxBlock extends GridPane {
 
     private final ArrayList<Text> cbox_text;
     private final ArrayList<ComboBox<String>> cbox;
 
+    /**
+     *
+     */
     public final int MAX_TEAMS_BONUS = 5;
 
+    /**
+     *
+     */
     public ComboBoxBlock() {
         cbox_text = new ArrayList<>();
         cbox = new ArrayList<>();
@@ -29,6 +39,11 @@ public class ComboBoxBlock extends GridPane {
         getColumnConstraints().add(new ColumnConstraints(250));
     }
 
+    /**
+     *
+     * @param gridView
+     * @param squadreHandler
+     */
     public void setComboBox(Pane gridView, SquadreHandler squadreHandler) {
         for (int i = 0; i < MAX_TEAMS_BONUS; i++) {
             ComboBox<String> cbox_temp = new ComboBox<>();
@@ -47,6 +62,10 @@ public class ComboBoxBlock extends GridPane {
         }
     }
 
+    /**
+     *
+     * @param squadreHandler
+     */
     public void sendResults(SquadreHandler squadreHandler) {
         for (int i = 0; i < cbox.size(); i++) {
             String object_name = (cbox.get(i).getValue());

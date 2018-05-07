@@ -5,10 +5,23 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import static ctfchallenge.CTFChallenge.txt;
 
+
+/**
+ * @since 07/05/2018
+ * @version 1.0
+ * @author Matteo Franzil
+ */
 public class SquadreHandler {
 
+    /**
+     *
+     */
     public final ObservableList<Squadra> squadreList = FXCollections.observableArrayList();
 
+    /**
+     *
+     * @return
+     */
     public ArrayList<Squadra> getLeader() {
         int punteggio_temp = 0;
         ArrayList<Squadra> temp = new ArrayList<>();
@@ -21,6 +34,9 @@ public class SquadreHandler {
         return temp;
     }
 
+    /**
+     *
+     */
     public void victoryHandler() {
         ArrayList<Squadra> winners = getLeader();
         switch (winners.size()) {
