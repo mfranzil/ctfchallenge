@@ -32,7 +32,7 @@ import javafx.stage.WindowEvent;
  */
 public class CTFChallenge extends Application {
     
-    //ciao bello;
+    //ciao bello ;
 
     /**
      *
