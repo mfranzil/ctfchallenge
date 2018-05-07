@@ -1,5 +1,6 @@
 package ctfchallenge;
 
+
 import java.util.ArrayList;
 import javafx.geometry.Insets;
 import javafx.scene.control.ComboBox;
@@ -10,10 +11,6 @@ import javafx.scene.text.Text;
 import static ctfchallenge.CTFChallenge.txt;
 
 
-/**
- *
- * @author matte
- */
 public class ComboBoxBlock extends GridPane {
 
     private final ArrayList<Text> cbox_text;

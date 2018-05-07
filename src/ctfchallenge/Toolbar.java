@@ -1,15 +1,12 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package ctfchallenge;
+
 
 import static ctfchallenge.CTFChallenge.txt;
 import static ctfchallenge.CTFChallenge.numeroes;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.event.ActionEvent;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -20,10 +17,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-/**
- *
- * @author matte
- */
+
 public class Toolbar extends HBox {
 
     private Button addTeam = new Button("Nuova squadra");
@@ -127,56 +121,11 @@ public class Toolbar extends HBox {
         }
     }
 
-    private void editTeamActions(SquadreHandler squadreHandler) {
+    private void editTeamActions(SquadreHandler squadreHandler) { // TODO move to another method
         String id = CTFChallenge.optionDialog("Nome della squadra da modificare");
         Squadra tmp = Squadra.getSquadraFromName(id, squadreHandler.squadreList);
-        squadreHandler.squadreList.remove(tmp);
         if (tmp != null) {
-            Stage editStage = new Stage();
-            GridPane editPane = new GridPane();
-            Scene editScene = new Scene(editPane);
-            editStage.setScene(editScene);
-            editStage.setTitle("Modifica squadra...");
-
-            
-            TextField nome_field = new TextField(tmp.getNomesquadra());
-            TextField m1_field = new TextField(tmp.getMembro1());
-            TextField m2_field = new TextField(tmp.getMembro2());
-            
-            HBox id_box = new HBox();
-            HBox nome_box = new HBox();
-            HBox m1_box = new HBox();
-            HBox m2_box = new HBox();
-            
-            Button send = new Button("Invia");
-            
-            id_box.getChildren().addAll(new Text("ID"), new Text(String.valueOf(tmp.getId())));
-            nome_box.getChildren().addAll(new Text("Nome"), nome_field);
-            m1_box.getChildren().addAll(new Text("Membro 1"), m1_field);
-            m2_box.getChildren().addAll(new Text("Membro 2"), m2_field);
-            
-            CTFChallenge.setColumnRowIndex(id_box, 0, 0);
-            CTFChallenge.setColumnRowIndex(nome_box, 0, 1);
-            CTFChallenge.setColumnRowIndex(m1_box, 0, 2);
-            CTFChallenge.setColumnRowIndex(m2_box, 0, 3);
-            
-            editPane.setHgap(8);
-            editPane.setVgap(8);
-            editPane.setPadding(new Insets(15, 12, 15, 12));
-            editPane.getColumnConstraints().add(new ColumnConstraints(250));
-            CTFChallenge.setColumnRowIndex(send, 0, 4);
-            send.setOnAction((ActionEvent event) -> {
-                tmp.setNomesquadra(nome_field.getText());
-                tmp.setMembro1(m1_field.getText());
-                tmp.setMembro2(m2_field.getText());
-                editStage.close();
-                squadreHandler.squadreList.add(tmp);
-                
-            });
-
-            editPane.getChildren().addAll(id_box, nome_box, m1_box, m2_box, send);
-
-            editStage.show();
+            EditStage editStage = new EditStage(squadreHandler, tmp);
         } else {
             txt.appendText("Nessuna squadra trovata " + "con questo nome (" + id + ")\n");
         }

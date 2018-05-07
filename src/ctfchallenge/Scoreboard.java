@@ -1,14 +1,12 @@
 package ctfchallenge;
 
+
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import static ctfchallenge.CTFChallenge.txt;
 
-/**
- *
- * @author matte
- */
+
 public final class Scoreboard extends TableView<Squadra> {
 
     private final TableColumn<Squadra, String> nomesquadra;

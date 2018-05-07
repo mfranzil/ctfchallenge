@@ -11,10 +11,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import static ctfchallenge.CTFChallenge.txt;
 
-/**
- *
- * @author matte
- */
+
 public class RadioButtons extends GridPane {
 
     private final ArrayList<ToggleGroup> radio_btn;

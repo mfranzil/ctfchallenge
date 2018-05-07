@@ -1,11 +1,9 @@
 package ctfchallenge;
 
+
 import java.util.Collection;
 
-/**
- *
- * @author matte
- */
+
 public class Squadra {
 
     private String membro1;

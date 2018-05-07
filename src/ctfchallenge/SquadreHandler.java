@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package ctfchallenge;
 
 import java.util.ArrayList;
@@ -10,10 +5,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import static ctfchallenge.CTFChallenge.txt;
 
-/**
- *
- * @author matte
- */
 public class SquadreHandler {
 
     public final ObservableList<Squadra> squadreList = FXCollections.observableArrayList();
