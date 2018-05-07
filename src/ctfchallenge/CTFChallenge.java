@@ -8,13 +8,19 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -32,24 +38,24 @@ public class CTFChallenge extends Application {
     public void start(Stage primaryStage) {
         // Una seconda stage per una seconda finestra della scoreboard
         Stage scoreboardWindow = new Stage();
-        
+
         // mainPane per tutto, scoreBoardPane per la finestra esterna
         BorderPane mainPane = new BorderPane();
         StackPane scoreboardPane = new StackPane();
-        
+
         Scene mainScene = new Scene(mainPane);
         Scene scoreboardScene = new Scene(scoreboardPane);
-       
+
         // Queste classi verranno inserite nel borderpane
         RadioButtons buttons = new RadioButtons();
         ComboBoxBlock comboBoxBlock = new ComboBoxBlock();
         SquadreHandler squadreHandler = new SquadreHandler();
         Scoreboard scoreboard = new Scoreboard();
         Toolbar toolBar = new Toolbar(buttons, comboBoxBlock, squadreHandler, scoreboard);
-        
+
         scoreboard.setItems(squadreHandler.squadreList);
         scoreboardPane.getChildren().add(scoreboard);
-        
+
         mainPane.setTop(toolBar);
         mainPane.setLeft(txt);
         mainPane.setCenter(buttons);
@@ -61,7 +67,7 @@ public class CTFChallenge extends Application {
         primaryStage.setOnCloseRequest((WindowEvent event) -> {
             Platform.exit();
         });
-                
+
         scoreboardWindow.setOnCloseRequest((WindowEvent event) -> {
             Platform.exit();
         });
@@ -72,10 +78,46 @@ public class CTFChallenge extends Application {
         primaryStage.setHeight(600);
         primaryStage.setTitle("CTFChallenge");
         primaryStage.setScene(mainScene);
+        primaryStage.setOnCloseRequest((final WindowEvent event) -> {
+            event.consume();
+            final Stage dialog = new Stage();
+            dialog.initModality(Modality.APPLICATION_MODAL);
+            HBox root = new HBox();
+            root.setPrefSize(200, 50);
+            root.setAlignment(Pos.CENTER);
+
+            Button okBtn = new Button("Sì");
+            okBtn.setOnAction((ActionEvent event1) -> {
+                primaryStage.close();
+                scoreboardWindow.close();
+                dialog.close();
+            });
+
+            Button cancelBtn = new Button("No");
+            cancelBtn.setOnAction((ActionEvent event1) -> {
+                dialog.close();
+            });
+
+            HBox.setMargin(okBtn, new Insets(15, 12, 15, 12));
+            HBox.setMargin(cancelBtn, new Insets(15, 12, 15, 12));
+
+            root.getChildren().add(okBtn);
+            root.getChildren().add(cancelBtn);
+            Scene dialogScene = new Scene(root);
+            dialog.setScene(dialogScene);
+            dialog.setTitle("Esci?");
+            dialog.show();
+        });
         primaryStage.show();
 
         scoreboardWindow.setTitle("Classifica");
+        scoreboardWindow.setWidth(500);
+        scoreboardWindow.setHeight(600);
         scoreboardWindow.setScene(scoreboardScene);
+        scoreboardWindow.setOnCloseRequest((final WindowEvent event) -> {
+            //Stage init
+            event.consume();
+        });
         scoreboardWindow.show();
     }
 
