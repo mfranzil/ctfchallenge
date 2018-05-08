@@ -5,11 +5,11 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.control.Labeled;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
-import static ctfchallenge.CTFChallenge.txt;
 
 
 /**
@@ -36,9 +36,7 @@ public class RadioButtons extends GridPane {
         setStyle("-fx-background-color: #cce5ff;");
         setHgap(8);
         setVgap(8);
-        setPadding(new Insets(15, 12, 15, 12));
-        
-        
+        setPadding(new Insets(15, 12, 15, 12));  
     }
 
     /**
@@ -49,10 +47,11 @@ public class RadioButtons extends GridPane {
     public void setRadioButtons(Pane gridView, ObservableList<Squadra> squadre) {
         int media = (int) Math.floor(squadre.size() / 2);
         for (int i = 0; i < squadre.size(); i++) {
+            Text radio_text_tmp = new Text(squadre.get(i).getNomesquadra());
+                        
             RadioButton vinto_tmp = new RadioButton("Completato");
             RadioButton perso_tmp = new RadioButton("Non completato");
             ToggleGroup radio_btn_tmp = new ToggleGroup();
-            Text radio_text_tmp = new Text(squadre.get(i).getNomesquadra());
             vinto_tmp.setToggleGroup(radio_btn_tmp);
             perso_tmp.setToggleGroup(radio_btn_tmp);
             perso_tmp.setSelected(true);
@@ -80,7 +79,7 @@ public class RadioButtons extends GridPane {
      * @param squadre
      * @param punteggio
      */
-    public void sendResults(ObservableList<Squadra> squadre, int punteggio) {
+    public void sendResults(TextArea txt, ObservableList<Squadra> squadre, int punteggio) {
         for (int i = 0; i < squadre.size(); i++) {
             String label = ((Labeled) radio_btn.get(i).getSelectedToggle()).getText();
             Squadra current = squadre.get(i);

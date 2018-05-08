@@ -1,7 +1,6 @@
 package ctfchallenge;
 
 
-import static ctfchallenge.CTFChallenge.txt;
 import static ctfchallenge.CTFChallenge.numeroes;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -9,6 +8,7 @@ import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
+import javafx.scene.control.TextArea;
 
 
 /**
@@ -21,7 +21,7 @@ public class Toolbar extends HBox {
     private Button addTeam = new Button("Nuova squadra");
     private Button removeTeam = new Button("Rimuovi squadra");
     private Button refreshScore = new Button("Aggiorna la classifica");
-    private Button gameOn = new Button("Inizia la partita");
+    private Button startGame = new Button("Inizia la partita");
     private Button sendResults = new Button("Invia i risultati");
     private Button incrementFont = new Button("+");
     private Button decrementFont = new Button("-");
@@ -34,41 +34,42 @@ public class Toolbar extends HBox {
      * @param squadreHandler
      * @param scoreboard
      */
-    public Toolbar(RadioButtons buttons, ComboBoxBlock comboBoxBlock, SquadreHandler squadreHandler, Scoreboard scoreboard) {
+    public Toolbar(TextArea txt, RadioButtons buttons, ComboBoxBlock comboBoxBlock,
+            SquadreHandler squadreHandler, Scoreboard scoreboard) {
         setPadding(new Insets(15, 12, 15, 12));
         setSpacing(10);
         setStyle("-fx-background-color: #336699;");
 
-        getChildren().addAll(addTeam, removeTeam, editTeam, refreshScore, gameOn);
+        getChildren().addAll(addTeam, removeTeam, editTeam, refreshScore, startGame);
 
         addTeam.setOnAction((ActionEvent event) -> {
-            addTeamActions(squadreHandler);
+            addTeamActions(txt, scoreboard, squadreHandler);
         });
 
         removeTeam.setOnAction((ActionEvent event) -> {
-            removeTeamActions(squadreHandler);
+            removeTeamActions(txt, squadreHandler);
         });
         removeTeam.setDisable(true);
 
         editTeam.setOnAction((ActionEvent event) -> {
-            editTeamActions(squadreHandler);
+            editTeamActions(txt, scoreboard, squadreHandler);
         });
         editTeam.setDisable(true);
 
         incrementFont.setOnAction((ActionEvent event) -> {
-            scoreboard.incrementFont();
+            scoreboard.incrementFont(txt);
         });
 
         decrementFont.setOnAction((ActionEvent event) -> {
-            scoreboard.decrementFont();
+            scoreboard.decrementFont(txt);
         });
 
         refreshScore.setOnAction((ActionEvent event) -> {
             scoreboard.refresh();
-            CTFChallenge.backupData(squadreHandler);
+            CTFChallenge.backupData(txt, squadreHandler);
         });
 
-        gameOn.setOnAction((ActionEvent event) -> {
+        startGame.setOnAction((ActionEvent event) -> {
             CTFChallenge.numeroes++;
             if (CTFChallenge.numeroes == 1) {
                 addTeam.setDisable(true);
@@ -77,28 +78,27 @@ public class Toolbar extends HBox {
                 comboBoxBlock.setComboBox(comboBoxBlock, squadreHandler);
                 getChildren().addAll(sendResults, incrementFont, decrementFont);
             }
-            if (CTFChallenge.numeroes >= 1 && CTFChallenge.numeroes <= 5) {
+            if (CTFChallenge.numeroes >= 1 && CTFChallenge.numeroes <= CTFChallenge.MAX_EXERCISES) {
                 txt.appendText("Inizio esercizio " + numeroes + "\n");
-                gameOn.setText("Prossimo esercizio");
+                startGame.setText("Prossimo esercizio");
                 sendResults.setDisable(false);
             } else {
-                squadreHandler.victoryHandler();
+                squadreHandler.victoryHandler(txt);
                 sendResults.setDisable(true);
             }
             refreshScore.fire();
-            gameOn.setDisable(true);
+            startGame.setDisable(true);
         });
 
         sendResults.setOnAction((ActionEvent onFinish) -> {
-            buttons.sendResults(squadreHandler.squadreList, CTFChallenge.punteggioEs(numeroes));
-            comboBoxBlock.sendResults(squadreHandler);
+            buttons.sendResults(txt, squadreHandler.squadreList, CTFChallenge.punteggioEs(numeroes));
+            comboBoxBlock.sendResults(txt, squadreHandler);
             refreshScore.fire();
-            gameOn.setDisable(false);
+            startGame.setDisable(false);
             if (numeroes == 5) {
-                gameOn.setText("Termina partita");
+                startGame.setText("Termina partita");
             }
             sendResults.setDisable(true);
-
         });
     }
 
@@ -106,23 +106,14 @@ public class Toolbar extends HBox {
      * 
      * @param squadreHandler 
      */
-    private void addTeamActions(SquadreHandler squadreHandler) {
-        String member1 = null;
-        String member2 = null;
-        String nome = null;
-        Squadra tmp;
+    private void addTeamActions(TextArea txt, Scoreboard scoreboard, SquadreHandler squadreHandler) {
         try {
-            member1 = CTFChallenge.optionDialog("Nome del primo membro?");
-            member2 = CTFChallenge.optionDialog("Nome del secondo membro?");
-            nome = CTFChallenge.optionDialog("Nome della squadra");
-        } catch (Exception e) {
-            txt.appendText("ERRORE! Prova a reinserire la squadra!");
-            Logger.getLogger(CTFChallenge.class.getName()).log(Level.SEVERE, null, e);
-        }
-        if (member1 != null && member2 != null && nome != null) {
-            tmp = new Squadra(member1, member2, nome);
-            txt.appendText("Nuova squadra creata:\nID: " + tmp.getId() + " (nome squadra: " + tmp.getNomesquadra() + ")\nMembri: " + tmp + "\n");
+            Squadra tmp = new Squadra("", "", "");
+            EditStage editStage = new EditStage(txt, squadreHandler, scoreboard, tmp, false);
             squadreHandler.squadreList.add(tmp);
+        } catch (Exception e) {
+            txt.appendText("ERRORE! Prova a reinserire la squadra!\n");
+            Logger.getLogger(CTFChallenge.class.getName()).log(Level.SEVERE, null, e);
         }
         if (!(squadreHandler.squadreList.isEmpty())) {
             removeTeam.setDisable(false);
@@ -134,11 +125,11 @@ public class Toolbar extends HBox {
      * 
      * @param squadreHandler 
      */
-    private void editTeamActions(SquadreHandler squadreHandler) { // TODO move to another method
+    private void editTeamActions(TextArea txt, Scoreboard scoreboard, SquadreHandler squadreHandler) { // TODO move to another method
         String id = CTFChallenge.optionDialog("Nome della squadra da modificare");
         Squadra tmp = Squadra.getSquadraFromName(id, squadreHandler.squadreList);
         if (tmp != null) {
-            EditStage editStage = new EditStage(squadreHandler, tmp);
+            EditStage editStage = new EditStage(txt, squadreHandler, scoreboard, tmp, true);
         } else {
             txt.appendText("Nessuna squadra trovata " + "con questo nome (" + id + ")\n");
         }
@@ -148,7 +139,7 @@ public class Toolbar extends HBox {
      * 
      * @param squadreHandler 
      */
-    private void removeTeamActions(SquadreHandler squadreHandler) {
+    private void removeTeamActions(TextArea txt, SquadreHandler squadreHandler) {
         if (Squadra.getNumerosquadre() != 0) {
             String id = CTFChallenge.optionDialog("Nome della squadra da cancellare");
             Squadra tmp = Squadra.getSquadraFromName(id, squadreHandler.squadreList);

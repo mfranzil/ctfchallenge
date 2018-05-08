@@ -7,7 +7,7 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
-import static ctfchallenge.CTFChallenge.txt;
+import javafx.scene.control.TextArea;
 
 
 /**
@@ -19,11 +19,6 @@ public class ComboBoxBlock extends GridPane {
 
     private final ArrayList<Text> cbox_text;
     private final ArrayList<ComboBox<String>> cbox;
-
-    /**
-     *
-     */
-    public final int MAX_TEAMS_BONUS = 5;
 
     /**
      *
@@ -45,7 +40,7 @@ public class ComboBoxBlock extends GridPane {
      * @param squadreHandler
      */
     public void setComboBox(Pane gridView, SquadreHandler squadreHandler) {
-        for (int i = 0; i < MAX_TEAMS_BONUS; i++) {
+        for (int i = 0; i < CTFChallenge.MAX_TEAMS_BONUS; i++) {
             ComboBox<String> cbox_temp = new ComboBox<>();
             Text cbox_text_temp = new Text(CTFChallenge.intToText(i + 1) + " classificato");
             
@@ -66,14 +61,14 @@ public class ComboBoxBlock extends GridPane {
      *
      * @param squadreHandler
      */
-    public void sendResults(SquadreHandler squadreHandler) {
+    public void sendResults(TextArea txt, SquadreHandler squadreHandler) {
         for (int i = 0; i < cbox.size(); i++) {
             String object_name = (cbox.get(i).getValue());
             if (object_name != null) {
                 Squadra temp = Squadra.getSquadraFromName(object_name, squadreHandler.squadreList);
-                temp.setPunteggio(temp.getPunteggio() + 5 - i);
+                temp.setPunteggio(temp.getPunteggio() + CTFChallenge.MAX_TEAMS_BONUS - i);
                 txt.appendText("La squadra " + temp.getNomesquadra()
-                        + " ottiene " + (5 - i) + " punti bonus\n");
+                        + " ottiene " + (CTFChallenge.MAX_TEAMS_BONUS - i) + " punti bonus\n");
             }
         }
         clearAll();

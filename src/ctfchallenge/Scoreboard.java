@@ -4,7 +4,7 @@ package ctfchallenge;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import static ctfchallenge.CTFChallenge.txt;
+import javafx.scene.control.TextArea;
 
 
 /**
@@ -27,7 +27,7 @@ public final class Scoreboard extends TableView<Squadra> {
      *
      */
     @SuppressWarnings("unchecked")
-    public Scoreboard() {
+    public Scoreboard(TextArea txt) {
         nomesquadra = new TableColumn<>("Nome squadra");
         giocatori = new TableColumn<>("Giocatori");
         membro1 = new TableColumn<>("Membro 1");
@@ -44,7 +44,7 @@ public final class Scoreboard extends TableView<Squadra> {
         membro2.prefWidthProperty().bind(widthProperty().divide(3.0));
         punteggio.prefWidthProperty().bind(widthProperty().divide(6.0));
 
-        resizeFont(24);
+        resizeFont(24, txt);
         
         giocatori.getColumns().addAll(membro1, membro2);
         getColumns().addAll(nomesquadra, giocatori, punteggio);
@@ -53,10 +53,10 @@ public final class Scoreboard extends TableView<Squadra> {
     /**
      *
      */
-    public void decrementFont() {
+    public void decrementFont(TextArea txt) {
         --pointer;
         if (pointer >= 0 && pointer <= fontsizes.length) {
-            resizeFont(fontsizes[pointer]);
+            resizeFont(fontsizes[pointer], txt);
             refresh();
         } else {
             txt.appendText("Impossibile settare la grandezza desiderata\n");
@@ -67,10 +67,10 @@ public final class Scoreboard extends TableView<Squadra> {
     /**
      *
      */
-    public void incrementFont() {
+    public void incrementFont(TextArea txt) {
         ++pointer;
         if (pointer >= 0 && pointer <= fontsizes.length) {
-            resizeFont(fontsizes[pointer]);
+            resizeFont(fontsizes[pointer], txt);
             refresh();
         } else {
             txt.appendText("Impossibile settare la grandezza desiderata\n");
@@ -82,7 +82,7 @@ public final class Scoreboard extends TableView<Squadra> {
      *
      * @param size
      */
-    public void resizeFont(int size) {
+    public void resizeFont(int size, TextArea txt) {
         if (size > 0 && size < 100) {
             String style = ("-fx-font: " + size + "px Arial; -fx-alignment: CENTER");
             nomesquadra.setStyle(style);

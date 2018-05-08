@@ -1,6 +1,5 @@
 package ctfchallenge;
 
-
 import java.util.Collection;
 
 /**
@@ -30,6 +29,14 @@ public class Squadra {
         this.membro1 = membro1;
         this.membro2 = membro2;
         this.punteggio = 0;
+    }
+
+    public Squadra(int id, String nomesquadra, String membro1, String membro2, int punteggio) {
+        this.id = id;
+        this.nomesquadra = nomesquadra;
+        this.membro1 = membro1;
+        this.membro2 = membro2;
+        this.punteggio = punteggio;
     }
 
     /**
@@ -136,7 +143,7 @@ public class Squadra {
     public int getPunteggio() {
         return punteggio;
     }
-    
+
     /**
      *
      * @param increment
@@ -168,7 +175,7 @@ public class Squadra {
     public void setNomesquadra(String nomesquadra) {
         this.nomesquadra = nomesquadra;
     }
-    
+
     /**
      *
      * @param punteggio
@@ -193,5 +200,5 @@ public class Squadra {
         }
         return res;
     }
-    
+
 }

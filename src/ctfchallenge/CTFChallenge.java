@@ -7,23 +7,16 @@ import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-
 
 /**
  * @since 07/05/2018
@@ -31,16 +24,10 @@ import javafx.stage.WindowEvent;
  * @author Matteo Franzil
  */
 public class CTFChallenge extends Application {
-
-    /**
-     *
-     */
     public static int numeroes = 0;
-
-    /**
-     *
-     */
-    public static final TextArea txt = new TextArea();
+    public static final int MAX_TEAMS_BONUS = 5;
+    public static final int MAX_TEAMS = 10;
+    public static final int MAX_EXERCISES = 5;
 
     @Override
     public void start(Stage primaryStage) {
@@ -55,11 +42,12 @@ public class CTFChallenge extends Application {
         Scene scoreboardScene = new Scene(scoreboardPane);
 
         // Queste classi verranno inserite nel borderpane
+        TextArea txt = new TextArea();
         RadioButtons buttons = new RadioButtons();
         ComboBoxBlock comboBoxBlock = new ComboBoxBlock();
         SquadreHandler squadreHandler = new SquadreHandler();
-        Scoreboard scoreboard = new Scoreboard();
-        Toolbar toolBar = new Toolbar(buttons, comboBoxBlock, squadreHandler, scoreboard);
+        Scoreboard scoreboard = new Scoreboard(txt);
+        Toolbar toolBar = new Toolbar(txt, buttons, comboBoxBlock, squadreHandler, scoreboard);
 
         scoreboard.setItems(squadreHandler.squadreList);
         scoreboardPane.getChildren().add(scoreboard);
@@ -71,15 +59,6 @@ public class CTFChallenge extends Application {
 
         txt.setEditable(false);
 
-        // Se chiudo una finestra si chiudono tutte
-        primaryStage.setOnCloseRequest((WindowEvent event) -> {
-            Platform.exit();
-        });
-
-        scoreboardWindow.setOnCloseRequest((WindowEvent event) -> {
-            Platform.exit();
-        });
-
         // Infine mostro le due finestre
         primaryStage.setMaximized(false);
         primaryStage.setWidth(1100);
@@ -88,34 +67,9 @@ public class CTFChallenge extends Application {
         primaryStage.setScene(mainScene);
         primaryStage.setOnCloseRequest((final WindowEvent event) -> {
             event.consume();
-            final Stage dialog = new Stage();
-            dialog.initModality(Modality.APPLICATION_MODAL);
-            HBox root = new HBox();
-            root.setPrefSize(150, 50);
-            root.setAlignment(Pos.CENTER);
-
-            Button okBtn = new Button("Sì");
-            okBtn.setOnAction((ActionEvent event1) -> {
-                primaryStage.close();
-                scoreboardWindow.close();
-                dialog.close();
-            });
-
-            Button cancelBtn = new Button("No");
-            cancelBtn.setOnAction((ActionEvent event1) -> {
-                dialog.close();
-            });
-
-            HBox.setMargin(okBtn, new Insets(15, 12, 15, 12));
-            HBox.setMargin(cancelBtn, new Insets(15, 12, 15, 12));
-
-            root.getChildren().add(okBtn);
-            root.getChildren().add(cancelBtn);
-            Scene dialogScene = new Scene(root);
-            dialog.setScene(dialogScene);
-            dialog.setTitle("Esci?");
-            dialog.show();
-        }); 
+            ExitStage exit = new ExitStage();
+        });
+        primaryStage.getIcons().add(new Image("file:logo.png"));
         primaryStage.show();
 
         scoreboardWindow.setTitle("Classifica");
@@ -123,9 +77,9 @@ public class CTFChallenge extends Application {
         scoreboardWindow.setHeight(600);
         scoreboardWindow.setScene(scoreboardScene);
         scoreboardWindow.setOnCloseRequest((final WindowEvent event) -> {
-            //Stage init
             event.consume();
         });
+        scoreboardWindow.getIcons().add(new Image("file:logo.png"));
         scoreboardWindow.show();
     }
 
@@ -148,22 +102,26 @@ public class CTFChallenge extends Application {
     /**
      * Metodo che fa un backup dei dati su backup.txt ogni volta che viene
      * chiamato sovrascrivendo il precedente.
+     *
      * @param squadreHandler
      */
-    public static void backupData(SquadreHandler squadreHandler) {
+    public static void backupData(TextArea txt, SquadreHandler squadreHandler) {
         try {
-            BufferedWriter fileOut = new BufferedWriter(new FileWriter("backup.txt"));
-            fileOut.write("LOG:\n" + txt.getText() + "\nSCOREBOARD:\n");
-            fileOut.write("ID Squadra\t\tNome squadra\t\tMembro 1\t\tMembro 2\t\tPunteggio\n");
+            BufferedWriter fileOut = new BufferedWriter(new FileWriter("log.txt"));
+            fileOut.write(txt.getText());
+            fileOut.close();
+            fileOut = new BufferedWriter(new FileWriter("backup.txt"));
             System.out.println("Logging in progress...");
             for (Squadra temp : squadreHandler.squadreList) {
-                String data = temp.getId() + "\t\t" + temp.getNomesquadra() + "\t\t"
-                        + temp.getMembro1() + "\t\t" + temp.getMembro2() + "\t\t" + temp.getPunteggio() + "\n";
+                String data = temp.getId() + "\t" + temp.getNomesquadra() + "\t"
+                        + temp.getMembro1() + "\t" + temp.getMembro2() + "\t" + temp.getPunteggio() + "\n";
                 fileOut.write(data);
-                System.out.print(data);
             }
+            fileOut.close();
         } catch (IOException ex) {
             Logger.getLogger(CTFChallenge.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            System.out.println("Logging finished.");
         }
 
     }
