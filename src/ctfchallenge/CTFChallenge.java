@@ -24,6 +24,12 @@ import javafx.stage.WindowEvent;
  * @author Matteo Franzil
  */
 public class CTFChallenge extends Application {
+    
+    //ciao bello ;
+
+    /**
+     *
+     */
     public static int numeroes = 0;
     public static final int MAX_TEAMS_BONUS = 5;
     public static final int MAX_TEAMS = 10;
