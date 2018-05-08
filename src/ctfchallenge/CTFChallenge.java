@@ -1,9 +1,12 @@
 package ctfchallenge;
 
 import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Optional;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
@@ -15,6 +18,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -24,6 +28,7 @@ import javafx.stage.WindowEvent;
  * @author Matteo Franzil
  */
 public class CTFChallenge extends Application {
+
     public static int numeroes = 0;
     public static final int MAX_TEAMS_BONUS = 5;
     public static final int MAX_TEAMS = 10;
@@ -47,7 +52,7 @@ public class CTFChallenge extends Application {
         ComboBoxBlock comboBoxBlock = new ComboBoxBlock();
         SquadreHandler squadreHandler = new SquadreHandler();
         Scoreboard scoreboard = new Scoreboard(txt);
-        Toolbar toolBar = new Toolbar(txt, buttons, comboBoxBlock, squadreHandler, scoreboard);
+        Toolbar toolBar = new Toolbar(txt, buttons, comboBoxBlock, squadreHandler, scoreboard, primaryStage);
 
         scoreboard.setItems(squadreHandler.squadreList);
         scoreboardPane.getChildren().add(scoreboard);
@@ -113,8 +118,8 @@ public class CTFChallenge extends Application {
             fileOut = new BufferedWriter(new FileWriter("backup.txt"));
             System.out.println("Logging in progress...");
             for (Squadra temp : squadreHandler.squadreList) {
-                String data = temp.getId() + "\t" + temp.getNomesquadra() + "\t"
-                        + temp.getMembro1() + "\t" + temp.getMembro2() + "\t" + temp.getPunteggio() + "\n";
+                String data = temp.getId() + " TAB " + temp.getNomesquadra() + " TAB "
+                        + temp.getMembro1() + " TAB " + temp.getMembro2() + " TAB " + temp.getPunteggio() + " TAB";
                 fileOut.write(data);
             }
             fileOut.close();
@@ -124,6 +129,32 @@ public class CTFChallenge extends Application {
             System.out.println("Logging finished.");
         }
 
+    }
+
+    public static void restoreData(TextArea txt, SquadreHandler squadreHandler, Stage stage) {
+        try {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Carica un file");
+            fileChooser.getExtensionFilters().addAll(
+                    new FileChooser.ExtensionFilter("TXT", "*.txt")
+            );
+            File file = fileChooser.showOpenDialog(stage);
+            if (file == null) {
+                System.out.println("No file chosen");
+                System.exit(1);
+            }
+            Scanner fileIn = new Scanner(file).useDelimiter("\\s*TAB\\s*");
+            while(fileIn.hasNext()) {
+                String id = fileIn.next(), nomesquadra = fileIn.next(),
+                        membro1 = fileIn.next(), membro2 = fileIn.next(), punteggio = fileIn.next();
+                Squadra temp = new Squadra(Integer.parseInt(id), nomesquadra, membro1, membro2, Integer.parseInt(punteggio));
+                squadreHandler.squadreList.add(temp);
+            }
+            txt.appendText("Backup ripristinato con successo.");
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(CTFChallenge.class.getName()).log(Level.SEVERE, null, ex);
+            txt.appendText("Impossibile ripristinare il backup:");
+        }
     }
 
     /**

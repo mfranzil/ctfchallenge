@@ -1,7 +1,7 @@
 package ctfchallenge;
 
-
 import static ctfchallenge.CTFChallenge.numeroes;
+import static ctfchallenge.CTFChallenge.restoreData;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.event.ActionEvent;
@@ -9,7 +9,7 @@ import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
 import javafx.scene.control.TextArea;
-
+import javafx.stage.Stage;
 
 /**
  * @since 07/05/2018
@@ -25,22 +25,26 @@ public class Toolbar extends HBox {
     private Button sendResults = new Button("Invia i risultati");
     private Button incrementFont = new Button("+");
     private Button decrementFont = new Button("-");
+    private Button restoreData = new Button("Recupera da backup");
+    private Button goToEx = new Button("Modifica numero esercizio");
     private final Button editTeam = new Button("Modifica squadra");
 
     /**
      *
+     * @param txt
      * @param buttons
      * @param comboBoxBlock
      * @param squadreHandler
      * @param scoreboard
+     * @param primaryStage
      */
     public Toolbar(TextArea txt, RadioButtons buttons, ComboBoxBlock comboBoxBlock,
-            SquadreHandler squadreHandler, Scoreboard scoreboard) {
+        SquadreHandler squadreHandler, Scoreboard scoreboard, Stage primaryStage) {
         setPadding(new Insets(15, 12, 15, 12));
         setSpacing(10);
         setStyle("-fx-background-color: #336699;");
 
-        getChildren().addAll(addTeam, removeTeam, editTeam, refreshScore, startGame);
+        getChildren().addAll(addTeam, removeTeam, editTeam, refreshScore, startGame, goToEx, restoreData);
 
         addTeam.setOnAction((ActionEvent event) -> {
             addTeamActions(txt, scoreboard, squadreHandler);
@@ -88,6 +92,7 @@ public class Toolbar extends HBox {
             }
             refreshScore.fire();
             startGame.setDisable(true);
+            goToEx.setDisable(false);
         });
 
         sendResults.setOnAction((ActionEvent onFinish) -> {
@@ -100,11 +105,30 @@ public class Toolbar extends HBox {
             }
             sendResults.setDisable(true);
         });
+
+        goToEx.setOnAction((ActionEvent onFinish) -> {
+            try {
+                do {
+                    CTFChallenge.numeroes = Integer.parseInt(CTFChallenge.optionDialog("Numero dell'esercizio?"));
+                } while (numeroes < 1 || numeroes > 5);
+                startGame.fire();
+                txt.appendText("Salto al livello " + numeroes + "\n");
+            } catch (Exception e) {
+                txt.appendText("Numero esercizio non valido!");
+            }
+        });
+        goToEx.setDisable(true);
+
+        restoreData.setOnAction((ActionEvent event) -> {
+            squadreHandler.squadreList.clear();
+            CTFChallenge.restoreData(txt, squadreHandler, primaryStage);
+        });
+
     }
 
     /**
-     * 
-     * @param squadreHandler 
+     *
+     * @param squadreHandler
      */
     private void addTeamActions(TextArea txt, Scoreboard scoreboard, SquadreHandler squadreHandler) {
         try {
@@ -120,10 +144,10 @@ public class Toolbar extends HBox {
             editTeam.setDisable(false);
         }
     }
-    
+
     /**
-     * 
-     * @param squadreHandler 
+     *
+     * @param squadreHandler
      */
     private void editTeamActions(TextArea txt, Scoreboard scoreboard, SquadreHandler squadreHandler) { // TODO move to another method
         String id = CTFChallenge.optionDialog("Nome della squadra da modificare");
@@ -136,8 +160,8 @@ public class Toolbar extends HBox {
     }
 
     /**
-     * 
-     * @param squadreHandler 
+     *
+     * @param squadreHandler
      */
     private void removeTeamActions(TextArea txt, SquadreHandler squadreHandler) {
         if (Squadra.getNumerosquadre() != 0) {
