@@ -21,13 +21,13 @@ import javafx.stage.Stage;
 public class EditStage {
 
     /**
-     *
-     * @param squadreHandler
-     * @param scoreboard
-     * @param tmp
-     * @param isEdit
+     * Questa finestra viene mostrata in caso di aggiunta o modifica di una squadra
+     * @param txt La finestra di log del programma.
+     * @param scoreboard La finestea della scoreboard.
+     * @param tmp La squadra che verrà modificata.
+     * @param isEdit Metodo evocato in edit mode o addition mode (con punteggi bloccati)
      */
-    public EditStage(TextArea txt, SquadreHandler squadreHandler, Scoreboard scoreboard, Squadra tmp, boolean isEdit) {
+    public EditStage(TextArea txt, Scoreboard scoreboard, Squadra tmp, boolean isEdit) {
         Stage editStage = new Stage();
         GridPane editPane = new GridPane();
         Scene editScene = new Scene(editPane);

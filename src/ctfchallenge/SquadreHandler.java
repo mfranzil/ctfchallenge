@@ -36,7 +36,7 @@ public class SquadreHandler {
 
     /**
      * Metodo per terminare la partita; si comporta in maniera diversa a seconda del numero dei vincitori.
-     * @param txt La finestra di log del programma.
+     * @param txt La finestra di log del programma
      */
     public void victoryHandler(TextArea txt) {
         ArrayList<Squadra> winners = getLeader();

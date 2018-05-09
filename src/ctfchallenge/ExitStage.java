@@ -21,6 +21,9 @@ import javafx.stage.Stage;
  */
 public class ExitStage {
 
+    /**
+     * Questa finestra viene mostrata a richiesta se l'utente desidera di uscire dal programma.
+     */
     public ExitStage() {
         final Stage dialog = new Stage();
         HBox root = new HBox();

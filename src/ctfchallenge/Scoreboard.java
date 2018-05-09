@@ -24,7 +24,8 @@ public final class Scoreboard extends TableView<Squadra> {
     private int pointer = 11; // Pt = 24
 
     /**
-     *
+     * Costruttore standard della Scoreboard. Si comporta come una TableView con le colonne come variabili d'istanza.
+     * @param txt La finestra di log del programma
      */
     @SuppressWarnings("unchecked")
     public Scoreboard(TextArea txt) {
@@ -51,7 +52,8 @@ public final class Scoreboard extends TableView<Squadra> {
     }
     
     /**
-     *
+     * Metodo che decrementa il font di una grandezza fissa stabilita dall'array nella classe.
+     * @param txt La finestra di log del programma
      */
     public void decrementFont(TextArea txt) {
         --pointer;
@@ -65,7 +67,8 @@ public final class Scoreboard extends TableView<Squadra> {
     }
     
     /**
-     *
+     * Metodo che aumenti il font di una grandezza fissa stabilita dall'array nella classe.
+     * @param txt La finestra di log del programma
      */
     public void incrementFont(TextArea txt) {
         ++pointer;
@@ -79,8 +82,9 @@ public final class Scoreboard extends TableView<Squadra> {
     }
 
     /**
-     *
-     * @param size
+     * Metodo che modifica il font di una grandezza arbitraria.
+     * @param size La grandezza (px) del font
+     * @param txt La finestra di log del programma
      */
     public void resizeFont(int size, TextArea txt) {
         if (size > 0 && size < 100) {

@@ -1,6 +1,7 @@
 package ctfchallenge;
 
 import java.util.ArrayList;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.ColumnConstraints;
@@ -21,7 +22,7 @@ public class ComboBoxBlock extends GridPane {
     private final ArrayList<ComboBox<String>> cbox;
 
     /**
-     *
+     * Classe che estende un GridPane e contiene al suo interno delle ComboBox per decidere i primi, secondi, etc... classificati.
      */
     public ComboBoxBlock() {
         cbox_text = new ArrayList<>();
@@ -35,11 +36,11 @@ public class ComboBoxBlock extends GridPane {
     }
 
     /**
-     *
-     * @param gridView
-     * @param squadreHandler
+     * Metodo che mostra le ComboBox inizializzate in precedenza.
+     * @param gridView Il Pane su cui aggiungere le comboBox
+     * @param squadreList Una ObservableList di Squadre
      */
-    public void setComboBox(Pane gridView, SquadreHandler squadreHandler) {
+    public void setComboBox(Pane gridView, ObservableList<Squadra> squadreList) {
         for (int i = 0; i < CTFChallenge.MAX_TEAMS_BONUS; i++) {
             ComboBox<String> cbox_temp = new ComboBox<>();
             Text cbox_text_temp = new Text(CTFChallenge.intToText(i + 1) + " classificato");
@@ -47,7 +48,7 @@ public class ComboBoxBlock extends GridPane {
             CTFChallenge.setColumnRowIndex(cbox_text_temp, 0, 0 + (2 * i));
             CTFChallenge.setColumnRowIndex(cbox_temp, 0, 1 + (2 * i));
             
-            squadreHandler.squadreList.forEach((temp) -> {
+            squadreList.forEach((temp) -> {
                 cbox_temp.getItems().add(temp.getNomesquadra());
             });
             
@@ -58,14 +59,15 @@ public class ComboBoxBlock extends GridPane {
     }
 
     /**
-     *
-     * @param squadreHandler
+     * Metodo che prende le squadre selezionate nel ComboBox e ne assegna un punteggio prefissato.
+     * @param txt La finestra di log del programma.
+     * @param squadreList Una ObservableList di Squadre
      */
-    public void sendResults(TextArea txt, SquadreHandler squadreHandler) {
+    public void sendResults(TextArea txt, ObservableList<Squadra> squadreList) {
         for (int i = 0; i < cbox.size(); i++) {
             String object_name = (cbox.get(i).getValue());
             if (object_name != null) {
-                Squadra temp = Squadra.getSquadraFromName(object_name, squadreHandler.squadreList);
+                Squadra temp = Squadra.getSquadraFromName(object_name, squadreList);
                 temp.setPunteggio(temp.getPunteggio() + CTFChallenge.MAX_TEAMS_BONUS - i);
                 txt.appendText("La squadra " + temp.getNomesquadra()
                         + " ottiene " + (CTFChallenge.MAX_TEAMS_BONUS - i) + " punti bonus\n");

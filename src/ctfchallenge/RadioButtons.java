@@ -25,7 +25,7 @@ public class RadioButtons extends GridPane {
     private final ArrayList<RadioButton> perso;
 
     /**
-     *
+     * Costruttore standard. La classe estende un GridPane e contiene 4 ArrayList con i figli.
      */
     public RadioButtons() {
         radio_btn = new ArrayList<>();
@@ -40,9 +40,9 @@ public class RadioButtons extends GridPane {
     }
 
     /**
-     * 
-     * @param gridView
-     * @param squadre 
+     * Metodo che fa apparire sul Pane dato i bottoni inizializzati in precedenza.
+     * @param gridView Il Pane in cui aggiungere i bottoni
+     * @param squadre Una ObservableList di Squadre
      */
     public void setRadioButtons(Pane gridView, ObservableList<Squadra> squadre) {
         int media = (int) Math.floor(squadre.size() / 2);
@@ -75,9 +75,10 @@ public class RadioButtons extends GridPane {
     }
 
     /**
-     *
-     * @param squadre
-     * @param punteggio
+     * Metodo che preleva lo stato dei bottoni e li aggiunge alle squadre, con un punteggio prefissato.
+     * @param txt La finestra di log del programma
+     * @param squadre Una ObservableList di squadre
+     * @param punteggio Il punteggio da attribuire in caso di esercizio completato
      */
     public void sendResults(TextArea txt, ObservableList<Squadra> squadre, int punteggio) {
         for (int i = 0; i < squadre.size(); i++) {

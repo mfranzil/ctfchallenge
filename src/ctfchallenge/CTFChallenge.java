@@ -29,9 +29,24 @@ import javafx.stage.WindowEvent;
  */
 public class CTFChallenge extends Application {
 
+    /**
+     *
+     */
     public static int numeroes = 0;
+
+    /**
+     *
+     */
     public static final int MAX_TEAMS_BONUS = 5;
+
+    /**
+     *
+     */
     public static final int MAX_TEAMS = 10;
+
+    /**
+     *
+     */
     public static final int MAX_EXERCISES = 5;
 
     @Override
@@ -108,6 +123,7 @@ public class CTFChallenge extends Application {
      * Metodo che fa un backup dei dati su backup.txt ogni volta che viene
      * chiamato sovrascrivendo il precedente.
      *
+     * @param txt
      * @param squadreHandler
      */
     public static void backupData(TextArea txt, SquadreHandler squadreHandler) {
@@ -131,6 +147,12 @@ public class CTFChallenge extends Application {
 
     }
 
+    /**
+     * Metodo che evoca un FileChooser per riprendere il gioco da un backup precedente.
+     * @param txt La finestra di log del programma.
+     * @param squadreHandler
+     * @param stage La stage su cui mostrare il FileChooser.
+     */
     public static void restoreData(TextArea txt, SquadreHandler squadreHandler, Stage stage) {
         try {
             FileChooser fileChooser = new FileChooser();
