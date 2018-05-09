@@ -25,18 +25,18 @@ public class Toolbar extends HBox {
     private Button sendResults = new Button("Invia i risultati");
     private Button incrementFont = new Button("+");
     private Button decrementFont = new Button("-");
-    private Button restoreData = new Button("Recupera da backup");
+    private final Button restoreData = new Button("Recupera da backup");
     private Button goToEx = new Button("Modifica numero esercizio");
     private final Button editTeam = new Button("Modifica squadra");
 
     /**
-     *
-     * @param txt
-     * @param buttons
-     * @param comboBoxBlock
-     * @param squadreHandler
-     * @param scoreboard
-     * @param primaryStage
+     * Costruttore standard della toolbar del programma.
+     * @param txt La finestra di log del programma principale
+     * @param buttons I radiobutton delle squadre usati per il completamento dell'esercizio.
+     * @param comboBoxBlock I comboBox usati per selezionare i primi...quinti arrivati.
+     * @param squadreHandler Il gestore delle squadre.
+     * @param scoreboard La finestra dello scoreboard
+     * @param primaryStage La finestra principale del programma.
      */
     public Toolbar(TextArea txt, RadioButtons buttons, ComboBoxBlock comboBoxBlock,
         SquadreHandler squadreHandler, Scoreboard scoreboard, Stage primaryStage) {
@@ -127,8 +127,8 @@ public class Toolbar extends HBox {
     }
 
     /**
-     *
-     * @param squadreHandler
+     * Metodo di gestione del bottone per aggiungere le squadre.
+     * @param squadreHandler Il gestore delle squadre.
      */
     private void addTeamActions(TextArea txt, Scoreboard scoreboard, SquadreHandler squadreHandler) {
         try {
@@ -146,8 +146,8 @@ public class Toolbar extends HBox {
     }
 
     /**
-     *
-     * @param squadreHandler
+     * Metodo di gestione del bottone per modificare le squadre.
+     * @param squadreHandler Il gestore delle squadre.
      */
     private void editTeamActions(TextArea txt, Scoreboard scoreboard, SquadreHandler squadreHandler) { // TODO move to another method
         String id = CTFChallenge.optionDialog("Nome della squadra da modificare");
@@ -160,8 +160,8 @@ public class Toolbar extends HBox {
     }
 
     /**
-     *
-     * @param squadreHandler
+     * Metodo di gestione del bottone per rimuovere le squadre.
+     * @param squadreHandler Il gestore delle squadre.
      */
     private void removeTeamActions(TextArea txt, SquadreHandler squadreHandler) {
         if (Squadra.getNumerosquadre() != 0) {

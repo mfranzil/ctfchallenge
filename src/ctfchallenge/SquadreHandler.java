@@ -13,13 +13,14 @@ import javafx.scene.control.TextArea;
 public class SquadreHandler {
 
     /**
-     *
+     * Una ObservableList aggiornata man mano con le squadre della partita. Viene osservata dalla Scoreboard per
+     * aggiornarne i contenuti.
      */
     public final ObservableList<Squadra> squadreList = FXCollections.observableArrayList();
 
     /**
-     *
-     * @return
+     * Metodo per ottenere, all'interno della lista delle squadre, la Squadra con punteggio maggiore.
+     * @return Un ArrayList contenente 1 o più squadre con il punteggio maggiore.
      */
     public ArrayList<Squadra> getLeader() {
         int punteggio_temp = 0;
@@ -34,7 +35,8 @@ public class SquadreHandler {
     }
 
     /**
-     *
+     * Metodo per terminare la partita; si comporta in maniera diversa a seconda del numero dei vincitori.
+     * @param txt La finestra di log del programma.
      */
     public void victoryHandler(TextArea txt) {
         ArrayList<Squadra> winners = getLeader();

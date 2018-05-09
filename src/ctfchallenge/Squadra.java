@@ -7,6 +7,8 @@ import java.util.Collection;
  * @version 1.0
  * @author Matteo Franzil
  */
+
+// TODO Fix import of teams overriding counter
 public class Squadra {
 
     private String membro1;
@@ -18,19 +20,28 @@ public class Squadra {
     private static int numerosquadre = 0;
 
     /**
-     *
-     * @param membro1
-     * @param membro2
-     * @param nomesquadra
+     * Costruttore standard che incrementa il conteggio del numero delle squadre e setta il punteggio a 0.
+     * @param nomesquadra Il nome della squadra
+     * @param membro1 Il primo (o unico) membro della squadra
+     * @param membro2 Il secondo membro della squadra
      */
-    public Squadra(String membro1, String membro2, String nomesquadra) {
+    public Squadra(String nomesquadra, String membro1, String membro2) {
         this.id = ++numerosquadre;
         this.nomesquadra = nomesquadra;
         this.membro1 = membro1;
         this.membro2 = membro2;
         this.punteggio = 0;
     }
-
+    
+    
+    /**
+     * Costruttore utilizzato dal backup manager per creare squadre avendo tutti i dati.
+     * @param id Un codice univoco che rappresenti la squadra
+     * @param nomesquadra Il nome della squadra
+     * @param membro1 Il primo (o unico) membro della squadra
+     * @param membro2 Il secondo membro della squadra
+     * @param punteggio Il punteggio da assegnare alla squadra
+     */
     public Squadra(int id, String nomesquadra, String membro1, String membro2, int punteggio) {
         this.id = id;
         this.nomesquadra = nomesquadra;
@@ -38,6 +49,7 @@ public class Squadra {
         this.membro2 = membro2;
         this.punteggio = punteggio;
     }
+
 
     /**
      * Metodo che ritorna l'ID di una Squadra dato il suo nome
@@ -58,9 +70,9 @@ public class Squadra {
     }
 
     /**
-     *
-     * @param o
-     * @return
+     * Metodo standard che fa il paragone tra due Squadre.
+     * @param o Un oggetto da comparare.
+     * @return Un Boolean che rappresenta il risultato della comparazione.
      */
     @Override
     public boolean equals(Object o) {
@@ -76,8 +88,8 @@ public class Squadra {
     }
 
     /**
-     *
-     * @return
+     * Metodo standard di generazione dell'hashcode (generato da Netbeans)
+     * @return Un int che rappresenta l'hash della Persona.
      */
     @Override
     public int hashCode() {
@@ -88,107 +100,77 @@ public class Squadra {
     }
 
     /**
-     *
-     * @return
+     * Metodo standard toString, implementato citando semplicemente i membri.
+     * @return Una String contenente la versiona in Stringa della persona.
      */
     @Override
     public String toString() {
         return membro1 + ", " + membro2;
     }
+    
 
-    /**
-     *
-     * @return
-     */
     public String getMembro1() {
         return membro1;
     }
 
-    /**
-     *
-     * @return
-     */
+    
     public String getMembro2() {
         return membro2;
     }
 
-    /**
-     *
-     * @return
-     */
+
     public int getId() {
         return id;
     }
 
-    /**
-     *
-     * @return
-     */
+
     public static int getNumerosquadre() {
         return numerosquadre;
     }
 
-    /**
-     *
-     * @return
-     */
+
     public String getNomesquadra() {
         return nomesquadra;
     }
 
-    /**
-     *
-     * @return
-     */
+    
     public int getPunteggio() {
         return punteggio;
     }
 
     /**
-     *
-     * @param increment
+     * Metodo che incrementa in maniera arbitraria il punteggio della squadra
+     * @param increment Un int (anche negativo) usato per modificare il punteggio.
      */
     public void incrementPunteggio(int increment) {
         this.punteggio += increment;
     }
 
-    /**
-     *
-     * @param membro1
-     */
+
     public void setMembro1(String membro1) {
         this.membro1 = membro1;
     }
 
-    /**
-     *
-     * @param membro2
-     */
+
     public void setMembro2(String membro2) {
         this.membro2 = membro2;
     }
 
-    /**
-     *
-     * @param nomesquadra
-     */
+
     public void setNomesquadra(String nomesquadra) {
         this.nomesquadra = nomesquadra;
     }
 
-    /**
-     *
-     * @param punteggio
-     */
+
     public void setPunteggio(int punteggio) {
         this.punteggio = punteggio;
     }
 
     /**
-     *
-     * @param name
-     * @param squadre
-     * @return
+     * Metodo che prende in entrata una Collection di squadre e un nome e ritorna la squadra corrispondente al nome.
+     * @param name Il nome della squadra da cercare
+     * @param squadre La Collection in cui cercare
+     * @return Una Squadra che per prima ha un match con il valore cercato.
      */
     public static Squadra getSquadraFromName(String name, Collection<Squadra> squadre) {
         Squadra res = null;
