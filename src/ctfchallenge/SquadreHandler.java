@@ -1,14 +1,15 @@
 package ctfchallenge;
 
-import java.util.ArrayList;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TextArea;
 
+import java.util.ArrayList;
+
 /**
- * @since 07/05/2018
- * @version 1.0
  * @author Matteo Franzil
+ * @version 1.0
+ * @since 07/05/2018
  */
 public class SquadreHandler {
 
@@ -20,6 +21,7 @@ public class SquadreHandler {
 
     /**
      * Metodo per ottenere, all'interno della lista delle squadre, la Squadra con punteggio maggiore.
+     *
      * @return Un ArrayList contenente 1 o più squadre con il punteggio maggiore.
      */
     public ArrayList<Squadra> getLeader() {
@@ -36,6 +38,7 @@ public class SquadreHandler {
 
     /**
      * Metodo per terminare la partita; si comporta in maniera diversa a seconda del numero dei vincitori.
+     *
      * @param txt La finestra di log del programma
      */
     public void victoryHandler(TextArea txt) {
@@ -49,9 +52,7 @@ public class SquadreHandler {
                 break;
             default:
                 txt.appendText("PARTITA FINITA\nVincono le squadre: \n");
-                winners.forEach((Squadra i) -> {
-                    txt.appendText(i.getNomesquadra() + "\n");
-                });
+                winners.forEach((Squadra i) -> txt.appendText(i.getNomesquadra() + "\n"));
                 break;
         }
     }

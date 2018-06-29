@@ -1,20 +1,21 @@
 package ctfchallenge;
 
-import java.util.ArrayList;
+import ctfchallenge.assets.Common;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
-import javafx.scene.control.TextArea;
+
+import java.util.ArrayList;
 
 
 /**
- * @since 07/05/2018
- * @version 1.0
  * @author Matteo Franzil
+ * @version 1.0
+ * @since 07/05/2018
  */
 public class ComboBoxBlock extends GridPane {
 
@@ -27,7 +28,7 @@ public class ComboBoxBlock extends GridPane {
     public ComboBoxBlock() {
         cbox_text = new ArrayList<>();
         cbox = new ArrayList<>();
-        
+
         setStyle("-fx-background-color: #cce5ff;");
         setPadding(new Insets(15, 12, 15, 12));
         setHgap(8);
@@ -37,30 +38,28 @@ public class ComboBoxBlock extends GridPane {
 
     /**
      * Metodo che mostra le ComboBox inizializzate in precedenza.
-     * @param gridView Il Pane su cui aggiungere le comboBox
+     *
      * @param squadreList Una ObservableList di Squadre
      */
-    public void setComboBox(Pane gridView, ObservableList<Squadra> squadreList) {
-        for (int i = 0; i < CTFChallenge.MAX_TEAMS_BONUS; i++) {
+    public void setComboBox(ObservableList<Squadra> squadreList) {
+        for (int i = 0; i < Common.MAX_TEAMS_BONUS; i++) {
             ComboBox<String> cbox_temp = new ComboBox<>();
-            Text cbox_text_temp = new Text(CTFChallenge.intToText(i + 1) + " classificato");
-            
-            CTFChallenge.setColumnRowIndex(cbox_text_temp, 0, 0 + (2 * i));
-            CTFChallenge.setColumnRowIndex(cbox_temp, 0, 1 + (2 * i));
-            
-            squadreList.forEach((temp) -> {
-                cbox_temp.getItems().add(temp.getNomesquadra());
-            });
-            
+            Text cbox_text_temp = new Text(Common.intToText(i + 1) + " classificato");
+
+            add(cbox_text_temp, 0, (2 * i));
+            add(cbox_temp, 0, 1 + (2 * i));
+
+            squadreList.forEach((temp) -> cbox_temp.getItems().add(temp.getNomesquadra()));
+
             cbox.add(cbox_temp);
             cbox_text.add(cbox_text_temp);
-            gridView.getChildren().addAll(cbox_text.get(i), cbox.get(i));
         }
     }
 
     /**
      * Metodo che prende le squadre selezionate nel ComboBox e ne assegna un punteggio prefissato.
-     * @param txt La finestra di log del programma.
+     *
+     * @param txt         La finestra di log del programma.
      * @param squadreList Una ObservableList di Squadre
      */
     public void sendResults(TextArea txt, ObservableList<Squadra> squadreList) {
@@ -68,17 +67,15 @@ public class ComboBoxBlock extends GridPane {
             String object_name = (cbox.get(i).getValue());
             if (object_name != null) {
                 Squadra temp = Squadra.getSquadraFromName(object_name, squadreList);
-                temp.setPunteggio(temp.getPunteggio() + CTFChallenge.MAX_TEAMS_BONUS - i);
+                temp.setPunteggio(temp.getPunteggio() + Common.MAX_TEAMS_BONUS - i);
                 txt.appendText("La squadra " + temp.getNomesquadra()
-                        + " ottiene " + (CTFChallenge.MAX_TEAMS_BONUS - i) + " punti bonus\n");
+                        + " ottiene " + (Common.MAX_TEAMS_BONUS - i) + " punti bonus\n");
             }
         }
         clearAll();
     }
 
     private void clearAll() {
-        cbox.forEach((i) -> {
-            i.getSelectionModel().clearSelection();
-        });
+        cbox.forEach((i) -> i.getSelectionModel().clearSelection());
     }
 }
