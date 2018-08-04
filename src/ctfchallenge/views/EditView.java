@@ -27,7 +27,7 @@ public class EditView extends Stage {
      *
      * @param txt        La finestra di log del programma.
      * @param scoreboard La finestea della scoreboard.
-     * @param team        La squadra che verrà modificata.
+     * @param team       La squadra che verrà modificata.
      * @param isEdit     Metodo evocato in edit mode o addition mode (con punteggi bloccati)
      */
     public EditView(TextArea txt, Scoreboard scoreboard, Team team, boolean isEdit) {

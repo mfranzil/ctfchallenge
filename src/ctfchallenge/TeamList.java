@@ -75,7 +75,7 @@ public class TeamList extends SimpleListProperty<Team> {
                 break;
             default:
                 txt.appendText("PARTITA FINITA\nVincono le squadre: \n");
-                winners.forEach((Team i) -> txt.appendText(i.getTeamName() + "\n"));
+                winners.forEach(team -> txt.appendText(team.getTeamName() + "\n"));
                 break;
         }
     }

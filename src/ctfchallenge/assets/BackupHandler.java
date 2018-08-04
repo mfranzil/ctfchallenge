@@ -17,7 +17,7 @@ public class BackupHandler {
      * Metodo che fa un backup dei dati su backup.txt ogni volta che viene
      * chiamato sovrascrivendo il precedente.
      *
-     * @param txt            La finestra di log dei dati.
+     * @param txt      La finestra di log dei dati.
      * @param teamList Il gestore interno delle squadre.
      */
     public static void backupData(TextArea txt, TeamList teamList) {
@@ -44,7 +44,7 @@ public class BackupHandler {
     /**
      * Metodo che evoca un FileChooser per riprendere il gioco da un backup precedente.
      *
-     * @param txt            La finestra di log del programma.
+     * @param txt      La finestra di log del programma.
      * @param teamList Il gestore interno delle squadre.
      */
     public static void restoreData(TextArea txt, TeamList teamList) {
@@ -60,18 +60,18 @@ public class BackupHandler {
                 return;
             } else {
                 teamList.clear();
-                Scanner fileIn = new Scanner(file).useDelimiter("\\s*TAB\\s*");
-                while (fileIn.hasNext()) {
-                    String id = fileIn.next(), nomesquadra = fileIn.next(),
-                            membro1 = fileIn.next(), membro2 = fileIn.next(), punteggio = fileIn.next();
+                Scanner stream = new Scanner(file).useDelimiter("\\s*TAB\\s*");
+                while (stream.hasNext()) {
+                    String nomesquadra = stream.next(), membro1 = stream.next(),
+                            membro2 = stream.next(), punteggio = stream.next();
                     Team temp = new Team(nomesquadra, membro1, membro2, Integer.parseInt(punteggio));
                     teamList.add(temp);
                 }
             }
             txt.appendText("Backup ripristinato con successo.");
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-            txt.appendText("Impossibile ripristinare il backup:");
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, "File di backup non trovato.", ex);
+            txt.appendText("Impossibile ripristinare il backup");
         }
     }
 }

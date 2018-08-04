@@ -1,18 +1,10 @@
 package ctfchallenge.assets;
 
-import javafx.scene.control.TextInputDialog;
-
-import java.util.Optional;
-
 public class Common {
     /**
      *
      */
     public static final int MAX_TEAMS_BONUS = 5;
-    /**
-     *
-     */
-    public static final int MAX_TEAMS = 10;
     /**
      *
      */
@@ -85,21 +77,5 @@ public class Common {
                 break;
         }
         return res;
-    }
-
-    /**
-     * Finestrella per chiedere una String customizzata senza grafica basata su
-     * JavaFX.
-     *
-     * @param question La domanda da porre nella finestra
-     * @return Una string contenente la risposta.
-     */
-    public static String optionDialog(String question) {
-        TextInputDialog dialog = new TextInputDialog();
-        dialog.setHeaderText(question);
-        dialog.setTitle("CTF");
-        dialog.setGraphic(null);
-        Optional<String> result = dialog.showAndWait();
-        return result.orElse(null);
     }
 }

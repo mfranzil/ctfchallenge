@@ -60,7 +60,7 @@ public class ComboBoxBlock extends GridPane {
     /**
      * Metodo che prende le squadre selezionate nel ComboBox e ne assegna un punteggio prefissato.
      *
-     * @param txt         La finestra di log del programma.
+     * @param txt      La finestra di log del programma.
      * @param teamList Una ObservableList di Squadre
      */
     public void sendResults(TextArea txt, TeamList teamList) {
