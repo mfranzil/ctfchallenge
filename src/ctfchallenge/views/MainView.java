@@ -9,17 +9,16 @@ import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
 public class MainView extends Stage {
-    public MainView(Scoreboard scoreboard, TextArea txt, SquadreHandler squadreHandler) {
+    public MainView(Scoreboard scoreboard, TextArea txt, TeamList teamList) {
         BorderPane mainPane = new BorderPane();
         Scene mainScene = new Scene(mainPane);
 
         RadioButtonsBlock buttons = new RadioButtonsBlock();
         ComboBoxBlock comboBoxBlock = new ComboBoxBlock();
 
-        Toolbar toolbar = new Toolbar(txt, buttons, comboBoxBlock, squadreHandler, scoreboard);
+        Toolbar toolbar = new Toolbar(txt, buttons, comboBoxBlock, teamList, scoreboard);
 
         mainPane.setTop(toolbar);
         mainPane.setLeft(txt);
@@ -35,8 +34,8 @@ public class MainView extends Stage {
         setWidth(1100);
         setHeight(600);
         setTitle("Main");
-        setOnCloseRequest((final WindowEvent event) -> {
-            event.consume();
+        setOnCloseRequest(e -> {
+            e.consume();
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
                     "Sei sicuro di voler uscire?",
                     ButtonType.OK, ButtonType.CANCEL);

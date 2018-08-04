@@ -42,7 +42,7 @@ public class ComboBoxBlock extends GridPane {
      *
      * @param squadreList Una ObservableList di Squadre
      */
-    public void setComboBox(ObservableList<Squadra> squadreList) {
+    public void setComboBox(ObservableList<Team> squadreList) {
         for (int i = 0; i < Common.MAX_TEAMS_BONUS; i++) {
             ComboBox<String> cbox_temp = new ComboBox<>();
             Text cbox_text_temp = new Text(Common.intToText(i + 1) + " classificato");
@@ -63,11 +63,11 @@ public class ComboBoxBlock extends GridPane {
      * @param txt         La finestra di log del programma.
      * @param squadreList Una ObservableList di Squadre
      */
-    public void sendResults(TextArea txt, ObservableList<Squadra> squadreList) {
+    public void sendResults(TextArea txt, ObservableList<Team> squadreList) {
         for (int i = 0; i < cbox.size(); i++) {
             String object_name = (cbox.get(i).getValue());
             if (object_name != null) {
-                Squadra temp = Squadra.getSquadraFromName(object_name, squadreList);
+                Team temp = Team.getSquadraFromName(object_name, squadreList);
                 temp.setPunteggio(temp.getPunteggio() + Common.MAX_TEAMS_BONUS - i);
                 txt.appendText("La squadra " + temp.getNomesquadra()
                         + " ottiene " + (Common.MAX_TEAMS_BONUS - i) + " punti bonus\n");

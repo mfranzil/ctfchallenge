@@ -26,13 +26,13 @@ public class Main extends Application {
             setEditable(false);
         }};
         Scoreboard scoreboard = new Scoreboard(txt);
-        SquadreHandler squadreHandler = new SquadreHandler();
-        scoreboard.setItems(squadreHandler.squadreList);
+        TeamList teamList = new TeamList();
+        scoreboard.setItems(teamList);
 
         ScoreboardView scoreboardWindow = new ScoreboardView(scoreboard);
         scoreboardWindow.show();
 
-        MainView main = new MainView(scoreboard, txt, squadreHandler);
+        MainView main = new MainView(scoreboard, txt, teamList);
         main.show();
     }
 

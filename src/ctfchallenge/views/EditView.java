@@ -1,7 +1,7 @@
 package ctfchallenge.views;
 
 import ctfchallenge.Scoreboard;
-import ctfchallenge.Squadra;
+import ctfchallenge.Team;
 import javafx.event.ActionEvent;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -30,7 +30,7 @@ public class EditView extends Stage {
      * @param tmp        La squadra che verrà modificata.
      * @param isEdit     Metodo evocato in edit mode o addition mode (con punteggi bloccati)
      */
-    public EditView(TextArea txt, Scoreboard scoreboard, Squadra tmp, boolean isEdit) {
+    public EditView(TextArea txt, Scoreboard scoreboard, Team tmp, boolean isEdit) {
         GridPane editPane = new GridPane();
         Scene editScene = new Scene(editPane);
 
@@ -84,7 +84,7 @@ public class EditView extends Stage {
             tmp.setPunteggio(Integer.parseInt(ptField.getText()));
             this.close();
             scoreboard.refresh();
-            txt.appendText("Squadra con ID " + tmp.getId() + (isEdit ? " aggiornata:" : " aggiunta:")
+            txt.appendText("Team con ID " + tmp.getId() + (isEdit ? " aggiornata:" : " aggiunta:")
                     + "\nNome: " + tmp.getNomesquadra() + "\nMembri: " + tmp.getMembro1() + ", " + tmp.getMembro2()
                     + "\nPunteggio: " + tmp.getPunteggio() + "\n");
         });

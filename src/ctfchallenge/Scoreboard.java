@@ -12,13 +12,13 @@ import javafx.scene.control.cell.PropertyValueFactory;
  * @version 1.0
  * @since 07/05/2018
  */
-public final class Scoreboard extends TableView<Squadra> {
+public final class Scoreboard extends TableView<Team> {
 
-    private final TableColumn<Squadra, String> nomesquadra;
-    private final TableColumn<Squadra, TableColumn<Squadra, String>> giocatori;
-    private final TableColumn<Squadra, String> membro1;
-    private final TableColumn<Squadra, String> membro2;
-    private final TableColumn<Squadra, String> punteggio;
+    private final TableColumn<Team, String> nomesquadra;
+    private final TableColumn<Team, TableColumn<Team, String>> giocatori;
+    private final TableColumn<Team, String> membro1;
+    private final TableColumn<Team, String> membro2;
+    private final TableColumn<Team, String> punteggio;
 
     private final int fontsizes[] = {6, 7, 8, 9, 10, 11, 12, 14, 16, 18, 21, 24, 36, 48, 60, 72, 84, 96};
     private int pointer = 11; // Pt = 24

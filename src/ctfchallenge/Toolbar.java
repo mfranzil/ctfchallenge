@@ -39,11 +39,11 @@ public class Toolbar extends HBox {
      * @param txt            La finestra di log del programma principale
      * @param buttons        I radiobutton delle squadre usati per il completamento dell'esercizio.
      * @param comboBoxBlock  I comboBox usati per selezionare i primi...quinti arrivati.
-     * @param squadreHandler Il gestore delle squadre.
+     * @param teamList Il gestore delle squadre.
      * @param scoreboard     La finestra dello scoreboard
      */
     public Toolbar(TextArea txt, RadioButtonsBlock buttons, ComboBoxBlock comboBoxBlock,
-                   SquadreHandler squadreHandler, Scoreboard scoreboard) {
+                   TeamList teamList, Scoreboard scoreboard) {
 
         setPadding(new Insets(15, 12, 15, 12));
         setSpacing(10);
@@ -54,15 +54,15 @@ public class Toolbar extends HBox {
 
         getChildren().addAll(addTeam, removeTeam, editTeam, refreshScore, startGame, goToEx, restoreData);
 
-        addTeam.setOnAction(e -> addTeamActions(txt, scoreboard, squadreHandler.squadreList));
-        removeTeam.setOnAction(e -> removeTeamActions(txt, squadreHandler.squadreList));
-        editTeam.setOnAction(e -> editTeamActions(txt, scoreboard, squadreHandler.squadreList));
+        addTeam.setOnAction(e -> addTeamActions(txt, scoreboard, teamList));
+        removeTeam.setOnAction(e -> removeTeamActions(txt, teamList));
+        editTeam.setOnAction(e -> editTeamActions(txt, scoreboard, teamList));
         incrementFont.setOnAction(e -> scoreboard.incrementFont(txt));
         decrementFont.setOnAction(e -> scoreboard.decrementFont(txt));
 
         refreshScore.setOnAction(e -> {
             scoreboard.refresh();
-            BackupHandler.backupData(txt, squadreHandler);
+            BackupHandler.backupData(txt, teamList);
         });
 
         startGame.setOnAction((ActionEvent event) -> {
@@ -70,8 +70,8 @@ public class Toolbar extends HBox {
             if (Common.numeroes == 1) {
                 addTeam.setDisable(true);
                 removeTeam.setDisable(true);
-                buttons.setRadioButtons(buttons, squadreHandler.squadreList);
-                comboBoxBlock.setComboBox(squadreHandler.squadreList);
+                buttons.setRadioButtons(buttons, teamList);
+                comboBoxBlock.setComboBox(teamList);
                 getChildren().addAll(sendResults, incrementFont, decrementFont);
             }
             if (Common.numeroes >= 1 && Common.numeroes <= Common.MAX_EXERCISES) {
@@ -79,7 +79,7 @@ public class Toolbar extends HBox {
                 startGame.setText("Prossimo esercizio");
                 sendResults.setDisable(false);
             } else {
-                squadreHandler.victoryHandler(txt);
+                teamList.victoryHandler(txt);
                 sendResults.setDisable(true);
             }
             refreshScore.fire();
@@ -88,8 +88,8 @@ public class Toolbar extends HBox {
         });
 
         sendResults.setOnAction((ActionEvent onFinish) -> {
-            buttons.sendResults(txt, squadreHandler.squadreList, Common.punteggioEs(numeroes));
-            comboBoxBlock.sendResults(txt, squadreHandler.squadreList);
+            buttons.sendResults(txt, teamList, Common.punteggioEs(numeroes));
+            comboBoxBlock.sendResults(txt, teamList);
             refreshScore.fire();
             startGame.setDisable(false);
             if (numeroes == 5) {
@@ -111,7 +111,7 @@ public class Toolbar extends HBox {
         });
         goToEx.setDisable(true);
 
-        restoreData.setOnAction(e -> BackupHandler.restoreData(txt, squadreHandler));
+        restoreData.setOnAction(e -> BackupHandler.restoreData(txt, teamList));
 
     }
 
@@ -120,9 +120,9 @@ public class Toolbar extends HBox {
      *
      * @param squadreList Una ObservableList di Squadre
      */
-    private void addTeamActions(TextArea txt, Scoreboard scoreboard, ObservableList<Squadra> squadreList) {
+    private void addTeamActions(TextArea txt, Scoreboard scoreboard, ObservableList<Team> squadreList) {
         try {
-            Squadra tmp = new Squadra("", "", "");
+            Team tmp = new Team("", "", "");
             EditView editView = new EditView(txt, scoreboard, tmp, false);
             editView.showAndWait();
             squadreList.add(tmp);
@@ -141,9 +141,9 @@ public class Toolbar extends HBox {
      *
      * @param squadreList Una ObservableList di Squadre
      */
-    private void editTeamActions(TextArea txt, Scoreboard scoreboard, ObservableList<Squadra> squadreList) { // TODO move to another method
+    private void editTeamActions(TextArea txt, Scoreboard scoreboard, ObservableList<Team> squadreList) { // TODO move to another method
         String id = Common.optionDialog("Nome della squadra da modificare");
-        Squadra tmp = Squadra.getSquadraFromName(id, squadreList);
+        Team tmp = Team.getSquadraFromName(id, squadreList);
         if (tmp != null) {
             EditView editView = new EditView(txt, scoreboard, tmp, true);
             editView.showAndWait();
@@ -157,12 +157,12 @@ public class Toolbar extends HBox {
      *
      * @param squadreList Una ObservableList di Squadre
      */
-    private void removeTeamActions(TextArea txt, ObservableList<Squadra> squadreList) {
-        if (Squadra.getNumerosquadre() != 0) {
+    private void removeTeamActions(TextArea txt, ObservableList<Team> squadreList) {
+        if (Team.getNumerosquadre() != 0) {
             String id = Common.optionDialog("Nome della squadra da cancellare");
-            Squadra tmp = Squadra.getSquadraFromName(id, squadreList);
+            Team tmp = Team.getSquadraFromName(id, squadreList);
             if (tmp != null) {
-                txt.appendText("Squadra con nome " + id + " rimossa con successo\n");
+                txt.appendText("Team con nome " + id + " rimossa con successo\n");
                 squadreList.remove(tmp);
             } else {
                 txt.appendText("Nessuna squadra trovata " + "con questo nome (" + id + ")\n");

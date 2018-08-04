@@ -45,7 +45,7 @@ public class RadioButtonsBlock extends GridPane {
      * @param gridView Il Pane in cui aggiungere i bottoni
      * @param squadre  Una ObservableList di Squadre
      */
-    public void setRadioButtons(GridPane gridView, ObservableList<Squadra> squadre) {
+    public void setRadioButtons(GridPane gridView, ObservableList<Team> squadre) {
         int media = (int) Math.floor(squadre.size() / 2);
         for (int i = 0; i < squadre.size(); i++) {
             Text radio_text_tmp = new Text(squadre.get(i).getNomesquadra());
@@ -81,10 +81,10 @@ public class RadioButtonsBlock extends GridPane {
      * @param squadre   Una ObservableList di squadre
      * @param punteggio Il punteggio da attribuire in caso di esercizio completato
      */
-    public void sendResults(TextArea txt, ObservableList<Squadra> squadre, int punteggio) {
+    public void sendResults(TextArea txt, ObservableList<Team> squadre, int punteggio) {
         for (int i = 0; i < squadre.size(); i++) {
             String label = ((Labeled) radio_btn.get(i).getSelectedToggle()).getText();
-            Squadra current = squadre.get(i);
+            Team current = squadre.get(i);
             if (label.equals("Completato")) {
                 current.incrementPunteggio(punteggio);
                 txt.appendText("La squadra " + current.getNomesquadra() + " ottiene " + punteggio + " punti\n");
