@@ -9,7 +9,6 @@ import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.HBox;
-import javafx.stage.Stage;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -42,10 +41,9 @@ public class Toolbar extends HBox {
      * @param comboBoxBlock  I comboBox usati per selezionare i primi...quinti arrivati.
      * @param squadreHandler Il gestore delle squadre.
      * @param scoreboard     La finestra dello scoreboard
-     * @param primaryStage   La finestra principale del programma.
      */
     public Toolbar(TextArea txt, RadioButtonsBlock buttons, ComboBoxBlock comboBoxBlock,
-                   SquadreHandler squadreHandler, Scoreboard scoreboard, Stage primaryStage) {
+                   SquadreHandler squadreHandler, Scoreboard scoreboard) {
 
         setPadding(new Insets(15, 12, 15, 12));
         setSpacing(10);
@@ -113,10 +111,7 @@ public class Toolbar extends HBox {
         });
         goToEx.setDisable(true);
 
-        restoreData.setOnAction((ActionEvent event) -> {
-            squadreHandler.squadreList.clear();
-            BackupHandler.restoreData(txt, squadreHandler, primaryStage);
-        });
+        restoreData.setOnAction(e -> BackupHandler.restoreData(txt, squadreHandler));
 
     }
 

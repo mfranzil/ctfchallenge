@@ -23,7 +23,8 @@ public class ComboBoxBlock extends GridPane {
     private final ArrayList<ComboBox<String>> cbox;
 
     /**
-     * Classe che estende un GridPane e contiene al suo interno delle ComboBox per decidere i primi, secondi, etc... classificati.
+     * Classe che estende un GridPane e contiene al suo interno delle ComboBox
+     * per decidere i primi, secondi, etc... classificati.
      */
     public ComboBoxBlock() {
         cbox_text = new ArrayList<>();

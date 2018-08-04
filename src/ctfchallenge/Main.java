@@ -28,10 +28,12 @@ public class Main extends Application {
         Scoreboard scoreboard = new Scoreboard(txt);
         SquadreHandler squadreHandler = new SquadreHandler();
         scoreboard.setItems(squadreHandler.squadreList);
-        Stage scoreboardWindow = new ScoreboardView(scoreboard);
 
-        MainView main = new MainView(primaryStage, scoreboard, txt, squadreHandler);
+        ScoreboardView scoreboardWindow = new ScoreboardView(scoreboard);
         scoreboardWindow.show();
+
+        MainView main = new MainView(scoreboard, txt, squadreHandler);
+        main.show();
     }
 
 

@@ -46,26 +46,27 @@ public class BackupHandler {
      *
      * @param txt            La finestra di log del programma.
      * @param squadreHandler Il gestore interno delle squadre.
-     * @param stage          La stage su cui mostrare il FileChooser.
      */
-    public static void restoreData(TextArea txt, SquadreHandler squadreHandler, Stage stage) {
+    public static void restoreData(TextArea txt, SquadreHandler squadreHandler) {
         try {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Carica un file");
             fileChooser.getExtensionFilters().addAll(
                     new FileChooser.ExtensionFilter("TXT", "*.txt")
             );
-            File file = fileChooser.showOpenDialog(stage);
+            File file = fileChooser.showOpenDialog(new Stage());
             if (file == null) {
                 System.out.println("No file chosen");
-                System.exit(1);
-            }
-            Scanner fileIn = new Scanner(file).useDelimiter("\\s*TAB\\s*");
-            while (fileIn.hasNext()) {
-                String id = fileIn.next(), nomesquadra = fileIn.next(),
-                        membro1 = fileIn.next(), membro2 = fileIn.next(), punteggio = fileIn.next();
-                Squadra temp = new Squadra(Integer.parseInt(id), nomesquadra, membro1, membro2, Integer.parseInt(punteggio));
-                squadreHandler.squadreList.add(temp);
+                return;
+            } else {
+                squadreHandler.squadreList.clear();
+                Scanner fileIn = new Scanner(file).useDelimiter("\\s*TAB\\s*");
+                while (fileIn.hasNext()) {
+                    String id = fileIn.next(), nomesquadra = fileIn.next(),
+                            membro1 = fileIn.next(), membro2 = fileIn.next(), punteggio = fileIn.next();
+                    Squadra temp = new Squadra(Integer.parseInt(id), nomesquadra, membro1, membro2, Integer.parseInt(punteggio));
+                    squadreHandler.squadreList.add(temp);
+                }
             }
             txt.appendText("Backup ripristinato con successo.");
         } catch (FileNotFoundException ex) {

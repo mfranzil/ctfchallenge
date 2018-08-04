@@ -12,31 +12,30 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 public class MainView extends Stage {
-    public MainView(Stage primaryStage, Scoreboard scoreboard, TextArea txt, SquadreHandler squadreHandler) {
+    public MainView(Scoreboard scoreboard, TextArea txt, SquadreHandler squadreHandler) {
         BorderPane mainPane = new BorderPane();
         Scene mainScene = new Scene(mainPane);
 
         RadioButtonsBlock buttons = new RadioButtonsBlock();
         ComboBoxBlock comboBoxBlock = new ComboBoxBlock();
 
-        Toolbar toolbar = new Toolbar(txt, buttons, comboBoxBlock, squadreHandler, scoreboard, primaryStage);
+        Toolbar toolbar = new Toolbar(txt, buttons, comboBoxBlock, squadreHandler, scoreboard);
 
         mainPane.setTop(toolbar);
         mainPane.setLeft(txt);
         mainPane.setCenter(buttons);
         mainPane.setRight(comboBoxBlock);
 
-
-        initGUI(primaryStage);
-        primaryStage.setScene(mainScene);
+        setScene(mainScene);
+        initGUI();
     }
 
-    private void initGUI(Stage primaryStage) {
-        primaryStage.setMaximized(false);
-        primaryStage.setWidth(1100);
-        primaryStage.setHeight(600);
-        primaryStage.setTitle("Main");
-        primaryStage.setOnCloseRequest((final WindowEvent event) -> {
+    private void initGUI() {
+        setMaximized(false);
+        setWidth(1100);
+        setHeight(600);
+        setTitle("Main");
+        setOnCloseRequest((final WindowEvent event) -> {
             event.consume();
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
                     "Sei sicuro di voler uscire?",
@@ -45,7 +44,6 @@ public class MainView extends Stage {
                     .filter(response -> response == ButtonType.OK)
                     .ifPresent(response -> Platform.exit());
         });
-        primaryStage.getIcons().add(new Image("file:logo.png"));
-        primaryStage.show();
+        getIcons().add(new Image("file:logo.png"));
     }
 }

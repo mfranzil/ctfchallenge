@@ -5,6 +5,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.TextArea;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * @author Matteo Franzil
@@ -25,11 +26,14 @@ public class SquadreHandler {
      * @return Un ArrayList contenente 1 o più squadre con il punteggio maggiore.
      */
     public ArrayList<Squadra> getLeader() {
-        int punteggio_temp = 0;
+        Collections.sort(squadreList);
+        int punteggio_temp = squadreList.get(0).getPunteggio();
+
         ArrayList<Squadra> temp = new ArrayList<>();
         for (Squadra i : squadreList) {
-            if (i.getPunteggio() > punteggio_temp) {
-                punteggio_temp = i.getPunteggio();
+            if (i.getPunteggio() < punteggio_temp) {
+                break;
+            } else {
                 temp.add(i);
             }
         }

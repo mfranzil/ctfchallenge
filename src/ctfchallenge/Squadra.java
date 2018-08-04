@@ -9,7 +9,7 @@ import java.util.Collection;
  */
 
 // TODO Fix import of teams overriding counter
-public class Squadra {
+public class Squadra implements Comparable<Squadra> {
 
     private static int numerosquadre = 0;
     private final int id;
@@ -51,24 +51,6 @@ public class Squadra {
         this.punteggio = punteggio;
     }
 
-
-    /**
-     * Metodo che ritorna l'ID di una Squadra dato il suo nome
-     *
-     * @param nome       Il nome della String
-     * @param collection La collection da cui cercare.
-     * @return l'ID della squadra desiderata.
-     */
-    public static int nameToId(String nome, Collection<Squadra> collection) {
-        int res = -1;
-        for (Squadra temp : collection) {
-            if (temp.getNomesquadra().equals(nome)) {
-                res = temp.getId();
-                break;
-            }
-        }
-        return res;
-    }
 
     public static int getNumerosquadre() {
         return numerosquadre;
@@ -179,4 +161,8 @@ public class Squadra {
         this.punteggio += increment;
     }
 
+    @Override
+    public int compareTo(Squadra o) {
+        return o.getPunteggio() - this.getPunteggio();
+    }
 }
