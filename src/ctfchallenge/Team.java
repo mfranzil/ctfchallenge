@@ -1,77 +1,46 @@
 package ctfchallenge;
 
-import java.util.Collection;
-
 /**
  * @author Matteo Franzil
  * @version 1.0
  * @since 07/05/2018
  */
 
-// TODO Fix import of teams overriding counter
 public class Team implements Comparable<Team> {
 
-    private static int numerosquadre = 0;
-    private final int id;
-    private String membro1;
-    private String membro2;
-    private String nomesquadra;
-    private int punteggio;
+    private String member1;
+    private String member2;
+    private String teamName;
+    private int score;
 
     /**
-     * Costruttore standard che incrementa il conteggio del numero delle squadre e setta il punteggio a 0.
+     * Costruttore standard che incrementa il conteggio del numero delle squadre e setta il score a 0.
      *
-     * @param nomesquadra Il nome della squadra
-     * @param membro1     Il primo (o unico) membro della squadra
-     * @param membro2     Il secondo membro della squadra
+     * @param teamName Il nome della squadra
+     * @param member1  Il primo (o unico) membro della squadra
+     * @param member2  Il secondo membro della squadra
      */
-    public Team(String nomesquadra, String membro1, String membro2) {
-        this.id = ++numerosquadre;
-        this.nomesquadra = nomesquadra;
-        this.membro1 = membro1;
-        this.membro2 = membro2;
-        this.punteggio = 0;
+    public Team(String teamName, String member1, String member2) {
+        this.teamName = teamName;
+        this.member1 = member1;
+        this.member2 = member2;
+        this.score = 0;
     }
 
 
     /**
      * Costruttore utilizzato dal backup manager per creare squadre avendo tutti i dati.
      *
-     * @param id          Un codice univoco che rappresenti la squadra
-     * @param nomesquadra Il nome della squadra
-     * @param membro1     Il primo (o unico) membro della squadra
-     * @param membro2     Il secondo membro della squadra
-     * @param punteggio   Il punteggio da assegnare alla squadra
+     * @param teamName Il nome della squadra
+     * @param member1  Il primo (o unico) membro della squadra
+     * @param member2  Il secondo membro della squadra
+     * @param score    Il score da assegnare alla squadra
      */
-    public Team(int id, String nomesquadra, String membro1, String membro2, int punteggio) {
-        this.id = id;
-        this.nomesquadra = nomesquadra;
-        this.membro1 = membro1;
-        this.membro2 = membro2;
-        this.punteggio = punteggio;
-    }
-
-
-    public static int getNumerosquadre() {
-        return numerosquadre;
-    }
-
-    /**
-     * Metodo che prende in entrata una Collection di squadre e un nome e ritorna la squadra corrispondente al nome.
-     *
-     * @param name    Il nome della squadra da cercare
-     * @param squadre La Collection in cui cercare
-     * @return Una Team che per prima ha un match con il valore cercato.
-     */
-    public static Team getSquadraFromName(String name, Collection<Team> squadre) {
-        Team res = null;
-        for (Team i : squadre) {
-            if (name.equals(i.getNomesquadra())) {
-                res = i;
-                break;
-            }
-        }
-        return res;
+    public Team(String teamName, String member1, String member2, int score) {
+        this.teamName = teamName;
+        this.member1 = member1;
+        this.member2 = member2;
+        this.score = score;
     }
 
     /**
@@ -88,7 +57,7 @@ public class Team implements Comparable<Team> {
         } else if (!(o instanceof Team)) { // else if (var.getClass() != this.getClass())
             res = false;
         } else {
-            res = membro1.equals(((Team) o).getMembro1()) && membro2.equals(((Team) o).getMembro2());
+            res = member1.equals(((Team) o).getMember1()) && member2.equals(((Team) o).getMember2());
         }
         return res;
     }
@@ -101,9 +70,14 @@ public class Team implements Comparable<Team> {
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 41 * hash + membro1.hashCode();
-        hash = 41 * hash + membro2.hashCode();
+        hash = 41 * hash + member1.hashCode();
+        hash = 41 * hash + member2.hashCode();
         return hash;
+    }
+
+    @Override
+    public int compareTo(Team o) {
+        return o.getScore() - this.getScore();
     }
 
     /**
@@ -113,56 +87,47 @@ public class Team implements Comparable<Team> {
      */
     @Override
     public String toString() {
-        return membro1 + ", " + membro2;
+        return member1 + ", " + member2;
     }
 
-    public String getMembro1() {
-        return membro1;
+    public String getMember1() {
+        return member1;
     }
 
-    public void setMembro1(String membro1) {
-        this.membro1 = membro1;
+    public void setMember1(String member1) {
+        this.member1 = member1;
     }
 
-    public String getMembro2() {
-        return membro2;
+    public String getMember2() {
+        return member2;
     }
 
-    public void setMembro2(String membro2) {
-        this.membro2 = membro2;
+    public void setMember2(String member2) {
+        this.member2 = member2;
     }
 
-    public int getId() {
-        return id;
+    public String getTeamName() {
+        return teamName;
     }
 
-    public String getNomesquadra() {
-        return nomesquadra;
+    public void setTeamName(String teamName) {
+        this.teamName = teamName;
     }
 
-    public void setNomesquadra(String nomesquadra) {
-        this.nomesquadra = nomesquadra;
+    public int getScore() {
+        return score;
     }
 
-    public int getPunteggio() {
-        return punteggio;
-    }
-
-    public void setPunteggio(int punteggio) {
-        this.punteggio = punteggio;
+    public void setScore(int score) {
+        this.score = score;
     }
 
     /**
-     * Metodo che incrementa in maniera arbitraria il punteggio della squadra
+     * Metodo che incrementa in maniera arbitraria il score della squadra
      *
-     * @param increment Un int (anche negativo) usato per modificare il punteggio.
+     * @param increment Un int (anche negativo) usato per modificare il score.
      */
-    public void incrementPunteggio(int increment) {
-        this.punteggio += increment;
-    }
-
-    @Override
-    public int compareTo(Team o) {
-        return o.getPunteggio() - this.getPunteggio();
+    public void incrementScore(int increment) {
+        this.score += increment;
     }
 }

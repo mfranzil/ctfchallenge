@@ -23,17 +23,34 @@ public class TeamList extends SimpleListProperty<Team> {
     }
 
     /**
+     * Metodo che prende in entrata un nome e ritorna la squadra corrispondente al nome.
+     *
+     * @param name Il nome della squadra da cercare
+     * @return Una Team che per prima ha un match con il valore cercato.
+     */
+    public Team getSquadraFromName(String name) {
+        Team res = null;
+        for (Team i : this) {
+            if (name.equals(i.getTeamName())) {
+                res = i;
+                break;
+            }
+        }
+        return res;
+    }
+
+    /**
      * Metodo per ottenere, all'interno della lista delle squadre, il Team con punteggio maggiore.
      *
      * @return Un ArrayList contenente 1 o più squadre con il punteggio maggiore.
      */
     public ArrayList<Team> getLeader() {
         Collections.sort(this);
-        int punteggio_temp = this.get(0).getPunteggio();
+        int punteggio_temp = this.get(0).getScore();
 
         ArrayList<Team> temp = new ArrayList<>();
         for (Team i : this) {
-            if (i.getPunteggio() < punteggio_temp) {
+            if (i.getScore() < punteggio_temp) {
                 break;
             } else {
                 temp.add(i);
@@ -47,7 +64,7 @@ public class TeamList extends SimpleListProperty<Team> {
      *
      * @param txt La finestra di log del programma
      */
-    public void victoryHandler(TextArea txt) {
+    public void processVictory(TextArea txt) {
         ArrayList<Team> winners = getLeader();
         switch (winners.size()) {
             case 0:
@@ -58,7 +75,7 @@ public class TeamList extends SimpleListProperty<Team> {
                 break;
             default:
                 txt.appendText("PARTITA FINITA\nVincono le squadre: \n");
-                winners.forEach((Team i) -> txt.appendText(i.getNomesquadra() + "\n"));
+                winners.forEach((Team i) -> txt.appendText(i.getTeamName() + "\n"));
                 break;
         }
     }

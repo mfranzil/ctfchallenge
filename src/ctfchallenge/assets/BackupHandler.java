@@ -28,8 +28,8 @@ public class BackupHandler {
             fileOut = new BufferedWriter(new FileWriter("backup.txt"));
             System.out.println("Logging in progress...");
             for (Team temp : teamList) {
-                String data = temp.getId() + " TAB " + temp.getNomesquadra() + " TAB "
-                        + temp.getMembro1() + " TAB " + temp.getMembro2() + " TAB " + temp.getPunteggio() + " TAB";
+                String data = temp.getTeamName() + " TAB " + temp.getMember1() + " TAB "
+                        + temp.getMember2() + " TAB " + temp.getScore() + " TAB";
                 fileOut.write(data);
             }
             fileOut.close();
@@ -64,7 +64,7 @@ public class BackupHandler {
                 while (fileIn.hasNext()) {
                     String id = fileIn.next(), nomesquadra = fileIn.next(),
                             membro1 = fileIn.next(), membro2 = fileIn.next(), punteggio = fileIn.next();
-                    Team temp = new Team(Integer.parseInt(id), nomesquadra, membro1, membro2, Integer.parseInt(punteggio));
+                    Team temp = new Team(nomesquadra, membro1, membro2, Integer.parseInt(punteggio));
                     teamList.add(temp);
                 }
             }

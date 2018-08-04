@@ -3,16 +3,20 @@ package ctfchallenge;
 import ctfchallenge.assets.BackupHandler;
 import ctfchallenge.assets.Common;
 import ctfchallenge.views.EditView;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static ctfchallenge.assets.Common.MAX_EXERCISES;
 import static ctfchallenge.assets.Common.numeroes;
 
 /**
@@ -20,27 +24,27 @@ import static ctfchallenge.assets.Common.numeroes;
  * @version 1.0
  * @since 07/05/2018
  */
-public class Toolbar extends HBox {
+public final class Toolbar extends HBox {
 
     private final Button restoreData = new Button("Recupera da backup");
     private final Button editTeam = new Button("Modifica squadra");
-    private Button addTeam = new Button("Nuova squadra");
-    private Button removeTeam = new Button("Rimuovi squadra");
-    private Button refreshScore = new Button("Aggiorna la classifica");
-    private Button startGame = new Button("Inizia la partita");
-    private Button sendResults = new Button("Invia i risultati");
-    private Button incrementFont = new Button("+");
-    private Button decrementFont = new Button("-");
-    private Button goToEx = new Button("Modifica numero esercizio");
+    private final Button addTeam = new Button("Nuova squadra");
+    private final Button removeTeam = new Button("Rimuovi squadra");
+    private final Button refreshScore = new Button("Aggiorna la classifica");
+    private final Button startGame = new Button("Inizia la partita");
+    private final Button sendResults = new Button("Invia i risultati");
+    private final Button incrementFont = new Button("+");
+    private final Button decrementFont = new Button("-");
+    private final Button goToEx = new Button("Modifica numero esercizio");
 
     /**
      * Costruttore standard della toolbar del programma.
      *
-     * @param txt            La finestra di log del programma principale
-     * @param buttons        I radiobutton delle squadre usati per il completamento dell'esercizio.
-     * @param comboBoxBlock  I comboBox usati per selezionare i primi...quinti arrivati.
-     * @param teamList Il gestore delle squadre.
-     * @param scoreboard     La finestra dello scoreboard
+     * @param txt           La finestra di log del programma principale
+     * @param buttons       I radiobutton delle squadre usati per il completamento dell'esercizio.
+     * @param comboBoxBlock I comboBox usati per selezionare i primi...quinti arrivati.
+     * @param teamList      Il gestore delle squadre.
+     * @param scoreboard    La finestra dello scoreboard
      */
     public Toolbar(TextArea txt, RadioButtonsBlock buttons, ComboBoxBlock comboBoxBlock,
                    TeamList teamList, Scoreboard scoreboard) {
@@ -65,7 +69,7 @@ public class Toolbar extends HBox {
             BackupHandler.backupData(txt, teamList);
         });
 
-        startGame.setOnAction((ActionEvent event) -> {
+        startGame.setOnAction(e -> {
             Common.numeroes++;
             if (Common.numeroes == 1) {
                 addTeam.setDisable(true);
@@ -74,12 +78,12 @@ public class Toolbar extends HBox {
                 comboBoxBlock.setComboBox(teamList);
                 getChildren().addAll(sendResults, incrementFont, decrementFont);
             }
-            if (Common.numeroes >= 1 && Common.numeroes <= Common.MAX_EXERCISES) {
+            if (Common.numeroes >= 1 && Common.numeroes <= MAX_EXERCISES) {
                 txt.appendText("Inizio esercizio " + numeroes + "\n");
                 startGame.setText("Prossimo esercizio");
                 sendResults.setDisable(false);
             } else {
-                teamList.victoryHandler(txt);
+                teamList.processVictory(txt);
                 sendResults.setDisable(true);
             }
             refreshScore.fire();
@@ -87,7 +91,7 @@ public class Toolbar extends HBox {
             goToEx.setDisable(false);
         });
 
-        sendResults.setOnAction((ActionEvent onFinish) -> {
+        sendResults.setOnAction(e -> {
             buttons.sendResults(txt, teamList, Common.punteggioEs(numeroes));
             comboBoxBlock.sendResults(txt, teamList);
             refreshScore.fire();
@@ -98,39 +102,54 @@ public class Toolbar extends HBox {
             sendResults.setDisable(true);
         });
 
-        goToEx.setOnAction((ActionEvent onFinish) -> {
+        goToEx.setOnAction(e -> {
             try {
-                do {
-                    Common.numeroes = Integer.parseInt(Common.optionDialog("Numero dell'esercizio?"));
-                } while (numeroes < 1 || numeroes > 5);
-                startGame.fire();
-                txt.appendText("Salto al livello " + numeroes + "\n");
-            } catch (Exception e) {
+                HBox root = new HBox();
+                Scene scene = new Scene(root);
+                Stage stage = new Stage();
+
+                for (int i = 0; i < MAX_EXERCISES; i++) {
+                    int finalI = i + 1;
+                    root.getChildren().add(new Button("" + finalI) {{
+                        setOnAction(e -> {
+                            Common.numeroes = finalI;
+                            startGame.fire();
+                            txt.appendText("Salto al livello " + numeroes + "\n");
+                            stage.close();
+                        });
+                    }});
+                }
+                root.setPadding(new Insets(16));
+                root.setSpacing(16);
+
+                stage.setScene(scene);
+                stage.setTitle("Scegli l'esercizio");
+                stage.show();
+            } catch (Exception ex) {
                 txt.appendText("Numero esercizio non valido!");
             }
         });
         goToEx.setDisable(true);
 
         restoreData.setOnAction(e -> BackupHandler.restoreData(txt, teamList));
-
     }
 
     /**
      * Metodo di gestione del bottone per aggiungere le squadre.
      *
-     * @param squadreList Una ObservableList di Squadre
+     * @param teamList Una ObservableList di Squadre
      */
-    private void addTeamActions(TextArea txt, Scoreboard scoreboard, ObservableList<Team> squadreList) {
+    private void addTeamActions(TextArea txt, Scoreboard scoreboard, TeamList teamList) {
         try {
             Team tmp = new Team("", "", "");
             EditView editView = new EditView(txt, scoreboard, tmp, false);
             editView.showAndWait();
-            squadreList.add(tmp);
+            teamList.add(tmp);
         } catch (Exception e) {
             txt.appendText("ERRORE! Prova a reinserire la squadra!\n");
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, e);
         }
-        if (!(squadreList.isEmpty())) {
+        if (!(teamList.isEmpty())) {
             removeTeam.setDisable(false);
             editTeam.setDisable(false);
         }
@@ -139,38 +158,67 @@ public class Toolbar extends HBox {
     /**
      * Metodo di gestione del bottone per modificare le squadre.
      *
-     * @param squadreList Una ObservableList di Squadre
+     * @param teamList Una ObservableList di Squadre
      */
-    private void editTeamActions(TextArea txt, Scoreboard scoreboard, ObservableList<Team> squadreList) { // TODO move to another method
-        String id = Common.optionDialog("Nome della squadra da modificare");
-        Team tmp = Team.getSquadraFromName(id, squadreList);
-        if (tmp != null) {
-            EditView editView = new EditView(txt, scoreboard, tmp, true);
-            editView.showAndWait();
+    private void editTeamActions(TextArea txt, Scoreboard scoreboard, TeamList teamList) {
+        if (teamList.size() > 0) {
+            VBox root = new VBox();
+            root.getChildren().add(new Text("Scegli la squadra da modificare"));
+
+            for (Team team : teamList) {
+                root.getChildren().add(new Button(team.getTeamName()) {{
+                    setOnAction(e -> new EditView(txt, scoreboard, team, true).showAndWait());
+                }});
+            }
+            root.setPadding(new Insets(16));
+            root.setSpacing(16);
+
+            Scene scene = new Scene(root);
+            Stage stage = new Stage();
+            stage.setScene(scene);
+            stage.setTitle("Scegli la squadra");
+            stage.show();
         } else {
-            txt.appendText("Nessuna squadra trovata " + "con questo nome (" + id + ")\n");
+            new Alert(Alert.AlertType.ERROR, "Nessuna squadra da modificare!").showAndWait();
         }
     }
+
 
     /**
      * Metodo di gestione del bottone per rimuovere le squadre.
      *
-     * @param squadreList Una ObservableList di Squadre
+     * @param teamList Una ObservableList di Squadre
      */
-    private void removeTeamActions(TextArea txt, ObservableList<Team> squadreList) {
-        if (Team.getNumerosquadre() != 0) {
-            String id = Common.optionDialog("Nome della squadra da cancellare");
-            Team tmp = Team.getSquadraFromName(id, squadreList);
-            if (tmp != null) {
-                txt.appendText("Team con nome " + id + " rimossa con successo\n");
-                squadreList.remove(tmp);
-            } else {
-                txt.appendText("Nessuna squadra trovata " + "con questo nome (" + id + ")\n");
+    private void removeTeamActions(TextArea txt, TeamList teamList) {
+        if (teamList.size() > 0) {
+            VBox root = new VBox();
+            Scene scene = new Scene(root);
+            Stage stage = new Stage();
+
+            root.getChildren().add(new Text("Scegli la squadra da cancellare"));
+
+            for (Team team : teamList) {
+                root.getChildren().add(new Button(team.getTeamName()) {{
+                    setOnAction(e -> {
+                        txt.appendText("Team con nome " + team.getTeamName() + " rimosso con successo\n");
+                        teamList.remove(team);
+                        root.getChildren().remove(this);
+
+                        if (teamList.size() <= 0) {
+                            stage.close();
+                        }
+                    });
+                }});
             }
+            root.setPadding(new Insets(16));
+            root.setSpacing(16);
+            stage.setScene(scene);
+            stage.setTitle("Scegli la squadra");
+            stage.show();
         } else {
             txt.appendText("Nessuna squadra da rimuovere!" + "\n");
         }
-        if (squadreList.isEmpty()) {
+        if (teamList.isEmpty()) {
             removeTeam.setDisable(true);
             editTeam.setDisable(true);
         }

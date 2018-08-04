@@ -36,10 +36,10 @@ public final class Scoreboard extends TableView<Team> {
         membro2 = new TableColumn<>("Membro 2");
         punteggio = new TableColumn<>("Punteggio");
 
-        nomesquadra.setCellValueFactory(new PropertyValueFactory<>("nomesquadra"));
-        membro1.setCellValueFactory(new PropertyValueFactory<>("membro1"));
-        membro2.setCellValueFactory(new PropertyValueFactory<>("membro2"));
-        punteggio.setCellValueFactory(new PropertyValueFactory<>("punteggio"));
+        nomesquadra.setCellValueFactory(new PropertyValueFactory<>("teamName"));
+        membro1.setCellValueFactory(new PropertyValueFactory<>("member1"));
+        membro2.setCellValueFactory(new PropertyValueFactory<>("member2"));
+        punteggio.setCellValueFactory(new PropertyValueFactory<>("score"));
 
         nomesquadra.prefWidthProperty().bind(widthProperty().divide(6.0));
         membro1.prefWidthProperty().bind(widthProperty().divide(3.0));

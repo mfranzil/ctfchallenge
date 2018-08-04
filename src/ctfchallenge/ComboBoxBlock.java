@@ -50,7 +50,7 @@ public class ComboBoxBlock extends GridPane {
             add(cbox_text_temp, 0, (2 * i));
             add(cbox_temp, 0, 1 + (2 * i));
 
-            squadreList.forEach((temp) -> cbox_temp.getItems().add(temp.getNomesquadra()));
+            squadreList.forEach((temp) -> cbox_temp.getItems().add(temp.getTeamName()));
 
             cbox.add(cbox_temp);
             cbox_text.add(cbox_text_temp);
@@ -61,15 +61,15 @@ public class ComboBoxBlock extends GridPane {
      * Metodo che prende le squadre selezionate nel ComboBox e ne assegna un punteggio prefissato.
      *
      * @param txt         La finestra di log del programma.
-     * @param squadreList Una ObservableList di Squadre
+     * @param teamList Una ObservableList di Squadre
      */
-    public void sendResults(TextArea txt, ObservableList<Team> squadreList) {
+    public void sendResults(TextArea txt, TeamList teamList) {
         for (int i = 0; i < cbox.size(); i++) {
             String object_name = (cbox.get(i).getValue());
             if (object_name != null) {
-                Team temp = Team.getSquadraFromName(object_name, squadreList);
-                temp.setPunteggio(temp.getPunteggio() + Common.MAX_TEAMS_BONUS - i);
-                txt.appendText("La squadra " + temp.getNomesquadra()
+                Team temp = teamList.getSquadraFromName(object_name);
+                temp.setScore(temp.getScore() + Common.MAX_TEAMS_BONUS - i);
+                txt.appendText("La squadra " + temp.getTeamName()
                         + " ottiene " + (Common.MAX_TEAMS_BONUS - i) + " punti bonus\n");
             }
         }

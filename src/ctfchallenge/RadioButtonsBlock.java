@@ -1,6 +1,5 @@
 package ctfchallenge;
 
-import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.control.Labeled;
 import javafx.scene.control.RadioButton;
@@ -45,10 +44,10 @@ public class RadioButtonsBlock extends GridPane {
      * @param gridView Il Pane in cui aggiungere i bottoni
      * @param squadre  Una ObservableList di Squadre
      */
-    public void setRadioButtons(GridPane gridView, ObservableList<Team> squadre) {
+    public void setRadioButtons(GridPane gridView, TeamList squadre) {
         int media = (int) Math.floor(squadre.size() / 2);
         for (int i = 0; i < squadre.size(); i++) {
-            Text radio_text_tmp = new Text(squadre.get(i).getNomesquadra());
+            Text radio_text_tmp = new Text(squadre.get(i).getTeamName());
 
             RadioButton vinto_tmp = new RadioButton("Completato");
             RadioButton perso_tmp = new RadioButton("Non completato");
@@ -81,13 +80,13 @@ public class RadioButtonsBlock extends GridPane {
      * @param squadre   Una ObservableList di squadre
      * @param punteggio Il punteggio da attribuire in caso di esercizio completato
      */
-    public void sendResults(TextArea txt, ObservableList<Team> squadre, int punteggio) {
+    public void sendResults(TextArea txt, TeamList squadre, int punteggio) {
         for (int i = 0; i < squadre.size(); i++) {
             String label = ((Labeled) radio_btn.get(i).getSelectedToggle()).getText();
             Team current = squadre.get(i);
             if (label.equals("Completato")) {
-                current.incrementPunteggio(punteggio);
-                txt.appendText("La squadra " + current.getNomesquadra() + " ottiene " + punteggio + " punti\n");
+                current.incrementScore(punteggio);
+                txt.appendText("La squadra " + current.getTeamName() + " ottiene " + punteggio + " punti\n");
             }
         }
     }
