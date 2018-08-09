@@ -11,14 +11,14 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import org.jetbrains.annotations.NotNull;
 
 import static ctfchallenge.assets.Common.MAX_EXERCISES;
 import static ctfchallenge.assets.Common.numeroes;
 
 /**
  * @author Matteo Franzil
- * @version 1.0
- * @since 07/05/2018
+ * @version 1.1
  */
 public final class Toolbar extends HBox {
 
@@ -40,8 +40,8 @@ public final class Toolbar extends HBox {
      * @param comboBoxBlock I comboBox usati per selezionare i primi...quinti arrivati.
      * @param teamList      Il gestore delle squadre.
      */
-    public Toolbar(RadioButtonsBlock buttons, ComboBoxBlock comboBoxBlock,
-                   TeamList teamList) {
+    public Toolbar(@NotNull RadioButtonsBlock buttons, @NotNull ComboBoxBlock comboBoxBlock,
+                   @NotNull TeamList teamList) {
 
         setPadding(new Insets(15, 12, 15, 12));
         setSpacing(10);
@@ -134,7 +134,7 @@ public final class Toolbar extends HBox {
      *
      * @param teamList Una ObservableList di Squadre
      */
-    private void addTeamActions(TeamList teamList) {
+    private void addTeamActions(@NotNull TeamList teamList) {
         try {
             Team tmp = new Team("", "", "");
             EditView editView = new EditView(tmp, false);

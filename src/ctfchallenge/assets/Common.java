@@ -1,16 +1,18 @@
 package ctfchallenge.assets;
 
+import org.jetbrains.annotations.Nullable;
+
 public class Common {
     /**
-     *
+     *  Il numero di squadre che hanno diritto al bonus durante la partita.
      */
     public static final int MAX_TEAMS_BONUS = 5;
     /**
-     *
+     *  Il numero totale di esercizi che vengono svolti.
      */
     public static final int MAX_EXERCISES = 5;
     /**
-     *
+     *  Il numero dell'esercizio corrente-
      */
     public static int numeroes = 0;
 
@@ -54,6 +56,7 @@ public class Common {
      * @return Una String con la prima lettera maiuscola, rappresentante
      * l'input.
      */
+    @Nullable
     public static String intToText(int i) {
         String res;
         switch (i) {

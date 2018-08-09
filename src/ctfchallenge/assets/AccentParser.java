@@ -1,19 +1,30 @@
 package ctfchallenge.assets;
 
 import javafx.scene.paint.Color;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 
+/**
+ * @author Matteo Franzil
+ * @version 1.1
+ */
 public class AccentParser {
+    /**
+     * Metodo che prende il colore di Windows 10 impostato al momento, oppure grigio su altri sistemi operativi.
+     *
+     * @return Un Color con opacità 1.
+     */
     public static Color getAccentColor() {
         Color output;
         String value = null;
         try {
             value = new AccentParser().readRegistry("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\DWM",
                     "ColorizationColor");
-        } catch (IOException | InterruptedException e) {
+        } catch (@NotNull IOException | InterruptedException e) {
             e.printStackTrace();
         }
 
@@ -39,16 +50,21 @@ public class AccentParser {
         return output;
     }
 
+    /**
+     * Metodo che prende il colore di Windows 10 impostato al momento, oppure grigio su altri sistemi operativi.
+     * @return Un Color con opacità 0.5.
+     */
     public static Color getLightAccentColor() {
         Color color = getAccentColor();
         return Color.color(color.getRed(), color.getRed(), color.getGreen(), 0.5);
     }
 
     /**
-     * @param location path in the registry
-     * @param key      registry key
-     * @return registry value or null if not found
+     * @param location  La locazione nel registro.
+     * @param key       La chiave di registro.
+     * @return registry Il valore, oppure null.
      */
+    @Nullable
     public String readRegistry(String location, String key) throws IOException, InterruptedException {
         // Run reg query, then read output with StreamReader (internal class)
         Process process = Runtime.getRuntime().exec("reg query " +
@@ -69,6 +85,7 @@ public class AccentParser {
 
     class StreamReader extends Thread {
         private InputStream is;
+        @NotNull
         private StringWriter sw = new StringWriter();
 
         public StreamReader(InputStream is) {

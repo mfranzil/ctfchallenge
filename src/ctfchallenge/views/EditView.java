@@ -17,16 +17,15 @@ import javafx.stage.Stage;
 
 /**
  * @author Matteo Franzil
- * @version 1.0
- * @since 07/05/2018
+ * @version 1.1
  */
 public class EditView extends Stage {
 
     /**
      * Questa finestra viene mostrata in caso di aggiunta o modifica di una squadra
      *
-     * @param team       La squadra che verrà modificata.
-     * @param isEdit     Metodo evocato in edit mode o addition mode (con punteggi bloccati)
+     * @param team   La squadra che verrà modificata.
+     * @param isEdit Metodo evocato in edit mode o addition mode (con punteggi bloccati)
      */
     public EditView(Team team, boolean isEdit) {
         GridPane editPane = new GridPane();

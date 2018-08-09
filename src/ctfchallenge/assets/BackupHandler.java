@@ -5,6 +5,7 @@ import ctfchallenge.Team;
 import ctfchallenge.TeamList;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.util.Scanner;
@@ -44,7 +45,7 @@ public class BackupHandler {
      *
      * @param teamList Il gestore interno delle squadre.
      */
-    public static void restoreData(TeamList teamList) {
+    public static void restoreData(@NotNull TeamList teamList) {
         try {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Carica un file");
@@ -54,7 +55,6 @@ public class BackupHandler {
             File file = fileChooser.showOpenDialog(new Stage());
             if (file == null) {
                 Logging.warning("No file chosen");
-                return;
             } else {
                 teamList.clear();
                 Scanner stream = new Scanner(file).useDelimiter("\\s*TAB\\s*");
@@ -64,8 +64,8 @@ public class BackupHandler {
                     Team temp = new Team(nomesquadra, membro1, membro2, Integer.parseInt(punteggio));
                     teamList.add(temp);
                 }
+                Logging.info("Backup ripristinato con successo.");
             }
-            Logging.info("Backup ripristinato con successo.");
         } catch (FileNotFoundException ex) {
             Logging.fatal("File di backup non trovato.");
             Logging.fatal("Impossibile ripristinare il backup");

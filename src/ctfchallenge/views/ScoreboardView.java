@@ -7,6 +7,10 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
+/**
+ * @author Matteo Franzil
+ * @version 1.1
+ */
 public class ScoreboardView extends Stage {
     public ScoreboardView(Scoreboard scoreboard) {
         StackPane root = new StackPane();

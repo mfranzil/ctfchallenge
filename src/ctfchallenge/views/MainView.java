@@ -13,6 +13,10 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
+/**
+ * @author Matteo Franzil
+ * @version 1.1
+ */
 public class MainView extends Stage {
     public MainView(Logging logWindow, TeamList teamList) {
         BorderPane mainPane = new BorderPane();

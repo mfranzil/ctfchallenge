@@ -8,18 +8,20 @@ import javafx.geometry.Insets;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
 
 /**
  * @author Matteo Franzil
- * @version 1.0
- * @since 07/05/2018
+ * @version 1.1
  */
 public class ComboBoxBlock extends GridPane {
 
+    @NotNull
     private final ArrayList<Text> cbox_text;
+    @NotNull
     private final ArrayList<ComboBox<String>> cbox;
 
     /**
@@ -43,7 +45,7 @@ public class ComboBoxBlock extends GridPane {
      *
      * @param squadreList Una ObservableList di Squadre
      */
-    public void setComboBox(ObservableList<Team> squadreList) {
+    public void setComboBox(@NotNull ObservableList<Team> squadreList) {
         for (int i = 0; i < Common.MAX_TEAMS_BONUS; i++) {
             ComboBox<String> cbox_temp = new ComboBox<>();
             Text cbox_text_temp = new Text(Common.intToText(i + 1) + " classificato");
@@ -63,14 +65,16 @@ public class ComboBoxBlock extends GridPane {
      *
      * @param teamList Una ObservableList di Squadre
      */
-    public void sendResults(TeamList teamList) {
+    public void sendResults(@NotNull TeamList teamList) {
         for (int i = 0; i < cbox.size(); i++) {
             String object_name = (cbox.get(i).getValue());
             if (object_name != null) {
                 Team temp = teamList.getSquadraFromName(object_name);
-                temp.setScore(temp.getScore() + Common.MAX_TEAMS_BONUS - i);
-                Logging.info("La squadra " + temp.getTeamName()
-                        + " ottiene " + (Common.MAX_TEAMS_BONUS - i) + " punti bonus\n");
+                if (temp != null) {
+                    temp.setScore(temp.getScore() + Common.MAX_TEAMS_BONUS - i);
+                    Logging.info("La squadra " + temp.getTeamName()
+                            + " ottiene " + (Common.MAX_TEAMS_BONUS - i) + " punti bonus\n");
+                }
             }
         }
         clearAll();

@@ -6,21 +6,26 @@ import javafx.event.ActionEvent;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import org.jetbrains.annotations.NotNull;
 
 
 /**
  * @author Matteo Franzil
- * @version 1.0
- * @since 07/05/2018
+ * @version 1.1
  */
 public final class Scoreboard extends TableView<Team> {
 
     private static Scoreboard INSTANCE;
 
+    @NotNull
     private final TableColumn<Team, String> nomesquadra;
+    @NotNull
     private final TableColumn<Team, TableColumn<Team, String>> giocatori;
+    @NotNull
     private final TableColumn<Team, String> membro1;
+    @NotNull
     private final TableColumn<Team, String> membro2;
+    @NotNull
     private final TableColumn<Team, String> punteggio;
 
     private final int fontsizes[] = {6, 7, 8, 9, 10, 11, 12, 14, 16, 18, 21, 24, 36, 48, 60, 72, 84, 96};

@@ -11,20 +11,24 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
 
 /**
  * @author Matteo Franzil
- * @version 1.0
- * @since 07/05/2018
+ * @version 1.1
  */
 public class RadioButtonsBlock extends GridPane {
 
+    @NotNull
     private final ArrayList<ToggleGroup> radio_btn;
+    @NotNull
     private final ArrayList<Text> radio_text;
+    @NotNull
     private final ArrayList<RadioButton> vinto;
+    @NotNull
     private final ArrayList<RadioButton> perso;
 
     /**
@@ -49,7 +53,7 @@ public class RadioButtonsBlock extends GridPane {
      * @param gridView Il Pane in cui aggiungere i bottoni
      * @param squadre  Una ObservableList di Squadre
      */
-    public void setRadioButtons(GridPane gridView, TeamList squadre) {
+    public void setRadioButtons(@NotNull GridPane gridView, @NotNull TeamList squadre) {
         int media = (int) Math.floor(squadre.size() / 2);
         for (int i = 0; i < squadre.size(); i++) {
             Text radio_text_tmp = new Text(squadre.get(i).getTeamName());
@@ -84,7 +88,7 @@ public class RadioButtonsBlock extends GridPane {
      * @param squadre   Una ObservableList di squadre
      * @param punteggio Il punteggio da attribuire in caso di esercizio completato
      */
-    public void sendResults(TeamList squadre, int punteggio) {
+    public void sendResults(@NotNull TeamList squadre, int punteggio) {
         for (int i = 0; i < squadre.size(); i++) {
             String label = ((Labeled) radio_btn.get(i).getSelectedToggle()).getText();
             Team current = squadre.get(i);

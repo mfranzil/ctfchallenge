@@ -1,9 +1,11 @@
 package ctfchallenge;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 /**
  * @author Matteo Franzil
- * @version 1.0
- * @since 07/05/2018
+ * @version 1.1
  */
 
 public class Team implements Comparable<Team> {
@@ -50,7 +52,7 @@ public class Team implements Comparable<Team> {
      * @return Un Boolean che rappresenta il risultato della comparazione.
      */
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         boolean res;
         if (o == null) {
             res = false;
@@ -76,7 +78,7 @@ public class Team implements Comparable<Team> {
     }
 
     @Override
-    public int compareTo(Team o) {
+    public int compareTo(@NotNull Team o) {
         return o.getScore() - this.getScore();
     }
 
@@ -85,6 +87,7 @@ public class Team implements Comparable<Team> {
      *
      * @return Una String contenente la versiona in Stringa della persona.
      */
+    @NotNull
     @Override
     public String toString() {
         return member1 + ", " + member2;

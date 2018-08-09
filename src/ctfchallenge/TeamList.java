@@ -3,14 +3,15 @@ package ctfchallenge;
 import ctfchallenge.assets.Logging;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
 /**
  * @author Matteo Franzil
- * @version 1.0
- * @since 07/05/2018
+ * @version 1.1
  */
 public class TeamList extends SimpleListProperty<Team> {
     /**
@@ -28,7 +29,8 @@ public class TeamList extends SimpleListProperty<Team> {
      * @param name Il nome della squadra da cercare
      * @return Una Team che per prima ha un match con il valore cercato.
      */
-    public Team getSquadraFromName(String name) {
+    @Nullable
+    public Team getSquadraFromName(@NotNull String name) {
         Team res = null;
         for (Team i : this) {
             if (name.equals(i.getTeamName())) {
@@ -44,6 +46,7 @@ public class TeamList extends SimpleListProperty<Team> {
      *
      * @return Un ArrayList contenente 1 o più squadre con il punteggio maggiore.
      */
+    @NotNull
     public ArrayList<Team> getLeader() {
         Collections.sort(this);
         int punteggio_temp = this.get(0).getScore();
