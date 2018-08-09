@@ -1,10 +1,14 @@
 package ctfchallenge;
 
+import ctfchallenge.assets.AccentParser;
 import ctfchallenge.assets.Logging;
 import javafx.geometry.Insets;
 import javafx.scene.control.Labeled;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 
@@ -32,7 +36,8 @@ public class RadioButtonsBlock extends GridPane {
         vinto = new ArrayList<>();
         perso = new ArrayList<>();
 
-        setStyle("-fx-background-color: #cce5ff;");
+        setBackground(new Background(new BackgroundFill(AccentParser.getLightAccentColor(),
+                CornerRadii.EMPTY, Insets.EMPTY)));
         setHgap(8);
         setVgap(8);
         setPadding(new Insets(15, 12, 15, 12));

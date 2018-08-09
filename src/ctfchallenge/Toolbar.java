@@ -1,5 +1,6 @@
 package ctfchallenge;
 
+import ctfchallenge.assets.AccentParser;
 import ctfchallenge.assets.BackupHandler;
 import ctfchallenge.assets.Common;
 import ctfchallenge.assets.Logging;
@@ -7,8 +8,7 @@ import ctfchallenge.views.EditView;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -46,7 +46,8 @@ public final class Toolbar extends HBox {
 
         setPadding(new Insets(15, 12, 15, 12));
         setSpacing(10);
-        setStyle("-fx-background-color: #336699;");
+        setBackground(new Background(new BackgroundFill(AccentParser.getAccentColor(),
+                CornerRadii.EMPTY, Insets.EMPTY)));
 
         removeTeam.setDisable(true);
         editTeam.setDisable(true);

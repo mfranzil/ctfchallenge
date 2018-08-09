@@ -1,12 +1,12 @@
 package ctfchallenge;
 
+import ctfchallenge.assets.AccentParser;
 import ctfchallenge.assets.Common;
 import ctfchallenge.assets.Logging;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.control.ComboBox;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 
 import java.util.ArrayList;
@@ -30,7 +30,8 @@ public class ComboBoxBlock extends GridPane {
         cbox_text = new ArrayList<>();
         cbox = new ArrayList<>();
 
-        setStyle("-fx-background-color: #cce5ff;");
+        setBackground(new Background(new BackgroundFill(AccentParser.getLightAccentColor(),
+                CornerRadii.EMPTY, Insets.EMPTY)));
         setPadding(new Insets(15, 12, 15, 12));
         setHgap(8);
         setVgap(8);
