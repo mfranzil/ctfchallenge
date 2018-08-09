@@ -52,6 +52,7 @@ public class AccentParser {
 
     /**
      * Metodo che prende il colore di Windows 10 impostato al momento, oppure grigio su altri sistemi operativi.
+     *
      * @return Un Color con opacità 0.5.
      */
     public static Color getLightAccentColor() {
@@ -60,8 +61,8 @@ public class AccentParser {
     }
 
     /**
-     * @param location  La locazione nel registro.
-     * @param key       La chiave di registro.
+     * @param location La locazione nel registro.
+     * @param key      La chiave di registro.
      * @return registry Il valore, oppure null.
      */
     @Nullable

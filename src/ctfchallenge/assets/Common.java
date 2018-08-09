@@ -4,18 +4,18 @@ import org.jetbrains.annotations.Nullable;
 
 public class Common {
     /**
-     *  Il numero di squadre che hanno diritto al bonus durante la partita.
+     * Il numero di squadre che hanno diritto al bonus durante la partita.
      */
     public static final int MAX_TEAMS_BONUS = 5;
     /**
-     *  Il numero totale di esercizi che vengono svolti.
+     * Il numero totale di esercizi che vengono svolti.
      */
     public static final int MAX_EXERCISES = 5;
     /**
-     *  Il numero dell'esercizio corrente-
+     * Il numero dell'esercizio corrente-
      */
     public static int currentEs = 0;
-    
+
     public static int teamNumber;
 
     /**
