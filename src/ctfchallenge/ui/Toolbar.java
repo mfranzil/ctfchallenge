@@ -12,7 +12,7 @@ import javafx.stage.Stage;
 import org.jetbrains.annotations.NotNull;
 
 import static ctfchallenge.assets.Common.MAX_EXERCISES;
-import static ctfchallenge.assets.Common.numeroes;
+import static ctfchallenge.assets.Common.currentEs;
 
 /**
  * @author Matteo Franzil
@@ -34,11 +34,10 @@ public final class Toolbar extends HBox {
     /**
      * Costruttore standard della toolbar del programma.
      *
-     * @param buttons       I radiobutton delle squadre usati per il completamento dell'esercizio.
-     * @param comboBoxBlock I comboBox usati per selezionare i primi...quinti arrivati.
+     * @param pointAssigner Il gestore dei punti.
      * @param teamList      Il gestore delle squadre.
      */
-    public Toolbar(@NotNull RadioButtonsBlock buttons, @NotNull ComboBoxBlock comboBoxBlock,
+    public Toolbar(@NotNull PointAssigner pointAssigner,
                    @NotNull TeamList teamList) {
 
         setPadding(new Insets(15, 12, 15, 12));
@@ -63,16 +62,16 @@ public final class Toolbar extends HBox {
         });
 
         startGame.setOnAction(e -> {
-            Common.numeroes++;
-            if (Common.numeroes == 1) {
+            Common.currentEs++;
+            Common.teamNumber = teamList.size();
+            if (Common.currentEs == 1) {
                 addTeam.setDisable(true);
                 removeTeam.setDisable(true);
-                buttons.setRadioButtons(buttons, teamList);
-                comboBoxBlock.setComboBox(teamList);
+                pointAssigner.setPointAssigner(teamList);
                 getChildren().addAll(sendResults, incrementFont, decrementFont);
             }
-            if (Common.numeroes >= 1 && Common.numeroes <= MAX_EXERCISES) {
-                Logging.info("Inizio esercizio " + numeroes + "");
+            if (Common.currentEs >= 1 && Common.currentEs <= MAX_EXERCISES) {
+                Logging.info("Inizio esercizio " + currentEs + "");
                 startGame.setText("Prossimo esercizio");
                 sendResults.setDisable(false);
             } else {
@@ -85,11 +84,10 @@ public final class Toolbar extends HBox {
         });
 
         sendResults.setOnAction(e -> {
-            buttons.sendResults(teamList, Common.punteggioEs(numeroes));
-            comboBoxBlock.sendResults(teamList);
+            pointAssigner.sendResults();
             refreshScore.fire();
             startGame.setDisable(false);
-            if (numeroes == 5) {
+            if (currentEs == 5) {
                 startGame.setText("Termina partita");
             }
             sendResults.setDisable(true);
@@ -105,9 +103,9 @@ public final class Toolbar extends HBox {
                     int finalI = i + 1;
                     root.getChildren().add(new Button("" + finalI) {{
                         setOnAction(e -> {
-                            Common.numeroes = finalI;
+                            Common.currentEs = finalI;
                             startGame.fire();
-                            Logging.info("Salto al livello " + numeroes + "");
+                            Logging.info("Salto al livello " + currentEs + "");
                             stage.close();
                         });
                     }});

@@ -2,8 +2,7 @@ package ctfchallenge.views;
 
 import ctfchallenge.assets.Logging;
 import ctfchallenge.assets.TeamList;
-import ctfchallenge.ui.ComboBoxBlock;
-import ctfchallenge.ui.RadioButtonsBlock;
+import ctfchallenge.ui.PointAssigner;
 import ctfchallenge.ui.Toolbar;
 import javafx.application.Platform;
 import javafx.scene.Scene;
@@ -22,15 +21,13 @@ public class MainView extends Stage {
         BorderPane mainPane = new BorderPane();
         Scene mainScene = new Scene(mainPane);
 
-        RadioButtonsBlock buttons = new RadioButtonsBlock();
-        ComboBoxBlock comboBoxBlock = new ComboBoxBlock();
+        PointAssigner pointAssigner = new PointAssigner();
 
-        Toolbar toolbar = new Toolbar(buttons, comboBoxBlock, teamList);
+        Toolbar toolbar = new Toolbar(pointAssigner, teamList);
 
         mainPane.setTop(toolbar);
         mainPane.setLeft(logWindow);
-        mainPane.setCenter(buttons);
-        mainPane.setRight(comboBoxBlock);
+        mainPane.setCenter(pointAssigner);
 
         setScene(mainScene);
         initGUI();

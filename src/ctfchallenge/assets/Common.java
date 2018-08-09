@@ -14,7 +14,9 @@ public class Common {
     /**
      *  Il numero dell'esercizio corrente-
      */
-    public static int numeroes = 0;
+    public static int currentEs = 0;
+    
+    public static int teamNumber;
 
     /**
      * Funzione ausiliaria per assegnare i punti agli esercizi. Sono supportati
