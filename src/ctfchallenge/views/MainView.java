@@ -1,6 +1,9 @@
 package ctfchallenge.views;
 
-import ctfchallenge.*;
+import ctfchallenge.ComboBoxBlock;
+import ctfchallenge.RadioButtonsBlock;
+import ctfchallenge.TeamList;
+import ctfchallenge.Toolbar;
 import ctfchallenge.assets.Logging;
 import javafx.application.Platform;
 import javafx.scene.Scene;
@@ -11,14 +14,14 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 public class MainView extends Stage {
-    public MainView(Scoreboard scoreboard, Logging logWindow, TeamList teamList) {
+    public MainView(Logging logWindow, TeamList teamList) {
         BorderPane mainPane = new BorderPane();
         Scene mainScene = new Scene(mainPane);
 
         RadioButtonsBlock buttons = new RadioButtonsBlock();
         ComboBoxBlock comboBoxBlock = new ComboBoxBlock();
 
-        Toolbar toolbar = new Toolbar(buttons, comboBoxBlock, teamList, scoreboard);
+        Toolbar toolbar = new Toolbar(buttons, comboBoxBlock, teamList);
 
         mainPane.setTop(toolbar);
         mainPane.setLeft(logWindow);

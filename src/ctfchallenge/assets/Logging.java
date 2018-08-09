@@ -20,23 +20,23 @@ public class Logging extends TextArea {
     }
 
     public static void debug(String text) {
-        getInstance().appendText("[DEBUG] " + getTime() + " - " + text);
+        getInstance().appendText("[DEBUG] " + getTime() + " - " + text + "\n");
     }
 
     public static void info(String text) {
-        getInstance().appendText("[INFO] " + getTime() + " - " + text);
+        getInstance().appendText("[INFO] " + getTime() + " - " + text + "\n");
     }
 
     public static void warning(String text) {
-        getInstance().appendText("[WARNING] " + getTime() + " - " + text);
+        getInstance().appendText("[WARNING] " + getTime() + " - " + text + "\n");
     }
 
     public static void fatal(String text) {
-        getInstance().appendText("[FATAL] " + getTime() + " - " + text);
+        getInstance().appendText("[FATAL] " + getTime() + " - " + text + "\n");
     }
 
     public static void error(String text) {
-        getInstance().appendText("[ERROR] " + getTime() + " - " + text);
+        getInstance().appendText("[ERROR] " + getTime() + " - " + text + "\n");
     }
 
     private static String getTime() {

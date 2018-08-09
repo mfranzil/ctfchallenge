@@ -90,7 +90,7 @@ public class RadioButtonsBlock extends GridPane {
             Team current = squadre.get(i);
             if (label.equals("Completato")) {
                 current.incrementScore(punteggio);
-                Logging.info("La squadra " + current.getTeamName() + " ottiene " + punteggio + " punti\n");
+                Logging.info("La squadra " + current.getTeamName() + " ottiene " + punteggio + " punti");
             }
         }
     }

@@ -25,11 +25,10 @@ public class EditView extends Stage {
     /**
      * Questa finestra viene mostrata in caso di aggiunta o modifica di una squadra
      *
-     * @param scoreboard La finestea della scoreboard.
      * @param team       La squadra che verrà modificata.
      * @param isEdit     Metodo evocato in edit mode o addition mode (con punteggi bloccati)
      */
-    public EditView(Scoreboard scoreboard, Team team, boolean isEdit) {
+    public EditView(Team team, boolean isEdit) {
         GridPane editPane = new GridPane();
         Scene editScene = new Scene(editPane);
 
@@ -78,7 +77,7 @@ public class EditView extends Stage {
             team.setMember2(m2Field.getText());
             team.setScore(Integer.parseInt(ptField.getText()));
             this.close();
-            scoreboard.refresh();
+            Scoreboard.refreshScoreboard();
             Logging.info("Team con nome " + team.getTeamName() + (isEdit ? " aggiornato:" : " aggiunto:")
                     + "\nMembri: " + team.getMember1() + ", " + team.getMember2()
                     + "\nPunteggio: " + team.getScore() + "\n");

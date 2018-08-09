@@ -22,16 +22,16 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-
         Logging logWindow = Logging.getInstance();
-        Scoreboard scoreboard = new Scoreboard();
+
+        Scoreboard scoreboard = Scoreboard.getInstance();
         TeamList teamList = new TeamList();
         scoreboard.setItems(teamList);
 
         ScoreboardView scoreboardWindow = new ScoreboardView(scoreboard);
         scoreboardWindow.show();
 
-        MainView main = new MainView(scoreboard, logWindow, teamList);
+        MainView main = new MainView(logWindow, teamList);
         main.show();
     }
 

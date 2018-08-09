@@ -39,10 +39,9 @@ public final class Toolbar extends HBox {
      * @param buttons       I radiobutton delle squadre usati per il completamento dell'esercizio.
      * @param comboBoxBlock I comboBox usati per selezionare i primi...quinti arrivati.
      * @param teamList      Il gestore delle squadre.
-     * @param scoreboard    La finestra dello scoreboard
      */
     public Toolbar(RadioButtonsBlock buttons, ComboBoxBlock comboBoxBlock,
-                   TeamList teamList, Scoreboard scoreboard) {
+                   TeamList teamList) {
 
         setPadding(new Insets(15, 12, 15, 12));
         setSpacing(10);
@@ -54,14 +53,14 @@ public final class Toolbar extends HBox {
 
         getChildren().addAll(addTeam, removeTeam, editTeam, refreshScore, startGame, goToEx, restoreData);
 
-        addTeam.setOnAction(e -> addTeamActions(scoreboard, teamList));
+        addTeam.setOnAction(e -> addTeamActions(teamList));
         removeTeam.setOnAction(e -> removeTeamActions(teamList));
-        editTeam.setOnAction(e -> editTeamActions(scoreboard, teamList));
-        incrementFont.setOnAction(e -> scoreboard.incrementFont());
-        decrementFont.setOnAction(e -> scoreboard.decrementFont());
+        editTeam.setOnAction(e -> editTeamActions(teamList));
+        incrementFont.setOnAction(Scoreboard::incrementFont);
+        decrementFont.setOnAction(Scoreboard::decrementFont);
 
         refreshScore.setOnAction(e -> {
-            scoreboard.refresh();
+            Scoreboard.refreshScoreboard();
             BackupHandler.backupData(teamList);
         });
 
@@ -75,7 +74,7 @@ public final class Toolbar extends HBox {
                 getChildren().addAll(sendResults, incrementFont, decrementFont);
             }
             if (Common.numeroes >= 1 && Common.numeroes <= MAX_EXERCISES) {
-                Logging.info("Inizio esercizio " + numeroes + "\n");
+                Logging.info("Inizio esercizio " + numeroes + "");
                 startGame.setText("Prossimo esercizio");
                 sendResults.setDisable(false);
             } else {
@@ -110,7 +109,7 @@ public final class Toolbar extends HBox {
                         setOnAction(e -> {
                             Common.numeroes = finalI;
                             startGame.fire();
-                            Logging.info("Salto al livello " + numeroes + "\n");
+                            Logging.info("Salto al livello " + numeroes + "");
                             stage.close();
                         });
                     }});
@@ -135,14 +134,14 @@ public final class Toolbar extends HBox {
      *
      * @param teamList Una ObservableList di Squadre
      */
-    private void addTeamActions(Scoreboard scoreboard, TeamList teamList) {
+    private void addTeamActions(TeamList teamList) {
         try {
             Team tmp = new Team("", "", "");
-            EditView editView = new EditView(scoreboard, tmp, false);
+            EditView editView = new EditView(tmp, false);
             editView.showAndWait();
             teamList.add(tmp);
         } catch (Exception e) {
-            Logging.error("Inserimento della squadra fallito.\n");
+            Logging.error("Inserimento della squadra fallito.");
         }
         if (!(teamList.isEmpty())) {
             removeTeam.setDisable(false);
@@ -155,14 +154,14 @@ public final class Toolbar extends HBox {
      *
      * @param teamList Una ObservableList di Squadre
      */
-    private void editTeamActions(Scoreboard scoreboard, TeamList teamList) {
+    private void editTeamActions(TeamList teamList) {
         if (teamList.size() > 0) {
             VBox root = new VBox();
             root.getChildren().add(new Text("Scegli la squadra da modificare"));
 
             for (Team team : teamList) {
                 root.getChildren().add(new Button(team.getTeamName()) {{
-                    setOnAction(e -> new EditView(scoreboard, team, true).showAndWait());
+                    setOnAction(e -> new EditView(team, true).showAndWait());
                 }});
             }
             root.setPadding(new Insets(16));
@@ -196,7 +195,7 @@ public final class Toolbar extends HBox {
             for (Team team : teamList) {
                 root.getChildren().add(new Button(team.getTeamName()) {{
                     setOnAction(e -> {
-                        Logging.info("Team con nome " + team.getTeamName() + " rimosso con successo\n");
+                        Logging.info("Team con nome " + team.getTeamName() + " rimosso con successo");
                         teamList.remove(team);
                         root.getChildren().remove(this);
 
@@ -212,7 +211,7 @@ public final class Toolbar extends HBox {
             stage.setTitle("Scegli la squadra");
             stage.show();
         } else {
-            Logging.error("Nessuna squadra da rimuovere!" + "\n");
+            Logging.error("Nessuna squadra da rimuovere!");
         }
         if (teamList.isEmpty()) {
             removeTeam.setDisable(true);

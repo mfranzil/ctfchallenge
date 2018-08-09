@@ -67,14 +67,14 @@ public class TeamList extends SimpleListProperty<Team> {
         switch (winners.size()) {
             case 0:
                 Logging.error("Sembra che non abbia vinto nessuno...." +
-                        "guarda la classifica per ottenere il vincitore.\n");
+                        "guarda la classifica per ottenere il vincitore.");
                 break;
             case 1:
                 Logging.info("PARTITA FINITA!\nVince la squadra " + winners.get(0));
                 break;
             default:
-                Logging.info("PARTITA FINITA\nVincono le squadre: \n");
-                winners.forEach(team -> Logging.info(team.getTeamName() + "\n"));
+                Logging.info("PARTITA FINITA\nVincono le squadre:");
+                winners.forEach(team -> Logging.info(team.getTeamName()));
                 break;
         }
     }
