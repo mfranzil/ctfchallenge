@@ -1,8 +1,8 @@
 package ctfchallenge.views;
 
-import ctfchallenge.Scoreboard;
 import ctfchallenge.Team;
 import ctfchallenge.assets.Logging;
+import ctfchallenge.ui.Scoreboard;
 import javafx.event.ActionEvent;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;

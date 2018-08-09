@@ -1,6 +1,6 @@
 package ctfchallenge.views;
 
-import ctfchallenge.Scoreboard;
+import ctfchallenge.ui.Scoreboard;
 import javafx.event.Event;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;

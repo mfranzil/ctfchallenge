@@ -1,6 +1,8 @@
 package ctfchallenge;
 
 import ctfchallenge.assets.Logging;
+import ctfchallenge.assets.TeamList;
+import ctfchallenge.ui.Scoreboard;
 import ctfchallenge.views.MainView;
 import ctfchallenge.views.ScoreboardView;
 import javafx.application.Application;

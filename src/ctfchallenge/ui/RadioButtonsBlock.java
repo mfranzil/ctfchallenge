@@ -1,7 +1,9 @@
-package ctfchallenge;
+package ctfchallenge.ui;
 
+import ctfchallenge.Team;
 import ctfchallenge.assets.AccentParser;
 import ctfchallenge.assets.Logging;
+import ctfchallenge.assets.TeamList;
 import javafx.geometry.Insets;
 import javafx.scene.control.Labeled;
 import javafx.scene.control.RadioButton;
@@ -51,12 +53,12 @@ public class RadioButtonsBlock extends GridPane {
      * Metodo che fa apparire sul Pane dato i bottoni inizializzati in precedenza.
      *
      * @param gridView Il Pane in cui aggiungere i bottoni
-     * @param squadre  Una ObservableList di Squadre
+     * @param teamList  Una ObservableList di Squadre
      */
-    public void setRadioButtons(@NotNull GridPane gridView, @NotNull TeamList squadre) {
-        int media = (int) Math.floor(squadre.size() / 2);
-        for (int i = 0; i < squadre.size(); i++) {
-            Text radio_text_tmp = new Text(squadre.get(i).getTeamName());
+    public void setRadioButtons(@NotNull GridPane gridView, @NotNull TeamList teamList) {
+        int media = (int) Math.floor(teamList.size() / 2);
+        for (int i = 0; i < teamList.size(); i++) {
+            Text radio_text_tmp = new Text(teamList.get(i).getTeamName());
 
             RadioButton vinto_tmp = new RadioButton("Completato");
             RadioButton perso_tmp = new RadioButton("Non completato");
@@ -85,13 +87,13 @@ public class RadioButtonsBlock extends GridPane {
     /**
      * Metodo che preleva lo stato dei bottoni e li aggiunge alle squadre, con un punteggio prefissato.
      *
-     * @param squadre   Una ObservableList di squadre
+     * @param teamList   Una ObservableList di squadre
      * @param punteggio Il punteggio da attribuire in caso di esercizio completato
      */
-    public void sendResults(@NotNull TeamList squadre, int punteggio) {
-        for (int i = 0; i < squadre.size(); i++) {
+    public void sendResults(@NotNull TeamList teamList, int punteggio) {
+        for (int i = 0; i < teamList.size(); i++) {
             String label = ((Labeled) radio_btn.get(i).getSelectedToggle()).getText();
-            Team current = squadre.get(i);
+            Team current = teamList.get(i);
             if (label.equals("Completato")) {
                 current.incrementScore(punteggio);
                 Logging.info("La squadra " + current.getTeamName() + " ottiene " + punteggio + " punti");

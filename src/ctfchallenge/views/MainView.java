@@ -1,10 +1,10 @@
 package ctfchallenge.views;
 
-import ctfchallenge.ComboBoxBlock;
-import ctfchallenge.RadioButtonsBlock;
-import ctfchallenge.TeamList;
-import ctfchallenge.Toolbar;
 import ctfchallenge.assets.Logging;
+import ctfchallenge.assets.TeamList;
+import ctfchallenge.ui.ComboBoxBlock;
+import ctfchallenge.ui.RadioButtonsBlock;
+import ctfchallenge.ui.Toolbar;
 import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;

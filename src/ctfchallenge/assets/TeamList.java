@@ -1,6 +1,6 @@
-package ctfchallenge;
+package ctfchallenge.assets;
 
-import ctfchallenge.assets.Logging;
+import ctfchallenge.Team;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import org.jetbrains.annotations.NotNull;

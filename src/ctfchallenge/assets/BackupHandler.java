@@ -2,7 +2,6 @@ package ctfchallenge.assets;
 
 import ctfchallenge.Main;
 import ctfchallenge.Team;
-import ctfchallenge.TeamList;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.jetbrains.annotations.NotNull;
