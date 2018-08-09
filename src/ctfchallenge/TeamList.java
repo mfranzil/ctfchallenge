@@ -1,8 +1,8 @@
 package ctfchallenge;
 
+import ctfchallenge.assets.Logging;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
-import javafx.scene.control.TextArea;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -61,21 +61,20 @@ public class TeamList extends SimpleListProperty<Team> {
 
     /**
      * Metodo per terminare la partita; si comporta in maniera diversa a seconda del numero dei vincitori.
-     *
-     * @param txt La finestra di log del programma
      */
-    public void processVictory(TextArea txt) {
+    public void processVictory() {
         ArrayList<Team> winners = getLeader();
         switch (winners.size()) {
             case 0:
-                txt.appendText("Sembra che non abbia vinto nessuno....guarda la classifica per ottenere il vincitore.\n");
+                Logging.error("Sembra che non abbia vinto nessuno...." +
+                        "guarda la classifica per ottenere il vincitore.\n");
                 break;
             case 1:
-                txt.appendText("PARTITA FINITA!\nVince la squadra " + winners.get(0));
+                Logging.info("PARTITA FINITA!\nVince la squadra " + winners.get(0));
                 break;
             default:
-                txt.appendText("PARTITA FINITA\nVincono le squadre: \n");
-                winners.forEach(team -> txt.appendText(team.getTeamName() + "\n"));
+                Logging.info("PARTITA FINITA\nVincono le squadre: \n");
+                winners.forEach(team -> Logging.info(team.getTeamName() + "\n"));
                 break;
         }
     }

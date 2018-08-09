@@ -1,9 +1,9 @@
 package ctfchallenge;
 
+import ctfchallenge.assets.Logging;
 import ctfchallenge.views.MainView;
 import ctfchallenge.views.ScoreboardView;
 import javafx.application.Application;
-import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
 
 /**
@@ -22,17 +22,16 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        TextArea txt = new TextArea() {{
-            setEditable(false);
-        }};
-        Scoreboard scoreboard = new Scoreboard(txt);
+
+        Logging logWindow = Logging.getInstance();
+        Scoreboard scoreboard = new Scoreboard();
         TeamList teamList = new TeamList();
         scoreboard.setItems(teamList);
 
         ScoreboardView scoreboardWindow = new ScoreboardView(scoreboard);
         scoreboardWindow.show();
 
-        MainView main = new MainView(scoreboard, txt, teamList);
+        MainView main = new MainView(scoreboard, logWindow, teamList);
         main.show();
     }
 

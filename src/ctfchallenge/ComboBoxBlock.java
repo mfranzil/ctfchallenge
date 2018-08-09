@@ -1,10 +1,10 @@
 package ctfchallenge;
 
 import ctfchallenge.assets.Common;
+import ctfchallenge.assets.Logging;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextArea;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
@@ -60,16 +60,15 @@ public class ComboBoxBlock extends GridPane {
     /**
      * Metodo che prende le squadre selezionate nel ComboBox e ne assegna un punteggio prefissato.
      *
-     * @param txt      La finestra di log del programma.
      * @param teamList Una ObservableList di Squadre
      */
-    public void sendResults(TextArea txt, TeamList teamList) {
+    public void sendResults(TeamList teamList) {
         for (int i = 0; i < cbox.size(); i++) {
             String object_name = (cbox.get(i).getValue());
             if (object_name != null) {
                 Team temp = teamList.getSquadraFromName(object_name);
                 temp.setScore(temp.getScore() + Common.MAX_TEAMS_BONUS - i);
-                txt.appendText("La squadra " + temp.getTeamName()
+                Logging.info("La squadra " + temp.getTeamName()
                         + " ottiene " + (Common.MAX_TEAMS_BONUS - i) + " punti bonus\n");
             }
         }

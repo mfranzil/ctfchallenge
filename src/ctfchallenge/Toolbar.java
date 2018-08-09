@@ -2,19 +2,15 @@ package ctfchallenge;
 
 import ctfchallenge.assets.BackupHandler;
 import ctfchallenge.assets.Common;
+import ctfchallenge.assets.Logging;
 import ctfchallenge.views.EditView;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextArea;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static ctfchallenge.assets.Common.MAX_EXERCISES;
 import static ctfchallenge.assets.Common.numeroes;
@@ -40,13 +36,12 @@ public final class Toolbar extends HBox {
     /**
      * Costruttore standard della toolbar del programma.
      *
-     * @param txt           La finestra di log del programma principale
      * @param buttons       I radiobutton delle squadre usati per il completamento dell'esercizio.
      * @param comboBoxBlock I comboBox usati per selezionare i primi...quinti arrivati.
      * @param teamList      Il gestore delle squadre.
      * @param scoreboard    La finestra dello scoreboard
      */
-    public Toolbar(TextArea txt, RadioButtonsBlock buttons, ComboBoxBlock comboBoxBlock,
+    public Toolbar(RadioButtonsBlock buttons, ComboBoxBlock comboBoxBlock,
                    TeamList teamList, Scoreboard scoreboard) {
 
         setPadding(new Insets(15, 12, 15, 12));
@@ -58,15 +53,15 @@ public final class Toolbar extends HBox {
 
         getChildren().addAll(addTeam, removeTeam, editTeam, refreshScore, startGame, goToEx, restoreData);
 
-        addTeam.setOnAction(e -> addTeamActions(txt, scoreboard, teamList));
-        removeTeam.setOnAction(e -> removeTeamActions(txt, teamList));
-        editTeam.setOnAction(e -> editTeamActions(txt, scoreboard, teamList));
-        incrementFont.setOnAction(e -> scoreboard.incrementFont(txt));
-        decrementFont.setOnAction(e -> scoreboard.decrementFont(txt));
+        addTeam.setOnAction(e -> addTeamActions(scoreboard, teamList));
+        removeTeam.setOnAction(e -> removeTeamActions(teamList));
+        editTeam.setOnAction(e -> editTeamActions(scoreboard, teamList));
+        incrementFont.setOnAction(e -> scoreboard.incrementFont());
+        decrementFont.setOnAction(e -> scoreboard.decrementFont());
 
         refreshScore.setOnAction(e -> {
             scoreboard.refresh();
-            BackupHandler.backupData(txt, teamList);
+            BackupHandler.backupData(teamList);
         });
 
         startGame.setOnAction(e -> {
@@ -79,11 +74,11 @@ public final class Toolbar extends HBox {
                 getChildren().addAll(sendResults, incrementFont, decrementFont);
             }
             if (Common.numeroes >= 1 && Common.numeroes <= MAX_EXERCISES) {
-                txt.appendText("Inizio esercizio " + numeroes + "\n");
+                Logging.info("Inizio esercizio " + numeroes + "\n");
                 startGame.setText("Prossimo esercizio");
                 sendResults.setDisable(false);
             } else {
-                teamList.processVictory(txt);
+                teamList.processVictory();
                 sendResults.setDisable(true);
             }
             refreshScore.fire();
@@ -92,8 +87,8 @@ public final class Toolbar extends HBox {
         });
 
         sendResults.setOnAction(e -> {
-            buttons.sendResults(txt, teamList, Common.punteggioEs(numeroes));
-            comboBoxBlock.sendResults(txt, teamList);
+            buttons.sendResults(teamList, Common.punteggioEs(numeroes));
+            comboBoxBlock.sendResults(teamList);
             refreshScore.fire();
             startGame.setDisable(false);
             if (numeroes == 5) {
@@ -114,7 +109,7 @@ public final class Toolbar extends HBox {
                         setOnAction(e -> {
                             Common.numeroes = finalI;
                             startGame.fire();
-                            txt.appendText("Salto al livello " + numeroes + "\n");
+                            Logging.info("Salto al livello " + numeroes + "\n");
                             stage.close();
                         });
                     }});
@@ -126,12 +121,12 @@ public final class Toolbar extends HBox {
                 stage.setTitle("Scegli l'esercizio");
                 stage.show();
             } catch (Exception ex) {
-                txt.appendText("Numero esercizio non valido!");
+                Logging.warning("Numero esercizio non valido!");
             }
         });
         goToEx.setDisable(true);
 
-        restoreData.setOnAction(e -> BackupHandler.restoreData(txt, teamList));
+        restoreData.setOnAction(e -> BackupHandler.restoreData(teamList));
     }
 
     /**
@@ -139,15 +134,14 @@ public final class Toolbar extends HBox {
      *
      * @param teamList Una ObservableList di Squadre
      */
-    private void addTeamActions(TextArea txt, Scoreboard scoreboard, TeamList teamList) {
+    private void addTeamActions(Scoreboard scoreboard, TeamList teamList) {
         try {
             Team tmp = new Team("", "", "");
-            EditView editView = new EditView(txt, scoreboard, tmp, false);
+            EditView editView = new EditView(scoreboard, tmp, false);
             editView.showAndWait();
             teamList.add(tmp);
         } catch (Exception e) {
-            txt.appendText("ERRORE! Prova a reinserire la squadra!\n");
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, e);
+            Logging.error("Inserimento della squadra fallito.\n");
         }
         if (!(teamList.isEmpty())) {
             removeTeam.setDisable(false);
@@ -160,14 +154,14 @@ public final class Toolbar extends HBox {
      *
      * @param teamList Una ObservableList di Squadre
      */
-    private void editTeamActions(TextArea txt, Scoreboard scoreboard, TeamList teamList) {
+    private void editTeamActions(Scoreboard scoreboard, TeamList teamList) {
         if (teamList.size() > 0) {
             VBox root = new VBox();
             root.getChildren().add(new Text("Scegli la squadra da modificare"));
 
             for (Team team : teamList) {
                 root.getChildren().add(new Button(team.getTeamName()) {{
-                    setOnAction(e -> new EditView(txt, scoreboard, team, true).showAndWait());
+                    setOnAction(e -> new EditView(scoreboard, team, true).showAndWait());
                 }});
             }
             root.setPadding(new Insets(16));
@@ -179,7 +173,8 @@ public final class Toolbar extends HBox {
             stage.setTitle("Scegli la squadra");
             stage.show();
         } else {
-            new Alert(Alert.AlertType.ERROR, "Nessuna squadra da modificare!").showAndWait();
+            // new Alert(Alert.AlertType.ERROR, "Nessuna squadra da modificare!").showAndWait();
+            Logging.error("Nessuna squadra da modificare!");
         }
     }
 
@@ -189,7 +184,7 @@ public final class Toolbar extends HBox {
      *
      * @param teamList Una ObservableList di Squadre
      */
-    private void removeTeamActions(TextArea txt, TeamList teamList) {
+    private void removeTeamActions(TeamList teamList) {
         if (teamList.size() > 0) {
             VBox root = new VBox();
             Scene scene = new Scene(root);
@@ -200,7 +195,7 @@ public final class Toolbar extends HBox {
             for (Team team : teamList) {
                 root.getChildren().add(new Button(team.getTeamName()) {{
                     setOnAction(e -> {
-                        txt.appendText("Team con nome " + team.getTeamName() + " rimosso con successo\n");
+                        Logging.info("Team con nome " + team.getTeamName() + " rimosso con successo\n");
                         teamList.remove(team);
                         root.getChildren().remove(this);
 
@@ -216,7 +211,7 @@ public final class Toolbar extends HBox {
             stage.setTitle("Scegli la squadra");
             stage.show();
         } else {
-            txt.appendText("Nessuna squadra da rimuovere!" + "\n");
+            Logging.error("Nessuna squadra da rimuovere!" + "\n");
         }
         if (teamList.isEmpty()) {
             removeTeam.setDisable(true);

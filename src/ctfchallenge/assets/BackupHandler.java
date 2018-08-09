@@ -3,7 +3,6 @@ package ctfchallenge.assets;
 import ctfchallenge.Main;
 import ctfchallenge.Team;
 import ctfchallenge.TeamList;
-import javafx.scene.control.TextArea;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -17,16 +16,15 @@ public class BackupHandler {
      * Metodo che fa un backup dei dati su backup.txt ogni volta che viene
      * chiamato sovrascrivendo il precedente.
      *
-     * @param txt      La finestra di log dei dati.
      * @param teamList Il gestore interno delle squadre.
      */
-    public static void backupData(TextArea txt, TeamList teamList) {
+    public static void backupData(TeamList teamList) {
         try {
             BufferedWriter fileOut = new BufferedWriter(new FileWriter("log.txt"));
-            fileOut.write(txt.getText());
+            fileOut.write(Logging.getLog());
             fileOut.close();
             fileOut = new BufferedWriter(new FileWriter("backup.txt"));
-            System.out.println("Logging in progress...");
+            Logging.info("Logging in progress...");
             for (Team temp : teamList) {
                 String data = temp.getTeamName() + " TAB " + temp.getMember1() + " TAB "
                         + temp.getMember2() + " TAB " + temp.getScore() + " TAB";
@@ -36,7 +34,7 @@ public class BackupHandler {
         } catch (IOException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
-            System.out.println("Logging finished.");
+            Logging.info("Logging finished.");
         }
 
     }
@@ -44,10 +42,9 @@ public class BackupHandler {
     /**
      * Metodo che evoca un FileChooser per riprendere il gioco da un backup precedente.
      *
-     * @param txt      La finestra di log del programma.
      * @param teamList Il gestore interno delle squadre.
      */
-    public static void restoreData(TextArea txt, TeamList teamList) {
+    public static void restoreData(TeamList teamList) {
         try {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Carica un file");
@@ -56,7 +53,7 @@ public class BackupHandler {
             );
             File file = fileChooser.showOpenDialog(new Stage());
             if (file == null) {
-                System.out.println("No file chosen");
+                Logging.warning("No file chosen");
                 return;
             } else {
                 teamList.clear();
@@ -68,10 +65,10 @@ public class BackupHandler {
                     teamList.add(temp);
                 }
             }
-            txt.appendText("Backup ripristinato con successo.");
+            Logging.info("Backup ripristinato con successo.");
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, "File di backup non trovato.", ex);
-            txt.appendText("Impossibile ripristinare il backup");
+            Logging.fatal("File di backup non trovato.");
+            Logging.fatal("Impossibile ripristinare il backup");
         }
     }
 }

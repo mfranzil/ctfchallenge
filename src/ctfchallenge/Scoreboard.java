@@ -1,9 +1,9 @@
 package ctfchallenge;
 
 
+import ctfchallenge.assets.Logging;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 
@@ -25,11 +25,9 @@ public final class Scoreboard extends TableView<Team> {
 
     /**
      * Costruttore standard della Scoreboard. Si comporta come una TableView con le colonne come variabili d'istanza.
-     *
-     * @param txt La finestra di log del programma
      */
     @SuppressWarnings("unchecked")
-    public Scoreboard(TextArea txt) {
+    public Scoreboard() {
         nomesquadra = new TableColumn<>("Nome squadra");
         giocatori = new TableColumn<>("Giocatori");
         membro1 = new TableColumn<>("Membro 1");
@@ -46,7 +44,7 @@ public final class Scoreboard extends TableView<Team> {
         membro2.prefWidthProperty().bind(widthProperty().divide(3.0));
         punteggio.prefWidthProperty().bind(widthProperty().divide(6.0));
 
-        resizeFont(24, txt);
+        resizeFont(24);
 
         giocatori.getColumns().addAll(membro1, membro2);
         getColumns().addAll(nomesquadra, giocatori, punteggio);
@@ -54,32 +52,28 @@ public final class Scoreboard extends TableView<Team> {
 
     /**
      * Metodo che decrementa il font di una grandezza fissa stabilita dall'array nella classe.
-     *
-     * @param txt La finestra di log del programma
      */
-    public void decrementFont(TextArea txt) {
+    public void decrementFont() {
         --pointer;
-        if (pointer >= 0 && pointer <= fontsizes.length) {
-            resizeFont(fontsizes[pointer], txt);
+        try {
+            resizeFont(fontsizes[pointer]);
             refresh();
-        } else {
-            txt.appendText("Impossibile settare la grandezza desiderata\n");
+        } catch (ArrayIndexOutOfBoundsException ex) {
+            Logging.warning("Impossibile settare la grandezza desiderata\n");
             ++pointer;
         }
     }
 
     /**
      * Metodo che aumenti il font di una grandezza fissa stabilita dall'array nella classe.
-     *
-     * @param txt La finestra di log del programma
      */
-    public void incrementFont(TextArea txt) {
+    public void incrementFont() {
         ++pointer;
-        if (pointer >= 0 && pointer <= fontsizes.length) {
-            resizeFont(fontsizes[pointer], txt);
+        try {
+            resizeFont(fontsizes[pointer]);
             refresh();
-        } else {
-            txt.appendText("Impossibile settare la grandezza desiderata\n");
+        } catch (ArrayIndexOutOfBoundsException ex) {
+            Logging.warning("Impossibile settare la grandezza desiderata\n");
             --pointer;
         }
     }
@@ -88,9 +82,8 @@ public final class Scoreboard extends TableView<Team> {
      * Metodo che modifica il font di una grandezza arbitraria.
      *
      * @param size La grandezza (px) del font
-     * @param txt  La finestra di log del programma
      */
-    public void resizeFont(int size, TextArea txt) {
+    public void resizeFont(int size) {
         if (size > 0 && size < 100) {
             String style = ("-fx-font: " + size + "px Arial; -fx-alignment: CENTER");
             nomesquadra.setStyle(style);
@@ -98,9 +91,9 @@ public final class Scoreboard extends TableView<Team> {
             membro2.setStyle(style);
             punteggio.setStyle(style);
             giocatori.setStyle(style);
-            txt.appendText("Grandezza del font settata a " + size + "\n");
+            Logging.info("Grandezza del font settata a " + size + "\n");
         } else {
-            txt.appendText("Grandezza del font non valida!" + "\n");
+            Logging.warning("Grandezza del font non valida!" + "\n");
         }
 
     }

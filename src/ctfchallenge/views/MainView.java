@@ -1,27 +1,27 @@
 package ctfchallenge.views;
 
 import ctfchallenge.*;
+import ctfchallenge.assets.Logging;
 import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 public class MainView extends Stage {
-    public MainView(Scoreboard scoreboard, TextArea txt, TeamList teamList) {
+    public MainView(Scoreboard scoreboard, Logging logWindow, TeamList teamList) {
         BorderPane mainPane = new BorderPane();
         Scene mainScene = new Scene(mainPane);
 
         RadioButtonsBlock buttons = new RadioButtonsBlock();
         ComboBoxBlock comboBoxBlock = new ComboBoxBlock();
 
-        Toolbar toolbar = new Toolbar(txt, buttons, comboBoxBlock, teamList, scoreboard);
+        Toolbar toolbar = new Toolbar(buttons, comboBoxBlock, teamList, scoreboard);
 
         mainPane.setTop(toolbar);
-        mainPane.setLeft(txt);
+        mainPane.setLeft(logWindow);
         mainPane.setCenter(buttons);
         mainPane.setRight(comboBoxBlock);
 

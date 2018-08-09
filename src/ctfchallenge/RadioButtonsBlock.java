@@ -1,9 +1,9 @@
 package ctfchallenge;
 
+import ctfchallenge.assets.Logging;
 import javafx.geometry.Insets;
 import javafx.scene.control.Labeled;
 import javafx.scene.control.RadioButton;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
@@ -76,17 +76,16 @@ public class RadioButtonsBlock extends GridPane {
     /**
      * Metodo che preleva lo stato dei bottoni e li aggiunge alle squadre, con un punteggio prefissato.
      *
-     * @param txt       La finestra di log del programma
      * @param squadre   Una ObservableList di squadre
      * @param punteggio Il punteggio da attribuire in caso di esercizio completato
      */
-    public void sendResults(TextArea txt, TeamList squadre, int punteggio) {
+    public void sendResults(TeamList squadre, int punteggio) {
         for (int i = 0; i < squadre.size(); i++) {
             String label = ((Labeled) radio_btn.get(i).getSelectedToggle()).getText();
             Team current = squadre.get(i);
             if (label.equals("Completato")) {
                 current.incrementScore(punteggio);
-                txt.appendText("La squadra " + current.getTeamName() + " ottiene " + punteggio + " punti\n");
+                Logging.info("La squadra " + current.getTeamName() + " ottiene " + punteggio + " punti\n");
             }
         }
     }
