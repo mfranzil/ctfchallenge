@@ -14,7 +14,7 @@ import javafx.stage.Stage;
 
 /**
  * @author Matteo Franzil
- * @version 1.1
+ * @version 1.2
  */
 public class MainView extends Stage {
     public MainView(Logging logWindow, TeamList teamList) {
@@ -37,16 +37,19 @@ public class MainView extends Stage {
         setMaximized(false);
         setWidth(1100);
         setHeight(600);
-        setTitle("Main");
+        setTitle("CTFChallenge");
+
         setOnCloseRequest(e -> {
             e.consume();
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
-                    "Sei sicuro di voler uscire?",
+                    "Do you really want to quit?",
                     ButtonType.OK, ButtonType.CANCEL);
             alert.showAndWait()
                     .filter(response -> response == ButtonType.OK)
                     .ifPresent(response -> Platform.exit());
         });
+
+        // Icona dell'applicazione
         getIcons().add(new Image("file:logo.png"));
     }
 }

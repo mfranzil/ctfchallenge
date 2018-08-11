@@ -11,39 +11,39 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.jetbrains.annotations.NotNull;
 
-import static ctfchallenge.assets.Common.MAX_EXERCISES;
-import static ctfchallenge.assets.Common.currentEs;
+import java.util.ArrayList;
+
+import static ctfchallenge.assets.Common.MAX_ROUNDS;
+import static ctfchallenge.assets.Common.currentRound;
 
 /**
  * @author Matteo Franzil
- * @version 1.1
+ * @version 1.2
  */
 public final class Toolbar extends HBox {
 
     private final Button restoreData, editTeam, addTeam, removeTeam, refreshScore,
-            startGame, sendResults, incrementFont, decrementFont, goToEx;
+            startGame, sendResults, incrementFont, decrementFont;
 
     /**
-     * Costruttore standard della toolbar del programma.
+     * Standard constructor for the Toolbar.
      *
-     * @param pointAssigner Il gestore dei punti.
-     * @param teamList      Il gestore delle squadre.
+     * @param pointAssigner The score assigner.
+     * @param teamList      The ObservableList of teams.
      */
     public Toolbar(@NotNull PointAssigner pointAssigner, @NotNull TeamList teamList) {
-        addTeam = new Button("Nuova squadra");
-        removeTeam = new Button("Rimuovi squadra");
-        editTeam = new Button("Modifica squadra");
+        addTeam = new Button("Add team");
+        removeTeam = new Button("Remove team");
+        editTeam = new Button("Edit team");
         incrementFont = new Button("+");
         decrementFont = new Button("-");
-        startGame = new Button("Inizia la partita");
-        goToEx = new Button("Modifica numero esercizio");
-        restoreData = new Button("Recupera da backup");
-        refreshScore = new Button("Aggiorna la classifica");
-        sendResults = new Button("Invia i risultati");
+        startGame = new Button("Start the match");
+        restoreData = new Button("Restore from backup");
+        refreshScore = new Button("Update the scoreboard");
+        sendResults = new Button("Send results");
 
         removeTeam.setDisable(true);
         editTeam.setDisable(true);
-        goToEx.setDisable(true);
 
         addTeam.setOnAction(e -> addTeamActions(teamList));
         removeTeam.setOnAction(e -> removeTeamActions(teamList));
@@ -51,7 +51,6 @@ public final class Toolbar extends HBox {
         incrementFont.setOnAction(Scoreboard::incrementFont);
         decrementFont.setOnAction(Scoreboard::decrementFont);
         startGame.setOnAction(e -> startGameActions(pointAssigner, teamList));
-        goToEx.setOnAction(e -> goToExActions());
         restoreData.setOnAction(e -> BackupHandler.restoreData(teamList));
 
         refreshScore.setOnAction(e -> {
@@ -63,13 +62,13 @@ public final class Toolbar extends HBox {
             pointAssigner.sendResults();
             refreshScore.fire();
             startGame.setDisable(false);
-            if (currentEs == 5) {
-                startGame.setText("Termina partita");
+            if (currentRound == 5) {
+                startGame.setText("End match");
             }
             sendResults.setDisable(true);
         });
 
-        getChildren().addAll(addTeam, removeTeam, editTeam, refreshScore, startGame, goToEx, restoreData);
+        getChildren().addAll(addTeam, removeTeam, editTeam, refreshScore, startGame, restoreData);
 
         setPadding(new Insets(15, 12, 15, 12));
         setSpacing(10);
@@ -77,19 +76,14 @@ public final class Toolbar extends HBox {
                 CornerRadii.EMPTY, Insets.EMPTY)));
     }
 
-    /**
-     * Metodo di gestione del bottone per aggiungere le squadre.
-     *
-     * @param teamList Una ObservableList di Squadre
-     */
     private void addTeamActions(@NotNull TeamList teamList) {
         try {
-            Team team = new Team("", "", "");
-            EditView editView = new EditView(team, false);
+            Team team = new Team("", "", "", 0);
+            EditView editView = new EditView(team, false, addTeam);
             editView.showAndWait();
             teamList.add(team);
         } catch (Exception e) {
-            Logging.error("Inserimento della squadra fallito.");
+            Logging.error("Team insertion failed.");
         }
         if (!(teamList.isEmpty())) {
             removeTeam.setDisable(false);
@@ -97,19 +91,14 @@ public final class Toolbar extends HBox {
         }
     }
 
-    /**
-     * Metodo di gestione del bottone per modificare le squadre.
-     *
-     * @param teamList Una ObservableList di Squadre
-     */
     private void editTeamActions(TeamList teamList) {
         if (teamList.size() > 0) {
             VBox root = new VBox();
-            root.getChildren().add(new Text("Scegli la squadra da modificare"));
+            root.getChildren().add(new Text("Choose the team to edit:"));
 
             for (Team team : teamList) {
-                root.getChildren().add(new Button(team.getTeamName()) {{
-                    setOnAction(e -> new EditView(team, true).showAndWait());
+                root.getChildren().add(new Button(team.getName()) {{
+                    setOnAction(e -> new EditView(team, true, editTeam).showAndWait());
                 }});
             }
             root.setPadding(new Insets(16));
@@ -118,29 +107,24 @@ public final class Toolbar extends HBox {
             Scene scene = new Scene(root);
             Stage stage = new Stage();
             stage.setScene(scene);
-            stage.setTitle("Scegli la squadra");
+            stage.setTitle("Choose the team");
             stage.show();
         } else {
-            Logging.error("Nessuna squadra da modificare!");
+            Logging.error("No team to edit!");
         }
     }
 
-    /**
-     * Metodo di gestione del bottone per rimuovere le squadre.
-     *
-     * @param teamList Una ObservableList di Squadre
-     */
     private void removeTeamActions(TeamList teamList) {
         if (teamList.size() > 0) {
             VBox root = new VBox();
             Scene scene = new Scene(root);
             Stage stage = new Stage();
 
-            root.getChildren().add(new Text("Scegli la squadra da cancellare"));
+            root.getChildren().add(new Text("Chooose the team to remove:"));
 
-            teamList.forEach(team -> root.getChildren().add(new Button(team.getTeamName()) {{
+            teamList.forEach(team -> root.getChildren().add(new Button(team.getName()) {{
                 setOnAction(e -> {
-                    Logging.info("Team con nome " + team.getTeamName() + " rimosso con successo");
+                    Logging.info("Team with name " + team.getName() + " successfully removed");
                     teamList.remove(team);
                     root.getChildren().remove(this);
 
@@ -153,10 +137,10 @@ public final class Toolbar extends HBox {
             root.setPadding(new Insets(16));
             root.setSpacing(16);
             stage.setScene(scene);
-            stage.setTitle("Scegli la squadra");
+            stage.setTitle("Choose the team");
             stage.show();
         } else {
-            Logging.error("Nessuna squadra da rimuovere!");
+            Logging.error("No team to remove!");
         }
         if (teamList.isEmpty()) {
             removeTeam.setDisable(true);
@@ -165,41 +149,70 @@ public final class Toolbar extends HBox {
     }
 
     private void startGameActions(@NotNull PointAssigner pointAssigner, @NotNull TeamList teamList) {
-        Common.currentEs++;
+        Common.currentRound++;
         Common.teamNumber = teamList.size();
-        if (Common.currentEs == 1) {
+        if (Common.currentRound == 1) {
             addTeam.setDisable(true);
             removeTeam.setDisable(true);
             pointAssigner.setPointAssigner(teamList);
             getChildren().addAll(sendResults, incrementFont, decrementFont);
         }
-        if (Common.currentEs >= 1 && Common.currentEs <= MAX_EXERCISES) {
-            Logging.info("Inizio esercizio " + currentEs + "");
-            startGame.setText("Prossimo esercizio");
+        if (Common.currentRound >= 1 && Common.currentRound <= MAX_ROUNDS) {
+            Logging.info("Starting round " + currentRound);
+            startGame.setText("Next round");
             sendResults.setDisable(false);
         } else {
-            teamList.processVictory();
-            sendResults.setDisable(true);
+            processVictory(teamList);
         }
         refreshScore.fire();
         restoreData.setDisable(true);
         startGame.setDisable(true);
-        goToEx.setDisable(false);
+        // goToEx.setDisable(false);
     }
 
+    private void processVictory(TeamList teamList) {
+        ArrayList<Team> winners = teamList.getLeader();
+        switch (winners.size()) {
+            case 0:
+                Logging.error("Whoops, looks like nobody has won. Take a look at the scoreboard for" +
+                        " information on the winner.");
+                break;
+            case 1:
+                Team winner = winners.get(0);
+                Logging.info("MATCH FINISHED!\nWinner: " + winner);
+                break;
+            default:
+                String winnerStr = "";
+                for (Team team : winners) {
+                    winnerStr = winnerStr + team + "\n";
+                }
+                Logging.info("MATCH FINISHED!\nThese teams are getting their share:\n" + winnerStr);
+                break;
+        }
+        sendResults.setDisable(true);
+    }
+
+    @Deprecated
     private void goToExActions() {
+        // Code to insert this in the program:
+        //
+        //Button goToEx = new Button("Modifica numero esercizio");
+        //goToEx.setDisable(true);
+        //goToEx.setOnAction(e -> goToExActions());
+        //getChildren().add(goToEx);
+
         try {
             HBox root = new HBox();
             Scene scene = new Scene(root);
             Stage stage = new Stage();
 
-            for (int i = 0; i < MAX_EXERCISES; i++) {
-                int finalI = i + 1;
+            for (int i = 0; i < MAX_ROUNDS; i++) {
+                int finalI = i;
                 root.getChildren().add(new Button("" + finalI) {{
                     setOnAction(e -> {
-                        Common.currentEs = finalI;
+                        Common.currentRound = finalI;
                         startGame.fire();
-                        Logging.info("Salto al livello " + currentEs + "");
+                        Logging.info("Jump to round " + currentRound + "");
                         stage.close();
                     });
                 }});
@@ -208,10 +221,10 @@ public final class Toolbar extends HBox {
             root.setSpacing(16);
 
             stage.setScene(scene);
-            stage.setTitle("Scegli l'esercizio");
+            stage.setTitle("Choose the round.");
             stage.show();
         } catch (Exception ex) {
-            Logging.warning("Numero esercizio non valido!");
+            Logging.warning("Round number is invalid!");
         }
     }
 }

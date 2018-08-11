@@ -5,51 +5,37 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * @author Matteo Franzil
- * @version 1.1
+ * @version 1.2
  */
 
 public class Team implements Comparable<Team> {
 
     private String member1;
     private String member2;
-    private String teamName;
+    private String name;
     private int score;
 
-    /**
-     * Costruttore standard che incrementa il conteggio del numero delle squadre e setta il score a 0.
-     *
-     * @param teamName Il nome della squadra
-     * @param member1  Il primo (o unico) membro della squadra
-     * @param member2  Il secondo membro della squadra
-     */
-    public Team(String teamName, String member1, String member2) {
-        this.teamName = teamName;
-        this.member1 = member1;
-        this.member2 = member2;
-        this.score = 0;
-    }
-
 
     /**
-     * Costruttore utilizzato dal backup manager per creare squadre avendo tutti i dati.
+     * Standard constructor.
      *
-     * @param teamName Il nome della squadra
-     * @param member1  Il primo (o unico) membro della squadra
-     * @param member2  Il secondo membro della squadra
-     * @param score    Il score da assegnare alla squadra
+     * @param name    The name of the team.
+     * @param member1 The first (or only) team member.
+     * @param member2 The second team member.
+     * @param score   The score to assign.
      */
-    public Team(String teamName, String member1, String member2, int score) {
-        this.teamName = teamName;
+    public Team(String name, String member1, String member2, int score) {
+        this.name = name;
         this.member1 = member1;
         this.member2 = member2;
         this.score = score;
     }
 
     /**
-     * Metodo standard che fa il paragone tra due Squadre.
+     * Method that compares two teams, based on the name of its members.
      *
-     * @param o Un oggetto da comparare.
-     * @return Un Boolean che rappresenta il risultato della comparazione.
+     * @param o The item to compare.
+     * @return A boolean representing the result.
      */
     @Override
     public boolean equals(@Nullable Object o) {
@@ -65,9 +51,9 @@ public class Team implements Comparable<Team> {
     }
 
     /**
-     * Metodo standard di generazione dell'hashcode (generato da Netbeans)
+     * Standard HashCode generation.
      *
-     * @return Un int che rappresenta l'hash della Persona.
+     * @return An Integer representing the HashCode.
      */
     @Override
     public int hashCode() {
@@ -83,14 +69,14 @@ public class Team implements Comparable<Team> {
     }
 
     /**
-     * Metodo standard toString, implementato citando semplicemente i membri.
+     * Standard toString method.
      *
-     * @return Una String contenente la versiona in Stringa della persona.
+     * @return A String containing name, members and score of the Team.
      */
     @NotNull
     @Override
     public String toString() {
-        return member1 + ", " + member2;
+        return name + ": " + member1 + ", " + member2 + " - " + score + " points";
     }
 
     public String getMember1() {
@@ -109,12 +95,12 @@ public class Team implements Comparable<Team> {
         this.member2 = member2;
     }
 
-    public String getTeamName() {
-        return teamName;
+    public String getName() {
+        return name;
     }
 
-    public void setTeamName(String teamName) {
-        this.teamName = teamName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getScore() {
@@ -126,9 +112,9 @@ public class Team implements Comparable<Team> {
     }
 
     /**
-     * Metodo che incrementa in maniera arbitraria il score della squadra
+     * Method to freely increment or decrement the score.
      *
-     * @param increment Un int (anche negativo) usato per modificare il score.
+     * @param increment A signed integer to add or subtract the score.
      */
     public void incrementScore(int increment) {
         this.score += increment;

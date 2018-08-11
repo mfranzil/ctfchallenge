@@ -10,30 +10,33 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 /**
+ * An ObservableList containing all the teams participating in the match.
+ * Gets observed by a {@link ctfchallenge.ui.Scoreboard}.
+ *
  * @author Matteo Franzil
- * @version 1.1
+ * @version 1.2
  */
 public class TeamList extends SimpleListProperty<Team> {
-    /**
-     * Una ObservableList aggiornata man mano con le squadre della partita. Viene osservata dalla Scoreboard per
-     * aggiornarne i contenuti.
-     */
 
+    /**
+     * Standard constructor, overriding the FXCollections one.
+     */
     public TeamList() {
         super(FXCollections.observableArrayList());
     }
 
     /**
-     * Metodo che prende in entrata un nome e ritorna la squadra corrispondente al nome.
+     * Method that searches for a Team within the Collection using the name.
      *
-     * @param name Il nome della squadra da cercare
-     * @return Una Team che per prima ha un match con il valore cercato.
+     * @param name The name of the team to search.
+     * @return A Team, or null.
      */
     @Nullable
+    @Deprecated
     public Team getSquadraFromName(@NotNull String name) {
         Team res = null;
         for (Team i : this) {
-            if (name.equals(i.getTeamName())) {
+            if (name.equals(i.getName())) {
                 res = i;
                 break;
             }
@@ -42,9 +45,9 @@ public class TeamList extends SimpleListProperty<Team> {
     }
 
     /**
-     * Metodo per ottenere, all'interno della lista delle squadre, il Team con punteggio maggiore.
+     * Method that returns the current leader (most points) in the collection.
      *
-     * @return Un ArrayList contenente 1 o più squadre con il punteggio maggiore.
+     * @return An ArrayList containing at least one Team.
      */
     @NotNull
     public ArrayList<Team> getLeader() {
@@ -60,25 +63,5 @@ public class TeamList extends SimpleListProperty<Team> {
             }
         }
         return temp;
-    }
-
-    /**
-     * Metodo per terminare la partita; si comporta in maniera diversa a seconda del numero dei vincitori.
-     */
-    public void processVictory() {
-        ArrayList<Team> winners = getLeader();
-        switch (winners.size()) {
-            case 0:
-                Logging.error("Sembra che non abbia vinto nessuno...." +
-                        "guarda la classifica per ottenere il vincitore.");
-                break;
-            case 1:
-                Logging.info("PARTITA FINITA!\nVince la squadra " + winners.get(0));
-                break;
-            default:
-                Logging.info("PARTITA FINITA\nVincono le squadre:");
-                winners.forEach(team -> Logging.info(team.getTeamName()));
-                break;
-        }
     }
 }

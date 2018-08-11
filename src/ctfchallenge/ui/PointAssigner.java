@@ -9,14 +9,28 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.VBox;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * This class is a wrapper for single AssignerItem instances.
+ *
+ * @author Matteo Franzil
+ * @version 1.2
+ */
 public final class PointAssigner extends VBox {
 
+    /**
+     * Standard constructor. Sets the background with the light accent color (or light gray).
+     */
     public PointAssigner() {
         setBackground(new Background(new BackgroundFill(AccentParser.getLightAccentColor(),
                 CornerRadii.EMPTY, Insets.EMPTY)));
         setPadding(new Insets(15));
     }
 
+    /**
+     * Recursively adds AssignerItems from a single TeamList.
+     *
+     * @param teamList The ObservableList of teams needed for the initialization.
+     */
     public void setPointAssigner(@NotNull TeamList teamList) {
         teamList.forEach(i -> {
             AssignerItem ai = new AssignerItem(i);
@@ -24,6 +38,9 @@ public final class PointAssigner extends VBox {
         });
     }
 
+    /**
+     * Calls sendResults on each AssignerItem instance.
+     */
     public void sendResults() {
         getChildren().forEach(i -> ((AssignerItem) i).sendResults());
     }

@@ -10,13 +10,13 @@ import java.io.StringWriter;
 
 /**
  * @author Matteo Franzil
- * @version 1.1
+ * @version 1.2
  */
 public class AccentParser {
     /**
-     * Metodo che prende il colore di Windows 10 impostato al momento, oppure grigio su altri sistemi operativi.
+     * This method returns Windows 10's current accent color, or grey in any other OS.
      *
-     * @return Un Color con opacità 1.
+     * @return A Color with Opacity 1.
      */
     public static Color getAccentColor() {
         Color output;
@@ -51,19 +51,21 @@ public class AccentParser {
     }
 
     /**
-     * Metodo che prende il colore di Windows 10 impostato al momento, oppure grigio su altri sistemi operativi.
+     * This method returns Windows 10's current accent color, or grey in any other OS.
      *
-     * @return Un Color con opacità 0.5.
+     * @return A Color with Opacity 0.5.
      */
     public static Color getLightAccentColor() {
         Color color = getAccentColor();
-        return Color.color(color.getRed(), color.getRed(), color.getGreen(), 0.5);
+        return Color.color(color.getRed(), color.getGreen(), color.getBlue(), 0.33);
     }
 
     /**
-     * @param location La locazione nel registro.
-     * @param key      La chiave di registro.
-     * @return registry Il valore, oppure null.
+     * @param location The registry location to read.
+     * @param key      The registry key to read.
+     * @return registry The value found, or null.
+     * @throws IOException Thrown in case of I/O errors.
+     * @throws InterruptedException Thrown if the process is killed by the user.
      */
     @Nullable
     public String readRegistry(String location, String key) throws IOException, InterruptedException {

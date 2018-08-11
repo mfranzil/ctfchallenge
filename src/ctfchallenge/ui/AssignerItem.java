@@ -8,14 +8,26 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 
-import static ctfchallenge.assets.Common.currentEs;
+import static ctfchallenge.assets.Common.currentRound;
 
+/**
+ * This class represents a single instance of an Assigner item, tasked with choosing and assigning points and
+ * bonuses for a single team.
+ *
+ * @author Matteo Franzil
+ * @version 1.2
+ */
 public final class AssignerItem extends HBox {
 
     private Team team;
     private ToggleGroup tg;
     private ComboBox<String> posizione;
 
+    /**
+     * Standard constructor for the class.
+     *
+     * @param team The team to be associated with the AssignerItem instance.
+     */
     public AssignerItem(Team team) {
         this.team = team;
 
@@ -42,7 +54,7 @@ public final class AssignerItem extends HBox {
             posizione.setValue("Fuori");
         });
 
-        getChildren().addAll(new Label(team.getTeamName()) {{
+        getChildren().addAll(new Label(team.getName()) {{
             setMinWidth(250);
         }}, completed, notCompleted, new Label("") {{
             setMinWidth(70);
@@ -52,22 +64,26 @@ public final class AssignerItem extends HBox {
         setSpacing(20);
     }
 
+    /**
+     * This methods must be called from PointAssigner. It automatically updates the AssignerItem's team with
+     * the corresponding score (with bonuses) for the round.
+     */
     public void sendResults() {
-        Integer punteggio = Common.punteggioEs(currentEs);
+        Integer punteggio = Common.punteggioEs(currentRound);
 
         if (((Labeled) tg.getSelectedToggle()).getText().equals("Completato")) {
             team.incrementScore(punteggio);
-            Logging.info("La squadra " + team.getTeamName() + " ottiene " + punteggio + " punti");
+            Logging.info("La squadra " + team.getName() + " ottiene " + punteggio + " punti");
         }
 
         Integer min = Math.min(Common.MAX_TEAMS_BONUS, Common.teamNumber);
         try {
             Integer punteggioPosizione = Integer.parseInt(posizione.getValue());
             team.setScore(team.getScore() + min - punteggioPosizione + 1);
-            Logging.info("La squadra " + team.getTeamName()
+            Logging.info("La squadra " + team.getName()
                     + " ottiene " + (min - punteggioPosizione + 1) + " punti bonus");
         } catch (NumberFormatException ex) {
-            Logging.info("Nessun punto bonus per " + team.getTeamName());
+            Logging.info("Nessun punto bonus per " + team.getName());
         }
         posizione.getSelectionModel().clearSelection();
     }

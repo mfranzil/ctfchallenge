@@ -6,7 +6,7 @@ import java.sql.Timestamp;
 
 /**
  * @author Matteo Franzil
- * @version 1.1
+ * @version 1.2
  */
 public class Logging extends TextArea {
 
@@ -17,7 +17,7 @@ public class Logging extends TextArea {
     }
 
     /**
-     * @return L'unica istanza della classe Logging (una TextArea)
+     * @return The only instance of the Logging class (a JavaFX {@link #TextArea})
      */
     public static Logging getInstance() {
         if (INSTANCE == null) {
@@ -27,56 +27,57 @@ public class Logging extends TextArea {
     }
 
     /**
-     * Logga una stringa con livello DEBUG.
+     * Logs a String with level DEBUG.
      *
-     * @param text La string da mettere nella finestra di log.
+     * @param text The string to be logged.
      */
     public static void debug(String text) {
         getInstance().appendText("[DEBUG] " + getTime() + " - " + text + "\n");
     }
 
     /**
-     * Logga una strina con livello INFO.
+     * Logs a String with level INFO.
      *
-     * @param text La string da mettere nella finestra di log.
+     * @param text The string to be logged.
      */
     public static void info(String text) {
         getInstance().appendText("[INFO] " + getTime() + " - " + text + "\n");
     }
 
     /**
-     * Logga una string con livello WARNING
+     * Logs a String with level WARNING
      *
-     * @param text La string da mettere nella finestra di log.
+     * @param text The string to be logged.
      */
     public static void warning(String text) {
         getInstance().appendText("[WARNING] " + getTime() + " - " + text + "\n");
     }
 
     /**
-     * Logga una string con livello FATAL.
+     * Logs a String with level ERROR.
      *
-     * @param text La string da mettere nella finestra di log.
-     */
-    public static void fatal(String text) {
-        getInstance().appendText("[FATAL] " + getTime() + " - " + text + "\n");
-    }
-
-    /**
-     * Logga una string con livello ERROR.
-     *
-     * @param text La string da mettere nella finestra di log.
+     * @param text The string to be logged.
      */
     public static void error(String text) {
         getInstance().appendText("[ERROR] " + getTime() + " - " + text + "\n");
     }
 
+    /**
+     * Logs a String with level FATAL.
+     *
+     * @param text The string to be logged.
+     */
+    public static void fatal(String text) {
+        getInstance().appendText("[FATAL] " + getTime() + " - " + text + "\n");
+    }
     private static String getTime() {
         return new Timestamp(System.currentTimeMillis()).toString();
     }
 
     /**
-     * @return L'intero contenuto della finestra di log.
+     * Returns a String containing the entire log.
+     *
+     * @return The entire content of the log window for this instance.
      */
     public static String getLog() {
         return getInstance().getText();

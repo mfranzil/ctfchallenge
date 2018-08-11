@@ -12,51 +12,54 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Matteo Franzil
- * @version 1.1
+ * @version 1.2
  */
 public final class Scoreboard extends TableView<Team> {
 
     private static Scoreboard INSTANCE;
 
     @NotNull
-    private final TableColumn<Team, String> nomesquadra;
+    private final TableColumn<Team, String> name;
     @NotNull
-    private final TableColumn<Team, TableColumn<Team, String>> giocatori;
+    private final TableColumn<Team, TableColumn<Team, String>> players;
     @NotNull
-    private final TableColumn<Team, String> membro1;
+    private final TableColumn<Team, String> member1;
     @NotNull
-    private final TableColumn<Team, String> membro2;
+    private final TableColumn<Team, String> member2;
     @NotNull
-    private final TableColumn<Team, String> punteggio;
+    private final TableColumn<Team, String> score;
 
     private final int fontsizes[] = {6, 7, 8, 9, 10, 11, 12, 14, 16, 18, 21, 24, 36, 48, 60, 72, 84, 96};
     private int pointer = 11; // Pt = 24
 
     /**
-     * Costruttore standard della Scoreboard. Si comporta come una TableView con le colonne come variabili d'istanza.
+     * Standard constructor. The Scoreboard fully behaves like a TableView containing only Team instances.
      */
     @SuppressWarnings("unchecked")
     private Scoreboard() {
-        nomesquadra = new TableColumn<>("Nome squadra");
-        giocatori = new TableColumn<>("Giocatori");
-        membro1 = new TableColumn<>("Membro 1");
-        membro2 = new TableColumn<>("Membro 2");
-        punteggio = new TableColumn<>("Punteggio");
+        name = new TableColumn<>("Team");
+        players = new TableColumn<>("Players");
+        member1 = new TableColumn<>("Player 1");
+        member2 = new TableColumn<>("Player 2");
+        score = new TableColumn<>("Score");
 
-        nomesquadra.setCellValueFactory(new PropertyValueFactory<>("teamName"));
-        membro1.setCellValueFactory(new PropertyValueFactory<>("member1"));
-        membro2.setCellValueFactory(new PropertyValueFactory<>("member2"));
-        punteggio.setCellValueFactory(new PropertyValueFactory<>("score"));
+        name.setCellValueFactory(new PropertyValueFactory<>("name"));
+        member1.setCellValueFactory(new PropertyValueFactory<>("member1"));
+        member2.setCellValueFactory(new PropertyValueFactory<>("member2"));
+        score.setCellValueFactory(new PropertyValueFactory<>("score"));
 
-        nomesquadra.prefWidthProperty().bind(widthProperty().divide(6.0));
-        membro1.prefWidthProperty().bind(widthProperty().divide(3.0));
-        membro2.prefWidthProperty().bind(widthProperty().divide(3.0));
-        punteggio.prefWidthProperty().bind(widthProperty().divide(6.0));
+        name.prefWidthProperty().bind(widthProperty().divide(6.0));
+        member1.prefWidthProperty().bind(widthProperty().divide(3.0));
+        member2.prefWidthProperty().bind(widthProperty().divide(3.0));
+        score.prefWidthProperty().bind(widthProperty().divide(6.0));
 
-        giocatori.getColumns().addAll(membro1, membro2);
-        getColumns().addAll(nomesquadra, giocatori, punteggio);
+        players.getColumns().addAll(member1, member2);
+        getColumns().addAll(name, players, score);
     }
 
+    /**
+     * @return The single instance of the Scoreboard (a JavaFX TableView)
+     */
     public static Scoreboard getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new Scoreboard();
@@ -66,7 +69,7 @@ public final class Scoreboard extends TableView<Team> {
     }
 
     /**
-     * Metodo che decrementa il font di una grandezza fissa stabilita dall'array nella classe.
+     * Decrements the Scoreboard font based on the {@link #fontsizes} array.
      */
     public static void decrementFont(ActionEvent actionEvent) {
         Scoreboard instance = getInstance();
@@ -75,13 +78,13 @@ public final class Scoreboard extends TableView<Team> {
             resizeFont(instance.fontsizes[instance.pointer]);
             instance.refresh();
         } catch (ArrayIndexOutOfBoundsException ex) {
-            Logging.warning("Impossibile settare la grandezza desiderata");
+            Logging.warning("Cannot set the desired size.");
             ++instance.pointer;
         }
     }
 
     /**
-     * Metodo che aumenti il font di una grandezza fissa stabilita dall'array nella classe.
+     * Increments the Scoreboard font based on the {@link #fontsizes} array.
      */
     public static void incrementFont(ActionEvent actionEvent) {
         Scoreboard instance = getInstance();
@@ -90,32 +93,30 @@ public final class Scoreboard extends TableView<Team> {
             resizeFont(instance.fontsizes[instance.pointer]);
             instance.refresh();
         } catch (ArrayIndexOutOfBoundsException ex) {
-            Logging.warning("Impossibile settare la grandezza desiderata");
+            Logging.warning("Cannot set the desired size.");
             --instance.pointer;
         }
     }
 
-    /**
-     * Metodo che modifica il font di una grandezza arbitraria.
-     *
-     * @param size La grandezza (px) del font
-     */
     private static void resizeFont(int size) {
         Scoreboard instance = getInstance();
         if (size > 0 && size < 100) {
             String style = ("-fx-font: " + size + "px Arial; -fx-alignment: CENTER");
-            instance.nomesquadra.setStyle(style);
-            instance.membro1.setStyle(style);
-            instance.membro2.setStyle(style);
-            instance.punteggio.setStyle(style);
-            instance.giocatori.setStyle(style);
-            Logging.info("Grandezza del font settata a " + size);
+            instance.name.setStyle(style);
+            instance.member1.setStyle(style);
+            instance.member2.setStyle(style);
+            instance.score.setStyle(style);
+            instance.players.setStyle(style);
+            Logging.info("Font size set to " + size);
         } else {
-            Logging.warning("Grandezza del font non valida!");
+            Logging.warning("Invalid font size!");
         }
 
     }
 
+    /**
+     * Refreshes the single instance of the Scoreboard.
+     */
     public static void refreshScoreboard() {
         Scoreboard.getInstance().refresh();
     }

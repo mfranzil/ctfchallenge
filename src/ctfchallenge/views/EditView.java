@@ -6,34 +6,39 @@ import ctfchallenge.ui.Scoreboard;
 import javafx.event.ActionEvent;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 /**
  * @author Matteo Franzil
- * @version 1.1
+ * @version 1.2
  */
 public class EditView extends Stage {
 
     /**
-     * Questa finestra viene mostrata in caso di aggiunta o modifica di una squadra
+     * Window shown in case of addition or editing of Teams.
      *
-     * @param team   La squadra che verrà modificata.
-     * @param isEdit Metodo evocato in edit mode o addition mode (con punteggi bloccati)
+     * @param team   The Team to be edited.
+     * @param isEdit Start the window in edit mode or addition mode (cannot edit score)?
+     * @param owner  The Node that called the window.
      */
-    public EditView(Team team, boolean isEdit) {
+    public EditView(Team team, boolean isEdit, Node owner) {
         GridPane editPane = new GridPane();
         Scene editScene = new Scene(editPane);
 
-        Button send = new Button("Invia");
+        Button send = new Button("Send");
 
-        TextField nomeField = new TextField(team.getTeamName());
+        TextField nomeField = new TextField(team.getName());
         TextField m1Field = new TextField(team.getMember1());
         TextField m2Field = new TextField(team.getMember2());
         TextField ptField = new TextField(String.valueOf(team.getScore()));
@@ -43,10 +48,10 @@ public class EditView extends Stage {
             ptField.setDisable(true);
         }
 
-        Text nomeText = new Text("Nome");
-        Text m1Text = new Text("Membro 1");
-        Text m2Text = new Text("Membro 2");
-        Text ptText = new Text("Punteggio");
+        Text nomeText = new Text("Name");
+        Text m1Text = new Text("Player 1");
+        Text m2Text = new Text("Player 2");
+        Text ptText = new Text("Score");
 
         editPane.add(nomeText, 0, 0);
         editPane.add(m1Text, 0, 1);
@@ -71,19 +76,27 @@ public class EditView extends Stage {
         GridPane.setHalignment(send, HPos.RIGHT);
 
         send.setOnAction((ActionEvent event) -> {
-            team.setTeamName(nomeField.getText());
-            team.setMember1(m1Field.getText());
-            team.setMember2(m2Field.getText());
-            team.setScore(Integer.parseInt(ptField.getText()));
-            this.close();
-            Scoreboard.refreshScoreboard();
-            Logging.info("Team con nome " + team.getTeamName() + (isEdit ? " aggiornato:" : " aggiunto:")
-                    + "\nMembri: " + team.getMember1() + ", " + team.getMember2()
-                    + "\nPunteggio: " + team.getScore() + "\n");
+            try {
+                team.setName(nomeField.getText());
+                team.setMember1(m1Field.getText());
+                team.setMember2(m2Field.getText());
+                team.setScore(Integer.parseInt(ptField.getText()));
+                close();
+                Scoreboard.refreshScoreboard();
+                Logging.info("Team successfully" + (isEdit ? " updated:" : " added:")
+                        + "\nName: " + team.getName()
+                        + "\nMembers: " + team.getMember1() + ", " + team.getMember2() +
+                        (isEdit ? "\nScore: " + team.getScore() : ""));
+            } catch (NumberFormatException ex) {
+                new Alert(Alert.AlertType.ERROR, "Formato del punteggio non corretto!", ButtonType.OK)
+                        .showAndWait();
+            }
         });
 
+        initModality(Modality.APPLICATION_MODAL);
+        initOwner(owner.getScene().getWindow());
         setScene(editScene);
-        setTitle((isEdit ? "Modifica squadra..." : "Aggiungi squadra..."));
+        setTitle((isEdit ? "Edit team..." : "Add team..."));
         getIcons().add(new Image("file:logo.png"));
     }
 

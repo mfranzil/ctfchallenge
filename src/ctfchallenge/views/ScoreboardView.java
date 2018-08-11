@@ -9,7 +9,7 @@ import javafx.stage.Stage;
 
 /**
  * @author Matteo Franzil
- * @version 1.1
+ * @version 1.2
  */
 public class ScoreboardView extends Stage {
     public ScoreboardView(Scoreboard scoreboard) {
@@ -19,7 +19,7 @@ public class ScoreboardView extends Stage {
         root.getChildren().add(scoreboard);
 
         setScene(scene);
-        setTitle("Classifica");
+        setTitle("Scoreboard");
         setWidth(500);
         setHeight(600);
         setOnCloseRequest(Event::consume);

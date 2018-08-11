@@ -18,6 +18,7 @@ public class BackupHandler {
      *
      * @param teamList Il gestore interno delle squadre.
      */
+    @Deprecated
     public static void backupData(TeamList teamList) {
         try {
             BufferedWriter fileOut = new BufferedWriter(new FileWriter("log.txt"));
@@ -26,7 +27,7 @@ public class BackupHandler {
             fileOut = new BufferedWriter(new FileWriter("backup.txt"));
             Logging.info("Logging in progress...");
             for (Team temp : teamList) {
-                String data = temp.getTeamName() + " TAB " + temp.getMember1() + " TAB "
+                String data = temp.getName() + " TAB " + temp.getMember1() + " TAB "
                         + temp.getMember2() + " TAB " + temp.getScore() + " TAB";
                 fileOut.write(data);
             }
@@ -44,16 +45,17 @@ public class BackupHandler {
      *
      * @param teamList Il gestore interno delle squadre.
      */
+    @Deprecated
     public static void restoreData(@NotNull TeamList teamList) {
         try {
             FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle("Carica un file");
+            fileChooser.setTitle("Upload a file");
             fileChooser.getExtensionFilters().addAll(
                     new FileChooser.ExtensionFilter("TXT", "*.txt")
             );
             File file = fileChooser.showOpenDialog(new Stage());
             if (file == null) {
-                Logging.warning("No file chosen");
+                Logging.warning("No file chosen!");
             } else {
                 teamList.clear();
                 Scanner stream = new Scanner(file).useDelimiter("\\s*TAB\\s*");
@@ -63,11 +65,10 @@ public class BackupHandler {
                     Team temp = new Team(nomesquadra, membro1, membro2, Integer.parseInt(punteggio));
                     teamList.add(temp);
                 }
-                Logging.info("Backup ripristinato con successo.");
+                Logging.info("Backup successfully recovered.");
             }
         } catch (FileNotFoundException ex) {
-            Logging.fatal("File di backup non trovato.");
-            Logging.fatal("Impossibile ripristinare il backup");
+            Logging.fatal("Backup file not found. Cannot recover from backup.");
         }
     }
 }

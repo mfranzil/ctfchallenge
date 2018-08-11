@@ -4,26 +4,27 @@ import org.jetbrains.annotations.Nullable;
 
 public class Common {
     /**
-     * Il numero di squadre che hanno diritto al bonus durante la partita.
+     * The number of teams allowed to get a bonus for finishing in the top positions.
      */
     public static final int MAX_TEAMS_BONUS = 5;
     /**
-     * Il numero totale di esercizi che vengono svolti.
+     * The total number of rounds.
      */
-    public static final int MAX_EXERCISES = 5;
+    public static final int MAX_ROUNDS = 5;
     /**
-     * Il numero dell'esercizio corrente-
+     * The current round.
      */
-    public static int currentEs = 0;
-
+    public static int currentRound = 0;
+    /**
+     * The number of teams participating. This field should be left as it is and modified by the program itself.
+     */
     public static int teamNumber;
 
     /**
-     * Funzione ausiliaria per assegnare i punti agli esercizi. Sono supportati
-     * fino a 5 esercizi.
+     * This method return the score for each round. Must be modified accordingly with {@link #MAX_ROUNDS}.
      *
-     * @param i L'indice dell'esercizio di cui ottenere il punteggio.
-     * @return Il punteggio dell'esercizio desiderato.
+     * @param i The round index.
+     * @return The score of the round.
      */
     public static int punteggioEs(int i) {
         int res;
@@ -51,31 +52,30 @@ public class Common {
     }
 
     /**
-     * Funzione ausiliaria statica che trasforma un numero cardinale nella sua
-     * versione ordinale scritta in String.
+     * This method return the ordinal name of each round number. Must be modified accordingly with {@link #MAX_ROUNDS}.
      *
-     * @param i Il numero da 1 a 5 da trasformare in String.
-     * @return Una String con la prima lettera maiuscola, rappresentante
-     * l'input.
+     * @param i The round index.
+     * @return A String, representing the round in English ordinal naming convention.
      */
     @Nullable
+    @Deprecated
     public static String intToText(int i) {
         String res;
         switch (i) {
             case 1:
-                res = "Primo";
+                res = "First";
                 break;
             case 2:
-                res = "Secondo";
+                res = "Second";
                 break;
             case 3:
-                res = "Terzo";
+                res = "Third";
                 break;
             case 4:
-                res = "Quarto";
+                res = "Fourth";
                 break;
             case 5:
-                res = "Quinto";
+                res = "Fifth";
                 break;
             default:
                 res = null;
