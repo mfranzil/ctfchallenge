@@ -3,12 +3,14 @@ package ctfchallenge;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.Serializable;
+
 /**
  * @author Matteo Franzil
  * @version 1.2
  */
 
-public class Team implements Comparable<Team> {
+public class Team implements Comparable<Team>, Serializable {
 
     private String player1;
     private String player2;

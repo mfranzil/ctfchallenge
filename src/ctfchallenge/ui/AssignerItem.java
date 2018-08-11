@@ -55,9 +55,9 @@ public final class AssignerItem extends HBox {
         });
 
         getChildren().addAll(new Label(team.getName()) {{
-            setMinWidth(250);
+            setMinWidth(125);
         }}, completed, notCompleted, new Label("") {{
-            setMinWidth(70);
+            setMinWidth(35);
         }}, new Text("Posizione:"), posizione);
 
         setPadding(new Insets(15));

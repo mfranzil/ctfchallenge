@@ -2,7 +2,6 @@ package ctfchallenge.views;
 
 import ctfchallenge.Team;
 import ctfchallenge.assets.Logging;
-import ctfchallenge.ui.Scoreboard;
 import javafx.event.ActionEvent;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -77,7 +76,7 @@ public class EditView extends Stage {
                 team.setPlayer2(player2.getText());
                 team.setScore(Integer.parseInt(score.getText()));
                 close();
-                Scoreboard.refreshScoreboard();
+                //Scoreboard.refreshScoreboard();
                 Logging.info("Team successfully" + (isEdit ? " updated:" : " added:")
                         + "\nName: " + team.getName()
                         + "\nMembers: " + team.getPlayer1() + ", " + team.getPlayer2() +

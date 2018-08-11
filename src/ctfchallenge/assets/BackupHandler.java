@@ -25,7 +25,7 @@ public class BackupHandler {
             fileOut.write(Logging.getLog());
             fileOut.close();
             fileOut = new BufferedWriter(new FileWriter("backup.txt"));
-            Logging.info("Logging in progress...");
+            Logging.info("Backup in progress...");
             for (Team temp : teamList) {
                 String data = temp.getName() + " TAB " + temp.getPlayer1() + " TAB "
                         + temp.getPlayer2() + " TAB " + temp.getScore() + " TAB";
@@ -35,7 +35,7 @@ public class BackupHandler {
         } catch (IOException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
-            Logging.info("Logging finished.");
+            Logging.info("Backup finished.");
         }
 
     }

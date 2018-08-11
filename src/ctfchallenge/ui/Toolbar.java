@@ -23,7 +23,7 @@ import static ctfchallenge.assets.Common.currentRound;
  */
 public final class Toolbar extends HBox {
 
-    private final Button restoreData, editTeam, addTeam, removeTeam, refreshScore,
+    private final Button restoreData, editTeam, addTeam, removeTeam,
             startGame, sendResults, incrementFont, decrementFont;
 
     /**
@@ -40,7 +40,6 @@ public final class Toolbar extends HBox {
         decrementFont = new Button("-");
         startGame = new Button("Start the match");
         restoreData = new Button("Restore from backup");
-        refreshScore = new Button("Update the scoreboard");
         sendResults = new Button("Send results");
 
         removeTeam.setDisable(true);
@@ -54,14 +53,9 @@ public final class Toolbar extends HBox {
         startGame.setOnAction(e -> startGameActions(pointAssigner, teamList));
         restoreData.setOnAction(e -> BackupHandler.restoreData(teamList));
 
-        refreshScore.setOnAction(e -> {
-            Scoreboard.refreshScoreboard();
-            BackupHandler.backupData(teamList);
-        });
-
         sendResults.setOnAction(e -> {
             pointAssigner.sendResults();
-            refreshScore.fire();
+            BackupHandler.backupData(teamList);
             startGame.setDisable(false);
             if (currentRound == Common.MAX_ROUNDS) {
                 startGame.setText("End match");
@@ -69,7 +63,7 @@ public final class Toolbar extends HBox {
             sendResults.setDisable(true);
         });
 
-        getChildren().addAll(addTeam, removeTeam, editTeam, refreshScore, startGame, restoreData);
+        getChildren().addAll(addTeam, removeTeam, editTeam, startGame, restoreData);
 
         setPadding(new Insets(15));
         setSpacing(10);
@@ -78,14 +72,19 @@ public final class Toolbar extends HBox {
     }
 
     private void addTeamActions(@NotNull TeamList teamList) {
+        Team team = new Team("", "", "", 0);
         try {
-            Team team = new Team("", "", "", 0);
             EditView editView = new EditView(team, false, addTeam);
             editView.showAndWait();
             teamList.add(team);
         } catch (Exception e) {
             Logging.error("Team insertion failed.");
         }
+
+        if (team.getName().equals("") && team.getPlayer1().equals("") && team.getPlayer2().equals("")) {
+            teamList.remove(team);
+        }
+
         if (teamList.isEmpty()) {
             removeTeam.setDisable(true);
             editTeam.setDisable(true);
@@ -178,7 +177,7 @@ public final class Toolbar extends HBox {
         } else {
             processVictory(teamList);
         }
-        refreshScore.fire();
+        BackupHandler.backupData(teamList);
         startGame.setDisable(true);
         // goToEx.setDisable(false);
     }
@@ -204,7 +203,6 @@ public final class Toolbar extends HBox {
         }
         sendResults.setDisable(true);
         editTeam.setDisable(true);
-        refreshScore.setDisable(true);
     }
 
     @Deprecated
@@ -223,11 +221,10 @@ public final class Toolbar extends HBox {
 
             for (int i = 0; i < MAX_ROUNDS; i++) {
                 int finalI = i;
-                root.getChildren().add(new Button("" + finalI) {{
+                root.getChildren().add(new Button("" + (i + 1)) {{
                     setOnAction(e -> {
-                        Common.currentRound = finalI;
                         startGame.fire();
-                        Logging.info("Jump to round " + currentRound + "");
+                        Logging.info("Jumping to round " + finalI + "");
                         stage.close();
                     });
                 }});
