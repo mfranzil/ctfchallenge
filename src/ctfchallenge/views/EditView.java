@@ -38,29 +38,24 @@ public class EditView extends Stage {
 
         Button send = new Button("Send");
 
-        TextField nomeField = new TextField(team.getName());
-        TextField m1Field = new TextField(team.getMember1());
-        TextField m2Field = new TextField(team.getMember2());
-        TextField ptField = new TextField(String.valueOf(team.getScore()));
+        TextField name = new TextField(team.getName());
+        TextField player1 = new TextField(team.getPlayer1());
+        TextField player2 = new TextField(team.getPlayer2());
+        TextField score = new TextField(String.valueOf(team.getScore()));
 
         if (!isEdit) {
-            ptField.setEditable(false);
-            ptField.setDisable(true);
+            score.setEditable(false);
+            score.setDisable(true);
         }
 
-        Text nomeText = new Text("Name");
-        Text m1Text = new Text("Player 1");
-        Text m2Text = new Text("Player 2");
-        Text ptText = new Text("Score");
-
-        editPane.add(nomeText, 0, 0);
-        editPane.add(m1Text, 0, 1);
-        editPane.add(m2Text, 0, 2);
-        editPane.add(ptText, 0, 3);
-        editPane.add(nomeField, 1, 0);
-        editPane.add(m1Field, 1, 1);
-        editPane.add(m2Field, 1, 2);
-        editPane.add(ptField, 1, 3);
+        editPane.add(new Text("Name"), 0, 0);
+        editPane.add(new Text("Player 1"), 0, 1);
+        editPane.add(new Text("Player 2"), 0, 2);
+        editPane.add(new Text("Score"), 0, 3);
+        editPane.add(name, 1, 0);
+        editPane.add(player1, 1, 1);
+        editPane.add(player2, 1, 2);
+        editPane.add(score, 1, 3);
         editPane.add(send, 1, 4);
 
         ColumnConstraints c1 = new ColumnConstraints();
@@ -71,24 +66,24 @@ public class EditView extends Stage {
 
         editPane.setHgap(8);
         editPane.setVgap(8);
-        editPane.setPadding(new Insets(15, 12, 15, 12));
+        editPane.setPadding(new Insets(15));
 
         GridPane.setHalignment(send, HPos.RIGHT);
 
         send.setOnAction((ActionEvent event) -> {
             try {
-                team.setName(nomeField.getText());
-                team.setMember1(m1Field.getText());
-                team.setMember2(m2Field.getText());
-                team.setScore(Integer.parseInt(ptField.getText()));
+                team.setName(name.getText());
+                team.setPlayer1(player1.getText());
+                team.setPlayer2(player2.getText());
+                team.setScore(Integer.parseInt(score.getText()));
                 close();
                 Scoreboard.refreshScoreboard();
                 Logging.info("Team successfully" + (isEdit ? " updated:" : " added:")
                         + "\nName: " + team.getName()
-                        + "\nMembers: " + team.getMember1() + ", " + team.getMember2() +
+                        + "\nMembers: " + team.getPlayer1() + ", " + team.getPlayer2() +
                         (isEdit ? "\nScore: " + team.getScore() : ""));
             } catch (NumberFormatException ex) {
-                new Alert(Alert.AlertType.ERROR, "Formato del punteggio non corretto!", ButtonType.OK)
+                new Alert(Alert.AlertType.ERROR, "Please enter a valid number for the score.", ButtonType.OK)
                         .showAndWait();
             }
         });
@@ -96,6 +91,7 @@ public class EditView extends Stage {
         initModality(Modality.APPLICATION_MODAL);
         initOwner(owner.getScene().getWindow());
         setScene(editScene);
+        setResizable(false);
         setTitle((isEdit ? "Edit team..." : "Add team..."));
         getIcons().add(new Image("file:logo.png"));
     }

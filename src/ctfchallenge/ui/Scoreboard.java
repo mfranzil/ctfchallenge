@@ -23,9 +23,9 @@ public final class Scoreboard extends TableView<Team> {
     @NotNull
     private final TableColumn<Team, TableColumn<Team, String>> players;
     @NotNull
-    private final TableColumn<Team, String> member1;
+    private final TableColumn<Team, String> player1;
     @NotNull
-    private final TableColumn<Team, String> member2;
+    private final TableColumn<Team, String> player2;
     @NotNull
     private final TableColumn<Team, String> score;
 
@@ -39,21 +39,21 @@ public final class Scoreboard extends TableView<Team> {
     private Scoreboard() {
         name = new TableColumn<>("Team");
         players = new TableColumn<>("Players");
-        member1 = new TableColumn<>("Player 1");
-        member2 = new TableColumn<>("Player 2");
+        player1 = new TableColumn<>("Player 1");
+        player2 = new TableColumn<>("Player 2");
         score = new TableColumn<>("Score");
 
         name.setCellValueFactory(new PropertyValueFactory<>("name"));
-        member1.setCellValueFactory(new PropertyValueFactory<>("member1"));
-        member2.setCellValueFactory(new PropertyValueFactory<>("member2"));
+        player1.setCellValueFactory(new PropertyValueFactory<>("player1"));
+        player2.setCellValueFactory(new PropertyValueFactory<>("player2"));
         score.setCellValueFactory(new PropertyValueFactory<>("score"));
 
         name.prefWidthProperty().bind(widthProperty().divide(6.0));
-        member1.prefWidthProperty().bind(widthProperty().divide(3.0));
-        member2.prefWidthProperty().bind(widthProperty().divide(3.0));
+        player1.prefWidthProperty().bind(widthProperty().divide(3.0));
+        player2.prefWidthProperty().bind(widthProperty().divide(3.0));
         score.prefWidthProperty().bind(widthProperty().divide(6.0));
 
-        players.getColumns().addAll(member1, member2);
+        players.getColumns().addAll(player1, player2);
         getColumns().addAll(name, players, score);
     }
 
@@ -103,8 +103,8 @@ public final class Scoreboard extends TableView<Team> {
         if (size > 0 && size < 100) {
             String style = ("-fx-font: " + size + "px Arial; -fx-alignment: CENTER");
             instance.name.setStyle(style);
-            instance.member1.setStyle(style);
-            instance.member2.setStyle(style);
+            instance.player1.setStyle(style);
+            instance.player2.setStyle(style);
             instance.score.setStyle(style);
             instance.players.setStyle(style);
             Logging.info("Font size set to " + size);

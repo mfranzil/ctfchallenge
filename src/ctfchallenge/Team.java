@@ -10,8 +10,8 @@ import org.jetbrains.annotations.Nullable;
 
 public class Team implements Comparable<Team> {
 
-    private String member1;
-    private String member2;
+    private String player1;
+    private String player2;
     private String name;
     private int score;
 
@@ -20,14 +20,14 @@ public class Team implements Comparable<Team> {
      * Standard constructor.
      *
      * @param name    The name of the team.
-     * @param member1 The first (or only) team member.
-     * @param member2 The second team member.
+     * @param player1 The first (or only) team member.
+     * @param player2 The second team member.
      * @param score   The score to assign.
      */
-    public Team(String name, String member1, String member2, int score) {
+    public Team(String name, String player1, String player2, int score) {
         this.name = name;
-        this.member1 = member1;
-        this.member2 = member2;
+        this.player1 = player1;
+        this.player2 = player2;
         this.score = score;
     }
 
@@ -45,7 +45,7 @@ public class Team implements Comparable<Team> {
         } else if (!(o instanceof Team)) { // else if (var.getClass() != this.getClass())
             res = false;
         } else {
-            res = member1.equals(((Team) o).getMember1()) && member2.equals(((Team) o).getMember2());
+            res = player1.equals(((Team) o).getPlayer1()) && player2.equals(((Team) o).getPlayer2());
         }
         return res;
     }
@@ -58,8 +58,8 @@ public class Team implements Comparable<Team> {
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 41 * hash + member1.hashCode();
-        hash = 41 * hash + member2.hashCode();
+        hash = 41 * hash + player1.hashCode();
+        hash = 41 * hash + player2.hashCode();
         return hash;
     }
 
@@ -76,23 +76,23 @@ public class Team implements Comparable<Team> {
     @NotNull
     @Override
     public String toString() {
-        return name + ": " + member1 + ", " + member2 + " - " + score + " points";
+        return name + ": " + player1 + ", " + player2 + " - " + score + " points";
     }
 
-    public String getMember1() {
-        return member1;
+    public String getPlayer1() {
+        return player1;
     }
 
-    public void setMember1(String member1) {
-        this.member1 = member1;
+    public void setPlayer1(String player1) {
+        this.player1 = player1;
     }
 
-    public String getMember2() {
-        return member2;
+    public String getPlayer2() {
+        return player2;
     }
 
-    public void setMember2(String member2) {
-        this.member2 = member2;
+    public void setPlayer2(String player2) {
+        this.player2 = player2;
     }
 
     public String getName() {

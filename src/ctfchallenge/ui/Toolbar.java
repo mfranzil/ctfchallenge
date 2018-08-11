@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.jetbrains.annotations.NotNull;
 
@@ -62,7 +63,7 @@ public final class Toolbar extends HBox {
             pointAssigner.sendResults();
             refreshScore.fire();
             startGame.setDisable(false);
-            if (currentRound == 5) {
+            if (currentRound == Common.MAX_ROUNDS) {
                 startGame.setText("End match");
             }
             sendResults.setDisable(true);
@@ -70,7 +71,7 @@ public final class Toolbar extends HBox {
 
         getChildren().addAll(addTeam, removeTeam, editTeam, refreshScore, startGame, restoreData);
 
-        setPadding(new Insets(15, 12, 15, 12));
+        setPadding(new Insets(15));
         setSpacing(10);
         setBackground(new Background(new BackgroundFill(AccentParser.getAccentColor(),
                 CornerRadii.EMPTY, Insets.EMPTY)));
@@ -85,7 +86,10 @@ public final class Toolbar extends HBox {
         } catch (Exception e) {
             Logging.error("Team insertion failed.");
         }
-        if (!(teamList.isEmpty())) {
+        if (teamList.isEmpty()) {
+            removeTeam.setDisable(true);
+            editTeam.setDisable(true);
+        } else {
             removeTeam.setDisable(false);
             editTeam.setDisable(false);
         }
@@ -94,18 +98,22 @@ public final class Toolbar extends HBox {
     private void editTeamActions(TeamList teamList) {
         if (teamList.size() > 0) {
             VBox root = new VBox();
-            root.getChildren().add(new Text("Choose the team to edit:"));
+            Scene scene = new Scene(root);
+            Stage stage = new Stage();
 
-            for (Team team : teamList) {
-                root.getChildren().add(new Button(team.getName()) {{
-                    setOnAction(e -> new EditView(team, true, editTeam).showAndWait());
-                }});
-            }
+            root.getChildren().add(new Text("Choose the team to edit:"));
             root.setPadding(new Insets(16));
             root.setSpacing(16);
 
-            Scene scene = new Scene(root);
-            Stage stage = new Stage();
+            for (Team team : teamList) {
+                root.getChildren().add(new Button(team.getName()) {{
+                    setOnAction(e -> new EditView(team, true, this).showAndWait());
+                }});
+            }
+
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.initOwner(editTeam.getScene().getWindow());
+            stage.setResizable(false);
             stage.setScene(scene);
             stage.setTitle("Choose the team");
             stage.show();
@@ -121,6 +129,8 @@ public final class Toolbar extends HBox {
             Stage stage = new Stage();
 
             root.getChildren().add(new Text("Chooose the team to remove:"));
+            root.setPadding(new Insets(16));
+            root.setSpacing(16);
 
             teamList.forEach(team -> root.getChildren().add(new Button(team.getName()) {{
                 setOnAction(e -> {
@@ -130,13 +140,16 @@ public final class Toolbar extends HBox {
 
                     if (teamList.size() <= 0) {
                         stage.close();
+                        removeTeam.setDisable(true);
+                        editTeam.setDisable(true);
                     }
                 });
             }}));
 
-            root.setPadding(new Insets(16));
-            root.setSpacing(16);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.initOwner(removeTeam.getScene().getWindow());
             stage.setScene(scene);
+            stage.setResizable(false);
             stage.setTitle("Choose the team");
             stage.show();
         } else {
@@ -156,6 +169,7 @@ public final class Toolbar extends HBox {
             removeTeam.setDisable(true);
             pointAssigner.setPointAssigner(teamList);
             getChildren().addAll(sendResults, incrementFont, decrementFont);
+            getChildren().remove(restoreData);
         }
         if (Common.currentRound >= 1 && Common.currentRound <= MAX_ROUNDS) {
             Logging.info("Starting round " + currentRound);
@@ -165,7 +179,6 @@ public final class Toolbar extends HBox {
             processVictory(teamList);
         }
         refreshScore.fire();
-        restoreData.setDisable(true);
         startGame.setDisable(true);
         // goToEx.setDisable(false);
     }
@@ -190,6 +203,8 @@ public final class Toolbar extends HBox {
                 break;
         }
         sendResults.setDisable(true);
+        editTeam.setDisable(true);
+        refreshScore.setDisable(true);
     }
 
     @Deprecated

@@ -27,8 +27,8 @@ public class BackupHandler {
             fileOut = new BufferedWriter(new FileWriter("backup.txt"));
             Logging.info("Logging in progress...");
             for (Team temp : teamList) {
-                String data = temp.getName() + " TAB " + temp.getMember1() + " TAB "
-                        + temp.getMember2() + " TAB " + temp.getScore() + " TAB";
+                String data = temp.getName() + " TAB " + temp.getPlayer1() + " TAB "
+                        + temp.getPlayer2() + " TAB " + temp.getScore() + " TAB";
                 fileOut.write(data);
             }
             fileOut.close();
