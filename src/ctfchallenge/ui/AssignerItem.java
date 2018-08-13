@@ -21,7 +21,7 @@ public final class AssignerItem extends HBox {
 
     private Team team;
     private ToggleGroup tg;
-    private ComboBox<String> posizione;
+    private ComboBox<String> position;
 
     /**
      * Standard constructor for the class.
@@ -31,34 +31,35 @@ public final class AssignerItem extends HBox {
     public AssignerItem(Team team) {
         this.team = team;
 
-        RadioButton completed = new RadioButton("Completato");
-        RadioButton notCompleted = new RadioButton("Non completato");
+        RadioButton completed = new RadioButton("Completed");
+        RadioButton notCompleted = new RadioButton("Not completed");
         tg = new ToggleGroup();
-        posizione = new ComboBox<>();
+        position = new ComboBox<>();
 
         Integer min = Math.min(Common.MAX_TEAMS_BONUS, Common.teamNumber);
         for (int i = 0; i < min; i++) {
-            posizione.getItems().add(String.valueOf(i + 1));
+            position.getItems().add(String.valueOf(i + 1));
         }
-        posizione.getItems().add("Fuori");
-        posizione.setValue("Fuori");
-        posizione.setDisable(true);
+        position.getItems().add("Out");
+
+        position.setDisable(true);
+        position.setValue("Out");
 
         completed.setToggleGroup(tg);
         notCompleted.setToggleGroup(tg);
         notCompleted.setSelected(true);
 
-        completed.setOnAction(e -> posizione.setDisable(false));
+        completed.setOnAction(e -> position.setDisable(false));
         notCompleted.setOnAction(e -> {
-            posizione.setDisable(true);
-            posizione.setValue("Fuori");
+            position.setDisable(true);
+            position.setValue("Out");
         });
 
         getChildren().addAll(new Label(team.getName()) {{
             setMinWidth(125);
         }}, completed, notCompleted, new Label("") {{
             setMinWidth(35);
-        }}, new Text("Posizione:"), posizione);
+        }}, new Text("Position:"), position);
 
         setPadding(new Insets(15));
         setSpacing(20);
@@ -69,22 +70,31 @@ public final class AssignerItem extends HBox {
      * the corresponding score (with bonuses) for the round.
      */
     public void sendResults() {
-        Integer punteggio = Common.punteggioEs(currentRound);
+        Integer score = Common.punteggioEs(currentRound);
 
-        if (((Labeled) tg.getSelectedToggle()).getText().equals("Completato")) {
-            team.incrementScore(punteggio);
-            Logging.info("La squadra " + team.getName() + " ottiene " + punteggio + " punti");
+        String output = "Team " + team.getName() + ":";
+
+        if (((Labeled) tg.getSelectedToggle()).getText().equals("Completed")) {
+            team.incrementScore(score);
+            output += "\nCompletion points: " + score;
+        } else if (((Labeled) tg.getSelectedToggle()).getText().equals("Not completed")) {
+            output += "\nNo completion points";
         }
 
         Integer min = Math.min(Common.MAX_TEAMS_BONUS, Common.teamNumber);
         try {
-            Integer punteggioPosizione = Integer.parseInt(posizione.getValue());
-            team.setScore(team.getScore() + min - punteggioPosizione + 1);
-            Logging.info("La squadra " + team.getName()
-                    + " ottiene " + (min - punteggioPosizione + 1) + " punti bonus");
+            Integer bonusScore = Integer.parseInt(position.getValue());
+            team.setScore(team.getScore() + min - bonusScore + 1);
+            output += "\nBonus points: " + (min - bonusScore + 1);
         } catch (NumberFormatException ex) {
-            Logging.info("Nessun punto bonus per " + team.getName());
+            output += "\nNo bonus points";
         }
-        posizione.getSelectionModel().clearSelection();
+
+        Logging.info(output);
+
+        // This must be changed in case the toggles get swapped
+        tg.selectToggle(tg.getToggles().get(1));
+        position.setDisable(true);
+        position.setValue("Out");
     }
 }

@@ -23,7 +23,7 @@ import static ctfchallenge.assets.Common.currentRound;
  */
 public final class Toolbar extends HBox {
 
-    private final Button restoreData, editTeam, addTeam, removeTeam,
+    private final Button /*restoreData,*/ editTeam, addTeam, removeTeam,
             startGame, sendResults, incrementFont, decrementFont;
 
     /**
@@ -39,7 +39,7 @@ public final class Toolbar extends HBox {
         incrementFont = new Button("+");
         decrementFont = new Button("-");
         startGame = new Button("Start the match");
-        restoreData = new Button("Restore from backup");
+        // restoreData = new Button("Restore from backup");
         sendResults = new Button("Send results");
 
         removeTeam.setDisable(true);
@@ -51,11 +51,11 @@ public final class Toolbar extends HBox {
         incrementFont.setOnAction(Scoreboard::incrementFont);
         decrementFont.setOnAction(Scoreboard::decrementFont);
         startGame.setOnAction(e -> startGameActions(pointAssigner, teamList));
-        restoreData.setOnAction(e -> BackupHandler.restoreData(teamList));
+        //restoreData.setOnAction(e -> BackupHandler.restoreData(teamList));
 
         sendResults.setOnAction(e -> {
             pointAssigner.sendResults();
-            BackupHandler.backupData(teamList);
+            BackupHandler.log();
             startGame.setDisable(false);
             if (currentRound == Common.MAX_ROUNDS) {
                 startGame.setText("End match");
@@ -63,7 +63,7 @@ public final class Toolbar extends HBox {
             sendResults.setDisable(true);
         });
 
-        getChildren().addAll(addTeam, removeTeam, editTeam, startGame, restoreData);
+        getChildren().addAll(addTeam, removeTeam, editTeam, startGame/*, restoreData*/);
 
         setPadding(new Insets(15));
         setSpacing(10);
@@ -168,7 +168,7 @@ public final class Toolbar extends HBox {
             removeTeam.setDisable(true);
             pointAssigner.setPointAssigner(teamList);
             getChildren().addAll(sendResults, incrementFont, decrementFont);
-            getChildren().remove(restoreData);
+            // getChildren().remove(restoreData);
         }
         if (Common.currentRound >= 1 && Common.currentRound <= MAX_ROUNDS) {
             Logging.info("Starting round " + currentRound);
@@ -177,7 +177,7 @@ public final class Toolbar extends HBox {
         } else {
             processVictory(teamList);
         }
-        BackupHandler.backupData(teamList);
+        BackupHandler.log();
         startGame.setDisable(true);
         // goToEx.setDisable(false);
     }
@@ -194,9 +194,9 @@ public final class Toolbar extends HBox {
                 Logging.info("MATCH FINISHED!\nWinner: " + winner);
                 break;
             default:
-                String winnerStr = "";
+                StringBuilder winnerStr = new StringBuilder();
                 for (Team team : winners) {
-                    winnerStr = winnerStr + team + "\n";
+                    winnerStr.append(team).append("\n");
                 }
                 Logging.info("MATCH FINISHED!\nThese teams are getting their share:\n" + winnerStr);
                 break;
@@ -204,15 +204,16 @@ public final class Toolbar extends HBox {
         sendResults.setDisable(true);
         editTeam.setDisable(true);
     }
+    /*
+        Code to insert this in the program:
+
+        Button goToEx = new Button("Modifica numero esercizio");
+        goToEx.setDisable(true);
+        goToEx.setOnAction(e -> goToExActions());
+        getChildren().add(goToEx);
 
     @Deprecated
     private void goToExActions() {
-        // Code to insert this in the program:
-        //
-        //Button goToEx = new Button("Modifica numero esercizio");
-        //goToEx.setDisable(true);
-        //goToEx.setOnAction(e -> goToExActions());
-        //getChildren().add(goToEx);
 
         try {
             HBox root = new HBox();
@@ -238,5 +239,5 @@ public final class Toolbar extends HBox {
         } catch (Exception ex) {
             Logging.warning("Round number is invalid!");
         }
-    }
+    }*/
 }

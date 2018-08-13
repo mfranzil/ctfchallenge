@@ -1,6 +1,5 @@
 package ctfchallenge.assets;
 
-import ctfchallenge.Main;
 import ctfchallenge.Team;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -8,10 +7,20 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class BackupHandler {
+
+    public static void log() {
+        BufferedWriter fileOut;
+        try {
+            fileOut = new BufferedWriter(new FileWriter("log.txt"));
+            fileOut.write(Logging.getLog());
+            fileOut.close();
+        } catch (IOException e) {
+            Logging.fatal("IOException occurred. Failed to log data. ");
+        }
+    }
+
     /**
      * Metodo che fa un backup dei dati su backup.txt ogni volta che viene
      * chiamato sovrascrivendo il precedente.
@@ -19,7 +28,7 @@ public class BackupHandler {
      * @param teamList Il gestore interno delle squadre.
      */
     @Deprecated
-    public static void backupData(TeamList teamList) {
+    public static void backupDataOld(TeamList teamList) {
         try {
             BufferedWriter fileOut = new BufferedWriter(new FileWriter("log.txt"));
             fileOut.write(Logging.getLog());
@@ -33,7 +42,7 @@ public class BackupHandler {
             }
             fileOut.close();
         } catch (IOException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            Logging.fatal("IOException occurred. Failed to back up data. ");
         } finally {
             Logging.info("Backup finished.");
         }
@@ -46,7 +55,7 @@ public class BackupHandler {
      * @param teamList Il gestore interno delle squadre.
      */
     @Deprecated
-    public static void restoreData(@NotNull TeamList teamList) {
+    public static void restoreDataOld(@NotNull TeamList teamList) {
         try {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Upload a file");
