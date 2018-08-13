@@ -16,6 +16,7 @@ public class BackupHandler {
             fileOut = new BufferedWriter(new FileWriter("log.txt"));
             fileOut.write(Logging.getLog());
             fileOut.close();
+            Logging.info("Log window saved to log.txt.");
         } catch (IOException e) {
             Logging.fatal("IOException occurred. Failed to log data. ");
         }
@@ -30,10 +31,7 @@ public class BackupHandler {
     @Deprecated
     public static void backupDataOld(TeamList teamList) {
         try {
-            BufferedWriter fileOut = new BufferedWriter(new FileWriter("log.txt"));
-            fileOut.write(Logging.getLog());
-            fileOut.close();
-            fileOut = new BufferedWriter(new FileWriter("backup.txt"));
+            BufferedWriter fileOut = new BufferedWriter(new FileWriter("backup.txt"));
             Logging.info("Backup in progress...");
             for (Team temp : teamList) {
                 String data = temp.getName() + " TAB " + temp.getPlayer1() + " TAB "
@@ -41,12 +39,10 @@ public class BackupHandler {
                 fileOut.write(data);
             }
             fileOut.close();
+            Logging.info("Backup finished.");
         } catch (IOException ex) {
             Logging.fatal("IOException occurred. Failed to back up data. ");
-        } finally {
-            Logging.info("Backup finished.");
         }
-
     }
 
     /**
