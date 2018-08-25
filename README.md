@@ -1,26 +1,33 @@
 # CTFChallenge
 
-CTFChallenge is a simple Java-FX driven project made for a local cryptography CtF event. It supports up to 10 teams and 5 exercises.
+**CTFChallenge** is a simple Java-FX driven project made for a local cryptography *Capture the Flag* event.
+It supports a customizable number of teams and rounds.
+
 
 ## Features
 
-* Addition of up to 10 teams, made up of two people, an unique ID, an unique team name and the score.
-* Seamless removal and editing of teams, useful if the score has to be corrected during the match.
-* Separate window with real-time updating scoreboard and buttons for editing font size
-* Main window divided into three parts: a left part, used as a log area, a center part, containing radio buttons for setting whether a team captured the flag or not, a right part, containing combo boxes for giving extra points for teams arrived in first up to fifth place
-* Customizable point system
+* Addition of unlimited teams, consisting of two people, an unique team name and a score initially set to 0.
+* Seamless removal (only before match start) and editing of teams, including score corrections for each team.
+* Assignment of points to teams who successfully capture the flag, and bonus points for teams ranking in the first
+  *n* positions (customizable).
+* A log area providing useful information on what's happening or shouldn't be happening.
+* Separate window with real-time updating scoreboard and buttons for editing font size.
 
-## TODO
 
-In the future, code will need to be refactored to accomodate an arbitrary number of teams and exercises.
+## Customization
 
+In the Common.java file, you will find two final variables to customize:
+* **MAX_TEAMS_BONUS** - Maximuim points the first team will receive. If greater than the number of teams, the number
+  of teams will be used instead.
+* **MAX_ROUNDS** - The number of rounds in the match. You should edit the **getScore** method to accomodate any
+  changes.
 
 ## Authors
 
 * **Matteo Franzil** - *Initial work* - [mfranzil](https://github.com/mfranzil)
 * **Christian Spolaore** - *Initial work* - [chris797](https://github.com/chris797)
 
+
 ## License
 
 This project is open source. Please, contact me for suggestions and reviews.
-

@@ -26,7 +26,7 @@ public class Common {
      * @param i The round index.
      * @return The score of the round.
      */
-    public static int punteggioEs(int i) {
+    public static int getScore(int i) {
         int res;
         switch (i) {
             case 1:

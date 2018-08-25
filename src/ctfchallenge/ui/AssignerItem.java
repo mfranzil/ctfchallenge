@@ -70,7 +70,7 @@ public final class AssignerItem extends HBox {
      * the corresponding score (with bonuses) for the round.
      */
     public void sendResults() {
-        Integer score = Common.punteggioEs(currentRound);
+        Integer score = Common.getScore(currentRound);
 
         String output = "Team " + team.getName() + ":";
 
