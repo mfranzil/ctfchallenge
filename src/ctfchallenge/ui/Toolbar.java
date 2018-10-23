@@ -6,6 +6,7 @@ import ctfchallenge.views.EditView;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -21,7 +22,7 @@ import static ctfchallenge.assets.Common.currentRound;
  */
 public final class Toolbar extends HBox {
 
-    private final Button /*restoreData,*/ editTeam, addTeam, removeTeam,
+    private final Button restoreData, editTeam, addTeam, removeTeam,
             startGame, sendResults, incrementFont, decrementFont;
 
     /**
@@ -37,7 +38,7 @@ public final class Toolbar extends HBox {
         incrementFont = new Button("+");
         decrementFont = new Button("-");
         startGame = new Button("Start the match");
-        // restoreData = new Button("Restore from backup");
+        restoreData = new Button("Restore from backup");
         sendResults = new Button("Send results");
 
         removeTeam.setDisable(true);
@@ -49,11 +50,18 @@ public final class Toolbar extends HBox {
         incrementFont.setOnAction(Scoreboard::incrementFont);
         decrementFont.setOnAction(Scoreboard::decrementFont);
         startGame.setOnAction(e -> startGameActions(pointAssigner, teamList));
-        //restoreData.setOnAction(e -> BackupHandler.restoreData(teamList));
+        restoreData.setOnAction(e -> {
+            boolean res = BackupHandler.restoreData(teamList);
+            if (res) {
+                removeTeam.setDisable(false);
+                editTeam.setDisable(false);
+                restoreData.setDisable(true);
+            }
+        });
 
         sendResults.setOnAction(e -> {
             pointAssigner.sendResults();
-            BackupHandler.log();
+            BackupHandler.log(teamList);
             startGame.setDisable(false);
             if (currentRound == Common.MAX_ROUNDS) {
                 startGame.setText("End match");
@@ -61,7 +69,7 @@ public final class Toolbar extends HBox {
             sendResults.setDisable(true);
         });
 
-        getChildren().addAll(addTeam, removeTeam, editTeam, startGame/*, restoreData*/);
+        getChildren().addAll(addTeam, removeTeam, editTeam, startGame, restoreData);
 
         setPadding(new Insets(15));
         setSpacing(10);
@@ -175,7 +183,7 @@ public final class Toolbar extends HBox {
         } else {
             processVictory(teamList);
         }
-        BackupHandler.log();
+        BackupHandler.log(teamList);
         startGame.setDisable(true);
         // goToEx.setDisable(false);
     }

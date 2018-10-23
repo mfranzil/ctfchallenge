@@ -29,7 +29,6 @@ public class TeamList extends SimpleListProperty<Team> {
      * @param name The name of the team to search.
      * @return A Team, or null.
      */
-    @Nullable
     @Deprecated
     public Team getSquadraFromName(String name) {
         Team res = null;
