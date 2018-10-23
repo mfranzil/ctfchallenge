@@ -7,7 +7,6 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.VBox;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * This class is a wrapper for single AssignerItem instances.
@@ -31,7 +30,7 @@ public final class PointAssigner extends VBox {
      *
      * @param teamList The ObservableList of teams needed for the initialization.
      */
-    public void setPointAssigner(@NotNull TeamList teamList) {
+    public void setPointAssigner(TeamList teamList) {
         teamList.forEach(i -> {
             AssignerItem ai = new AssignerItem(i);
             getChildren().add(ai);

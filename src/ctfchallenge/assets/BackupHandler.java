@@ -3,7 +3,6 @@ package ctfchallenge.assets;
 import ctfchallenge.Team;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.util.Scanner;
@@ -51,7 +50,7 @@ public class BackupHandler {
      * @param teamList Il gestore interno delle squadre.
      */
     @Deprecated
-    public static void restoreDataOld(@NotNull TeamList teamList) {
+    public static void restoreDataOld(TeamList teamList) {
         try {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Upload a file");

@@ -1,7 +1,5 @@
 package ctfchallenge.assets;
 
-import org.jetbrains.annotations.Nullable;
-
 public class Common {
     /**
      * The number of teams allowed to get a bonus for finishing in the top positions.
@@ -57,7 +55,6 @@ public class Common {
      * @param i The round index.
      * @return A String, representing the round in English ordinal naming convention.
      */
-    @Nullable
     @Deprecated
     public static String intToText(int i) {
         String res;

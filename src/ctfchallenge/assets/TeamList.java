@@ -3,8 +3,6 @@ package ctfchallenge.assets;
 import ctfchallenge.Team;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -33,7 +31,7 @@ public class TeamList extends SimpleListProperty<Team> {
      */
     @Nullable
     @Deprecated
-    public Team getSquadraFromName(@NotNull String name) {
+    public Team getSquadraFromName(String name) {
         Team res = null;
         for (Team i : this) {
             if (name.equals(i.getName())) {
@@ -49,7 +47,6 @@ public class TeamList extends SimpleListProperty<Team> {
      *
      * @return An ArrayList containing at least one Team.
      */
-    @NotNull
     public ArrayList<Team> getLeader() {
         Collections.sort(this);
         int punteggio_temp = this.get(0).getScore();

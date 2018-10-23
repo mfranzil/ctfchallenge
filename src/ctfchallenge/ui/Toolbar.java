@@ -6,11 +6,9 @@ import ctfchallenge.views.EditView;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
@@ -32,7 +30,7 @@ public final class Toolbar extends HBox {
      * @param pointAssigner The score assigner.
      * @param teamList      The ObservableList of teams.
      */
-    public Toolbar(@NotNull PointAssigner pointAssigner, @NotNull TeamList teamList) {
+    public Toolbar(PointAssigner pointAssigner, TeamList teamList) {
         addTeam = new Button("Add team");
         removeTeam = new Button("Remove team");
         editTeam = new Button("Edit team");
@@ -71,7 +69,7 @@ public final class Toolbar extends HBox {
                 CornerRadii.EMPTY, Insets.EMPTY)));
     }
 
-    private void addTeamActions(@NotNull TeamList teamList) {
+    private void addTeamActions(TeamList teamList) {
         Team team = new Team("", "", "", 0);
         try {
             EditView editView = new EditView(team, false, addTeam);
@@ -160,7 +158,7 @@ public final class Toolbar extends HBox {
         }
     }
 
-    private void startGameActions(@NotNull PointAssigner pointAssigner, @NotNull TeamList teamList) {
+    private void startGameActions(PointAssigner pointAssigner, TeamList teamList) {
         Common.currentRound++;
         Common.teamNumber = teamList.size();
         if (Common.currentRound == 1) {

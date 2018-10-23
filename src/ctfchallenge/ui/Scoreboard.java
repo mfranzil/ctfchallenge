@@ -1,14 +1,11 @@
 package ctfchallenge.ui;
 
-
 import ctfchallenge.Team;
 import ctfchallenge.assets.Logging;
 import javafx.event.ActionEvent;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import org.jetbrains.annotations.NotNull;
-
 
 /**
  * @author Matteo Franzil
@@ -18,22 +15,22 @@ public final class Scoreboard extends TableView<Team> {
 
     private static Scoreboard INSTANCE;
 
-    @NotNull
     private final TableColumn<Team, String> name;
-    @NotNull
+
     private final TableColumn<Team, TableColumn<Team, String>> players;
-    @NotNull
+
     private final TableColumn<Team, String> player1;
-    @NotNull
+
     private final TableColumn<Team, String> player2;
-    @NotNull
+
     private final TableColumn<Team, String> score;
 
     private final int fontsizes[] = {6, 7, 8, 9, 10, 11, 12, 14, 16, 18, 21, 24, 36, 48, 60, 72, 84, 96};
     private int pointer = 11; // Pt = 24
 
     /**
-     * Standard constructor. The Scoreboard fully behaves like a TableView containing only Team instances.
+     * Standard constructor. The Scoreboard fully behaves like a TableView
+     * containing only Team instances.
      */
     @SuppressWarnings("unchecked")
     private Scoreboard() {

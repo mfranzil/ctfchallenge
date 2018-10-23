@@ -1,8 +1,5 @@
 package ctfchallenge;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import java.io.Serializable;
 
 /**
@@ -40,7 +37,7 @@ public class Team implements Comparable<Team>, Serializable {
      * @return A boolean representing the result.
      */
     @Override
-    public boolean equals(@Nullable Object o) {
+    public boolean equals(Object o) {
         boolean res;
         if (o == null) {
             res = false;
@@ -66,7 +63,7 @@ public class Team implements Comparable<Team>, Serializable {
     }
 
     @Override
-    public int compareTo(@NotNull Team o) {
+    public int compareTo(Team o) {
         return o.getScore() - this.getScore();
     }
 
@@ -75,7 +72,6 @@ public class Team implements Comparable<Team>, Serializable {
      *
      * @return A String containing name, members and score of the Team.
      */
-    @NotNull
     @Override
     public String toString() {
         return name + ": " + player1 + ", " + player2 + " - " + score + " points";

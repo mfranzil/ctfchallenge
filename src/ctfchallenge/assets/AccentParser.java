@@ -1,8 +1,6 @@
 package ctfchallenge.assets;
 
 import javafx.scene.paint.Color;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,7 +22,7 @@ public class AccentParser {
         try {
             value = new AccentParser().readRegistry("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\DWM",
                     "ColorizationColor");
-        } catch (@NotNull IOException | InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
 
@@ -67,7 +65,6 @@ public class AccentParser {
      * @throws IOException Thrown in case of I/O errors.
      * @throws InterruptedException Thrown if the process is killed by the user.
      */
-    @Nullable
     public String readRegistry(String location, String key) throws IOException, InterruptedException {
         // Run reg query, then read output with StreamReader (internal class)
         Process process = Runtime.getRuntime().exec("reg query " +
@@ -88,7 +85,6 @@ public class AccentParser {
 
     class StreamReader extends Thread {
         private InputStream is;
-        @NotNull
         private StringWriter sw = new StringWriter();
 
         public StreamReader(InputStream is) {
