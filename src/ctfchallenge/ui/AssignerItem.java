@@ -15,7 +15,7 @@ import static ctfchallenge.assets.Common.currentRound;
  * bonuses for a single team.
  *
  * @author Matteo Franzil
- * @version 1.2
+ * @version 1.3.1
  */
 public final class AssignerItem extends HBox {
 

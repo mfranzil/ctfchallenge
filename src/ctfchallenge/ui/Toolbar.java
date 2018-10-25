@@ -18,7 +18,7 @@ import static ctfchallenge.assets.Common.currentRound;
 
 /**
  * @author Matteo Franzil
- * @version 1.2
+ * @version 1.3.1
  */
 public final class Toolbar extends HBox {
 

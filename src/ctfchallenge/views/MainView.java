@@ -14,7 +14,7 @@ import javafx.stage.Stage;
 
 /**
  * @author Matteo Franzil
- * @version 1.2
+ * @version 1.3.1
  */
 public class MainView extends Stage {
     public MainView(Logging logWindow, TeamList teamList) {

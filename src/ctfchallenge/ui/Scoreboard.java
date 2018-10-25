@@ -9,7 +9,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 
 /**
  * @author Matteo Franzil
- * @version 1.2
+ * @version 1.3.1
  */
 public final class Scoreboard extends TableView<Team> {
 

@@ -12,7 +12,7 @@ import javafx.scene.layout.VBox;
  * This class is a wrapper for single AssignerItem instances.
  *
  * @author Matteo Franzil
- * @version 1.2
+ * @version 1.3.1
  */
 public final class PointAssigner extends VBox {
 

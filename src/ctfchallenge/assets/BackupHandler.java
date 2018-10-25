@@ -3,7 +3,6 @@ package ctfchallenge.assets;
 import ctfchallenge.Team;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -18,7 +17,7 @@ public class BackupHandler {
         standardLog();
     }
 
-    public static void standardLog() {
+    private static void standardLog() {
         BufferedWriter fileOut;
         try {
             fileOut = new BufferedWriter(new FileWriter("log.txt"));
@@ -31,19 +30,20 @@ public class BackupHandler {
     }
 
     /**
-     * Metodo che fa un backup dei dati su backup.txt ogni volta che viene
-     * chiamato sovrascrivendo il precedente.
+     * This method dumps a JSON file named backup.json in the root folder, containing
+     * the program state at the moment of backup. It's dumped automatically at each teamList update.     *
      *
-     * @param teamList Il gestore interno delle squadre.
+     * @param teamList The ObservableList of teams.
      */
-    public static void backupData(TeamList teamList) {
+    private static void backupData(TeamList teamList) {
         JSONObject json = new JSONObject();
         try {
-            BufferedWriter fileOut = new BufferedWriter(new FileWriter("backup.txt"));
+            BufferedWriter fileOut = new BufferedWriter(new FileWriter("backup.json"));
             Logging.info("Backup in progress...");
+            int i = 0;
             for (Team temp : teamList) {
                 JSONObject tmp = new JSONObject();
-                json.put(temp.getName(), tmp);
+                json.put(++i, tmp);
                 tmp.put("Name", temp.getName());
                 tmp.put("Player1", temp.getPlayer1());
                 tmp.put("Player2", temp.getPlayer2());
@@ -62,9 +62,9 @@ public class BackupHandler {
     }
 
     /**
-     * Metodo che evoca un FileChooser per riprendere il gioco da un backup precedente.
+     * Method that calls a JavaFX FileChooser to pick a JSON backup file to restore data from.
      *
-     * @param teamList Il gestore interno delle squadre.
+     * @param teamList The ObservableList of teams.
      */
     public static boolean restoreData(TeamList teamList) {
         boolean res = false;
@@ -72,7 +72,7 @@ public class BackupHandler {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Upload a file");
             fileChooser.getExtensionFilters().addAll(
-                    new FileChooser.ExtensionFilter("TXT", "*.txt")
+                    new FileChooser.ExtensionFilter("JSON", "*.json")
             );
             File file = fileChooser.showOpenDialog(new Stage());
             if (file == null) {
@@ -83,15 +83,15 @@ public class BackupHandler {
                 JSONObject teams = (JSONObject) new JSONParser().parse(jsonContent);
 
                 for (Object a : teams.values()) {
-                    String nomesquadra = (String) ((JSONObject)a).get("Name");
-                    String membro1 = (String) ((JSONObject)a).get("Player1");
-                    String membro2 = (String) ((JSONObject)a).get("Player2");
-                    Integer punteggio = ((Long) ((JSONObject)a).get("Score")).intValue();
+                    String teamName = (String) ((JSONObject) a).get("Name");
+                    String player1 = (String) ((JSONObject) a).get("Player1");
+                    String player2 = (String) ((JSONObject) a).get("Player2");
+                    Integer score = ((Long) ((JSONObject) a).get("Score")).intValue();
 
-                    Team temp = new Team(nomesquadra, membro1, membro2, punteggio);
+                    Team temp = new Team(teamName, player1, player2, score);
                     teamList.add(temp);
-                    Logging.info("Restored successfully: " + nomesquadra + "\nMembers: "
-                            + membro1 + " " + membro2 + "\nPoints: " + punteggio);
+                    Logging.info("Restored successfully: " + teamName + "\nMembers: "
+                            + player1 + " " + player2 + "\nPoints: " + score);
                     res = true;
                 }
                 Logging.info("Backup successfully recovered.");

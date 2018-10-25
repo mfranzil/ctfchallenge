@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 /**
  * @author Matteo Franzil
- * @version 1.2
+ * @version 1.3.1
  */
 
 public class Team implements Comparable<Team>, Serializable {

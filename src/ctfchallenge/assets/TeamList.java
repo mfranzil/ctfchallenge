@@ -12,7 +12,7 @@ import java.util.Collections;
  * Gets observed by a {@link ctfchallenge.ui.Scoreboard}.
  *
  * @author Matteo Franzil
- * @version 1.2
+ * @version 1.3.1
  */
 public class TeamList extends SimpleListProperty<Team> {
 
