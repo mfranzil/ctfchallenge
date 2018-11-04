@@ -4,6 +4,12 @@
 It supports a customizable number of teams and rounds.
 
 
+
+## Dependencies
+
+Dependencies are placed in the /lib folder. Remember to manually add them to your Maven project or to your IDE dependencies in order for CTFChallenge to build correctly. The only JAR used at the moment is `json-simple-1.1.1.jar`.
+
+
 ## Features
 
 * Addition of unlimited teams, consisting of two people, an unique team name and a score initially set to 0.
