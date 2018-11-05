@@ -10,7 +10,7 @@ import javafx.stage.Stage;
 
 /**
  * @author Matteo Franzil
- * @version 1.3.1
+ * @version 20181105v2
  */
 public class Main extends Application {
 
@@ -23,18 +23,19 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        // Ottengo le istanze singleton della finestra di Logging e della Scoreboard
         Logging logWindow = Logging.getInstance();
-
         Scoreboard scoreboard = Scoreboard.getInstance();
+
+        // La teamList viene utilizzata durante tutto il programma e istanziata qua
         TeamList teamList = new TeamList();
         scoreboard.setItems(teamList);
 
+        // Creo una finestra separata per gestire la Scoreboard
         ScoreboardView scoreboardWindow = new ScoreboardView(scoreboard);
         scoreboardWindow.show();
 
         MainView main = new MainView(logWindow, teamList);
         main.show();
     }
-
-
 }

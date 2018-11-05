@@ -10,13 +10,25 @@ import org.json.simple.parser.ParseException;
 import java.io.*;
 import java.util.Scanner;
 
+/**
+ * @author Matteo Franzil
+ * @version 20181105v2
+ */
 public class BackupHandler {
 
+    /**
+     * Logs both the program status and the logging window text.
+     *
+     * @param teamList The teamList.
+     */
     public static void log(TeamList teamList) {
         backupData(teamList);
         standardLog();
     }
 
+    /**
+     * Dumps the logging window text to a file called "log.txt".
+     */
     private static void standardLog() {
         BufferedWriter fileOut;
         try {

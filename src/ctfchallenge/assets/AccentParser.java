@@ -8,7 +8,7 @@ import java.io.StringWriter;
 
 /**
  * @author Matteo Franzil
- * @version 1.3.1
+ * @version 20181105v2
  */
 public class AccentParser {
     /**

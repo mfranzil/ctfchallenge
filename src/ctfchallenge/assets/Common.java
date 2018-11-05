@@ -1,17 +1,28 @@
 package ctfchallenge.assets;
 
+/**
+ * @author Matteo Franzil
+ * @version 20181105v2
+ */
 public class Common {
     /**
      * The total number of rounds.
      */
     public static final int MAX_ROUNDS = 4;
+
     /**
      * The number of teams participating. This field should be left as it is and modified by the program itself.
      */
     public static int teamNumber;
 
+    /**
+     * The maximum number of teams allowed to get a variable bonus.
+     */
     public static int MAX_TEAMS_BONUS = 5;
 
+    /**
+     * The value of the fixed bonus given to teams.
+     */
     public static int FIXED_BONUS = 5;
 
     /**

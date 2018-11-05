@@ -11,7 +11,7 @@ import javafx.scene.text.Text;
  * bonuses for a single team.
  *
  * @author Matteo Franzil
- * @version 1.3.1
+ * @version 20181105v2
  */
 public final class AssignerTeam extends HBox {
 
@@ -37,6 +37,9 @@ public final class AssignerTeam extends HBox {
         setSpacing(20);
     }
 
+    /**
+     * Recursively dismantles AssignerRounds.
+     */
     public void dismantle() {
         getChildren().forEach(i -> ((AssignerRound) i).dismantle());
     }

@@ -6,7 +6,7 @@ import java.sql.Timestamp;
 
 /**
  * @author Matteo Franzil
- * @version 1.3.1
+ * @version 20181105v2
  */
 public class Logging extends TextArea {
 

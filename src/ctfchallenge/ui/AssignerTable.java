@@ -11,7 +11,7 @@ import javafx.scene.text.Text;
  * This class is a wrapper for single AssignerTeam instances.
  *
  * @author Matteo Franzil
- * @version 1.3.1
+ * @version 20181105v2
  */
 public final class AssignerTable extends VBox {
 
@@ -46,6 +46,9 @@ public final class AssignerTable extends VBox {
         });
     }
 
+    /**
+     * Recursively dismantles AssignerItems.
+     */
     public void dismantle() {
         getChildren().forEach(i -> ((AssignerTeam) i).dismantle());
     }

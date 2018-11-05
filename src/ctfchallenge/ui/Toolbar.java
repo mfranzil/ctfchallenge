@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Slider;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
@@ -18,12 +19,13 @@ import java.util.Optional;
 
 /**
  * @author Matteo Franzil
- * @version 1.3.1
+ * @version 20181105v2
  */
 public final class Toolbar extends HBox {
 
     private final Button restoreData, editTeam, addTeam, removeTeam,
             startGame, incrementFont, decrementFont;
+    private final Slider backupSpeed;
     private Thread backupThr;
 
     /**
@@ -40,6 +42,7 @@ public final class Toolbar extends HBox {
         decrementFont = new Button("-");
         startGame = new Button("Start the match");
         restoreData = new Button("Restore from backup");
+        backupSpeed = new Slider(1.5, 240, 30);
 
         removeTeam.setDisable(true);
         editTeam.setDisable(true);
@@ -174,13 +177,15 @@ public final class Toolbar extends HBox {
         removeTeam.setDisable(true);
 
         backupThr = new Thread(() -> {
-            BackupHandler.log(teamList);
-            try {
-                Thread.sleep(30000);
-            } catch (InterruptedException e) {
-                backupThr.interrupt();
-                Logging.fatal("An unhandled exception caused the Backup thread to stop. Please restart" +
-                        " the program and restore from the backup.");
+            while (true) {
+                BackupHandler.log(teamList);
+                try {
+                    Thread.sleep((long) (1000 * backupSpeed.getValue()));
+                } catch (InterruptedException e) {
+                    backupThr.interrupt();
+                    Logging.fatal("An unhandled exception caused the Backup thread to stop. Please restart" +
+                            " the program and restore from the backup.");
+                }
             }
         });
         backupThr.start();
@@ -199,10 +204,15 @@ public final class Toolbar extends HBox {
             }
         });
 
+        backupSpeed.setShowTickMarks(true);
+        backupSpeed.setShowTickLabels(true);
+        backupSpeed.valueProperty().addListener((ov, old_val, new_val) -> {
+            Logging.info("Backup speed set to " + new_val + " seconds");
+        });
+
         assignerTable.setAssignerTable(teamList);
-        getChildren().addAll(incrementFont, decrementFont);
+        getChildren().addAll(incrementFont, decrementFont, backupSpeed);
         Logging.info("Starting match");
-        BackupHandler.log(teamList);
     }
 
     private void processVictory(TeamList teamList) {
