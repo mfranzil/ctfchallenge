@@ -11,6 +11,7 @@ public class Team implements Comparable<Team>, Serializable {
 
     private String player1;
     private String player2;
+    private String player3;
     private String name;
     private int score;
 
@@ -23,10 +24,11 @@ public class Team implements Comparable<Team>, Serializable {
      * @param player2 The second team member.
      * @param score   The score to assign.
      */
-    public Team(String name, String player1, String player2, int score) {
+    public Team(String name, String player1, String player2, String player3, int score) {
         this.name = name;
         this.player1 = player1;
         this.player2 = player2;
+        this.player3 = player3;
         this.score = score;
     }
 
@@ -91,6 +93,14 @@ public class Team implements Comparable<Team>, Serializable {
 
     public void setPlayer2(String player2) {
         this.player2 = player2;
+    }
+
+    public String getPlayer3() {
+        return player3;
+    }
+
+    public void setPlayer3(String player3) {
+        this.player3 = player3;
     }
 
     public String getName() {

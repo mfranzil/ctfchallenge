@@ -5,16 +5,16 @@ import ctfchallenge.assets.*;
 import ctfchallenge.views.EditView;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
-
-import static ctfchallenge.assets.Common.MAX_ROUNDS;
-import static ctfchallenge.assets.Common.currentRound;
+import java.util.Optional;
 
 /**
  * @author Matteo Franzil
@@ -23,15 +23,16 @@ import static ctfchallenge.assets.Common.currentRound;
 public final class Toolbar extends HBox {
 
     private final Button restoreData, editTeam, addTeam, removeTeam,
-            startGame, sendResults, incrementFont, decrementFont;
+            startGame, incrementFont, decrementFont;
+    private Thread backupThr;
 
     /**
      * Standard constructor for the Toolbar.
      *
-     * @param pointAssigner The score assigner.
+     * @param assignerTable The score assigner.
      * @param teamList      The ObservableList of teams.
      */
-    public Toolbar(PointAssigner pointAssigner, TeamList teamList) {
+    public Toolbar(AssignerTable assignerTable, TeamList teamList) {
         addTeam = new Button("Add team");
         removeTeam = new Button("Remove team");
         editTeam = new Button("Edit team");
@@ -39,34 +40,25 @@ public final class Toolbar extends HBox {
         decrementFont = new Button("-");
         startGame = new Button("Start the match");
         restoreData = new Button("Restore from backup");
-        sendResults = new Button("Send results");
 
         removeTeam.setDisable(true);
         editTeam.setDisable(true);
+        startGame.setDisable(true);
 
         addTeam.setOnAction(e -> addTeamActions(teamList));
         removeTeam.setOnAction(e -> removeTeamActions(teamList));
         editTeam.setOnAction(e -> editTeamActions(teamList));
         incrementFont.setOnAction(Scoreboard::incrementFont);
         decrementFont.setOnAction(Scoreboard::decrementFont);
-        startGame.setOnAction(e -> startGameActions(pointAssigner, teamList));
+        startGame.setOnAction(e -> startGameActions(assignerTable, teamList));
         restoreData.setOnAction(e -> {
             boolean res = BackupHandler.restoreData(teamList);
             if (res) {
                 removeTeam.setDisable(false);
                 editTeam.setDisable(false);
                 restoreData.setDisable(true);
+                startGame.setDisable(false);
             }
-        });
-
-        sendResults.setOnAction(e -> {
-            pointAssigner.sendResults();
-            BackupHandler.log(teamList);
-            startGame.setDisable(false);
-            if (currentRound == Common.MAX_ROUNDS) {
-                startGame.setText("End match");
-            }
-            sendResults.setDisable(true);
         });
 
         getChildren().addAll(addTeam, removeTeam, editTeam, startGame, restoreData);
@@ -78,7 +70,7 @@ public final class Toolbar extends HBox {
     }
 
     private void addTeamActions(TeamList teamList) {
-        Team team = new Team("", "", "", 0);
+        Team team = new Team("", "", "", "", 0);
         try {
             EditView editView = new EditView(team, false, addTeam);
             editView.showAndWait();
@@ -87,16 +79,23 @@ public final class Toolbar extends HBox {
             Logging.error("Team insertion failed.");
         }
 
-        if (team.getName().equals("") && team.getPlayer1().equals("") && team.getPlayer2().equals("")) {
+        if (team.getName().equals("")
+                && team.getPlayer1().equals("")
+                && team.getPlayer2().equals("")
+                && team.getPlayer3().equals("")) {
             teamList.remove(team);
         }
 
         if (teamList.isEmpty()) {
             removeTeam.setDisable(true);
             editTeam.setDisable(true);
+            startGame.setDisable(true);
+            restoreData.setDisable(false);
         } else {
             removeTeam.setDisable(false);
             editTeam.setDisable(false);
+            startGame.setDisable(false);
+            restoreData.setDisable(true);
         }
     }
 
@@ -163,29 +162,47 @@ public final class Toolbar extends HBox {
         if (teamList.isEmpty()) {
             removeTeam.setDisable(true);
             editTeam.setDisable(true);
+            startGame.setDisable(true);
+            restoreData.setDisable(false);
         }
     }
 
-    private void startGameActions(PointAssigner pointAssigner, TeamList teamList) {
-        Common.currentRound++;
+    private void startGameActions(AssignerTable assignerTable, TeamList teamList) {
         Common.teamNumber = teamList.size();
-        if (Common.currentRound == 1) {
-            addTeam.setDisable(true);
-            removeTeam.setDisable(true);
-            pointAssigner.setPointAssigner(teamList);
-            getChildren().addAll(sendResults, incrementFont, decrementFont);
-            // getChildren().remove(restoreData);
-        }
-        if (Common.currentRound >= 1 && Common.currentRound <= MAX_ROUNDS) {
-            Logging.info("Starting round " + currentRound);
-            startGame.setText("Next round");
-            sendResults.setDisable(false);
-        } else {
-            processVictory(teamList);
-        }
+
+        addTeam.setDisable(true);
+        removeTeam.setDisable(true);
+
+        backupThr = new Thread(() -> {
+            BackupHandler.log(teamList);
+            try {
+                Thread.sleep(30000);
+            } catch (InterruptedException e) {
+                backupThr.interrupt();
+                Logging.fatal("An unhandled exception caused the Backup thread to stop. Please restart" +
+                        " the program and restore from the backup.");
+            }
+        });
+        backupThr.start();
+
+        startGame.setText("Termina partita");
+        startGame.setOnAction(e -> {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
+                    "Sei sicuro di voler interrompere la partita? L'operazione non è reversibile!");
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                BackupHandler.log(teamList);
+                editTeam.setDisable(true);
+                startGame.setDisable(true);
+                assignerTable.dismantle();
+                processVictory(teamList);
+            }
+        });
+
+        assignerTable.setAssignerTable(teamList);
+        getChildren().addAll(incrementFont, decrementFont);
+        Logging.info("Starting match");
         BackupHandler.log(teamList);
-        startGame.setDisable(true);
-        // goToEx.setDisable(false);
     }
 
     private void processVictory(TeamList teamList) {
@@ -207,43 +224,6 @@ public final class Toolbar extends HBox {
                 Logging.info("MATCH FINISHED!\nThese teams are getting their share:\n" + winnerStr);
                 break;
         }
-        sendResults.setDisable(true);
-        editTeam.setDisable(true);
     }
-    /*
-        Code to insert this in the program:
 
-        Button goToEx = new Button("Modifica numero esercizio");
-        goToEx.setDisable(true);
-        goToEx.setOnAction(e -> goToExActions());
-        getChildren().add(goToEx);
-
-    @Deprecated
-    private void goToExActions() {
-
-        try {
-            HBox root = new HBox();
-            Scene scene = new Scene(root);
-            Stage stage = new Stage();
-
-            for (int i = 0; i < MAX_ROUNDS; i++) {
-                int finalI = i;
-                root.getChildren().add(new Button("" + (i + 1)) {{
-                    setOnAction(e -> {
-                        startGame.fire();
-                        Logging.info("Jumping to round " + finalI + "");
-                        stage.close();
-                    });
-                }});
-            }
-            root.setPadding(new Insets(16));
-            root.setSpacing(16);
-
-            stage.setScene(scene);
-            stage.setTitle("Choose the round.");
-            stage.show();
-        } catch (Exception ex) {
-            Logging.warning("Round number is invalid!");
-        }
-    }*/
 }

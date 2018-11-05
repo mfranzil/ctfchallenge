@@ -2,21 +2,17 @@ package ctfchallenge.assets;
 
 public class Common {
     /**
-     * The number of teams allowed to get a bonus for finishing in the top positions.
-     */
-    public static final int MAX_TEAMS_BONUS = 5;
-    /**
      * The total number of rounds.
      */
-    public static final int MAX_ROUNDS = 5;
-    /**
-     * The current round.
-     */
-    public static int currentRound = 0;
+    public static final int MAX_ROUNDS = 4;
     /**
      * The number of teams participating. This field should be left as it is and modified by the program itself.
      */
     public static int teamNumber;
+
+    public static int MAX_TEAMS_BONUS = 5;
+
+    public static int FIXED_BONUS = 5;
 
     /**
      * This method return the score for each round. Must be modified accordingly with {@link #MAX_ROUNDS}.
@@ -37,9 +33,6 @@ public class Common {
                 res = 15;
                 break;
             case 4:
-                res = 25;
-                break;
-            case 5:
                 res = 25;
                 break;
             default:
@@ -70,9 +63,6 @@ public class Common {
                 break;
             case 4:
                 res = "Fourth";
-                break;
-            case 5:
-                res = "Fifth";
                 break;
             default:
                 res = null;

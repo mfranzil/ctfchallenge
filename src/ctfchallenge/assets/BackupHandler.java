@@ -47,6 +47,7 @@ public class BackupHandler {
                 tmp.put("Name", temp.getName());
                 tmp.put("Player1", temp.getPlayer1());
                 tmp.put("Player2", temp.getPlayer2());
+                tmp.put("Player3", temp.getPlayer3());
                 tmp.put("Score", temp.getScore());
             }
             StringWriter out = new StringWriter();
@@ -86,9 +87,10 @@ public class BackupHandler {
                     String teamName = (String) ((JSONObject) a).get("Name");
                     String player1 = (String) ((JSONObject) a).get("Player1");
                     String player2 = (String) ((JSONObject) a).get("Player2");
-                    Integer score = ((Long) ((JSONObject) a).get("Score")).intValue();
+                    String player3 = (String) ((JSONObject) a).get("Player3");
+                    int score = ((Long) ((JSONObject) a).get("Score")).intValue();
 
-                    Team temp = new Team(teamName, player1, player2, score);
+                    Team temp = new Team(teamName, player1, player2, player3, score);
                     teamList.add(temp);
                     Logging.info("Restored successfully: " + teamName + "\nMembers: "
                             + player1 + " " + player2 + "\nPoints: " + score);

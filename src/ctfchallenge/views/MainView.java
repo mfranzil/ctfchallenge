@@ -2,7 +2,7 @@ package ctfchallenge.views;
 
 import ctfchallenge.assets.Logging;
 import ctfchallenge.assets.TeamList;
-import ctfchallenge.ui.PointAssigner;
+import ctfchallenge.ui.AssignerTable;
 import ctfchallenge.ui.Toolbar;
 import javafx.application.Platform;
 import javafx.scene.Scene;
@@ -21,13 +21,13 @@ public class MainView extends Stage {
         BorderPane mainPane = new BorderPane();
         Scene mainScene = new Scene(mainPane);
 
-        PointAssigner pointAssigner = new PointAssigner();
+        AssignerTable assignerTable = new AssignerTable();
 
-        Toolbar toolbar = new Toolbar(pointAssigner, teamList);
+        Toolbar toolbar = new Toolbar(assignerTable, teamList);
 
         mainPane.setTop(toolbar);
         mainPane.setLeft(logWindow);
-        mainPane.setCenter(pointAssigner);
+        mainPane.setCenter(assignerTable);
 
         setScene(mainScene);
         initGUI();

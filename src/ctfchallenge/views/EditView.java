@@ -40,6 +40,7 @@ public class EditView extends Stage {
         TextField name = new TextField(team.getName());
         TextField player1 = new TextField(team.getPlayer1());
         TextField player2 = new TextField(team.getPlayer2());
+        TextField player3 = new TextField(team.getPlayer3());
         TextField score = new TextField(String.valueOf(team.getScore()));
 
         if (!isEdit) {
@@ -50,12 +51,14 @@ public class EditView extends Stage {
         editPane.add(new Text("Name"), 0, 0);
         editPane.add(new Text("Player 1"), 0, 1);
         editPane.add(new Text("Player 2"), 0, 2);
-        editPane.add(new Text("Score"), 0, 3);
+        editPane.add(new Text("Player 3"), 0, 3);
+        editPane.add(new Text("Score"), 0, 4);
         editPane.add(name, 1, 0);
         editPane.add(player1, 1, 1);
         editPane.add(player2, 1, 2);
-        editPane.add(score, 1, 3);
-        editPane.add(send, 1, 4);
+        editPane.add(player3, 1, 3);
+        editPane.add(score, 1, 4);
+        editPane.add(send, 1, 5);
 
         ColumnConstraints c1 = new ColumnConstraints();
         c1.setPercentWidth(50);
@@ -74,12 +77,13 @@ public class EditView extends Stage {
                 team.setName(name.getText());
                 team.setPlayer1(player1.getText());
                 team.setPlayer2(player2.getText());
+                team.setPlayer3(player3.getText());
                 team.setScore(Integer.parseInt(score.getText()));
                 close();
                 //Scoreboard.refreshScoreboard();
                 Logging.info("Team successfully" + (isEdit ? " updated:" : " added:")
                         + "\nName: " + team.getName()
-                        + "\nMembers: " + team.getPlayer1() + ", " + team.getPlayer2() +
+                        + "\nMembers: " + team.getPlayer1() + ", " + team.getPlayer2() + ", " + team.getPlayer3() +
                         (isEdit ? "\nScore: " + team.getScore() : ""));
             } catch (NumberFormatException ex) {
                 new Alert(Alert.AlertType.ERROR, "Please enter a valid number for the score.", ButtonType.OK)

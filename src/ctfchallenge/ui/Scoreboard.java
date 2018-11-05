@@ -23,6 +23,8 @@ public final class Scoreboard extends TableView<Team> {
 
     private final TableColumn<Team, String> player2;
 
+    private final TableColumn<Team, String> player3;
+
     private final TableColumn<Team, String> score;
 
     private final int fontsizes[] = {6, 7, 8, 9, 10, 11, 12, 14, 16, 18, 21, 24, 36, 48, 60, 72, 84, 96};
@@ -38,19 +40,22 @@ public final class Scoreboard extends TableView<Team> {
         players = new TableColumn<>("Players");
         player1 = new TableColumn<>("Player 1");
         player2 = new TableColumn<>("Player 2");
+        player3 = new TableColumn<>("Player 3");
         score = new TableColumn<>("Score");
 
         name.setCellValueFactory(new PropertyValueFactory<>("name"));
         player1.setCellValueFactory(new PropertyValueFactory<>("player1"));
         player2.setCellValueFactory(new PropertyValueFactory<>("player2"));
+        player3.setCellValueFactory(new PropertyValueFactory<>("player3"));
         score.setCellValueFactory(new PropertyValueFactory<>("score"));
 
-        name.prefWidthProperty().bind(widthProperty().divide(6.0));
-        player1.prefWidthProperty().bind(widthProperty().divide(3.0));
-        player2.prefWidthProperty().bind(widthProperty().divide(3.0));
-        score.prefWidthProperty().bind(widthProperty().divide(6.0));
+        name.prefWidthProperty().bind(widthProperty().divide(100 / 33));
+        player1.prefWidthProperty().bind(widthProperty().divide(100 / 11));
+        player2.prefWidthProperty().bind(widthProperty().divide(100 / 11));
+        player3.prefWidthProperty().bind(widthProperty().divide(100 / 11));
+        score.prefWidthProperty().bind(widthProperty().divide(100 / 33));
 
-        players.getColumns().addAll(player1, player2);
+        players.getColumns().addAll(player1, player2, player3);
         getColumns().addAll(name, players, score);
     }
 
@@ -102,6 +107,7 @@ public final class Scoreboard extends TableView<Team> {
             instance.name.setStyle(style);
             instance.player1.setStyle(style);
             instance.player2.setStyle(style);
+            instance.player3.setStyle(style);
             instance.score.setStyle(style);
             instance.players.setStyle(style);
             Logging.info("Font size set to " + size);
