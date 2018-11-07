@@ -188,6 +188,7 @@ public final class Toolbar extends HBox {
                 }
             }
         });
+        backupThr.setDaemon(true);
         backupThr.start();
 
         startGame.setText("Termina partita");
@@ -200,6 +201,7 @@ public final class Toolbar extends HBox {
                 editTeam.setDisable(true);
                 startGame.setDisable(true);
                 assignerTable.dismantle();
+                stopBackupThread();
                 processVictory(teamList);
             }
         });
@@ -233,6 +235,12 @@ public final class Toolbar extends HBox {
                 }
                 Logging.info("MATCH FINISHED!\nThese teams are getting their share:\n" + winnerStr);
                 break;
+        }
+    }
+
+    public void stopBackupThread() {
+        if (backupThr != null && backupThr.isAlive()) {
+            backupThr.interrupt();
         }
     }
 

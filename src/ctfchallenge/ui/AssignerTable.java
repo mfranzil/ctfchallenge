@@ -50,6 +50,10 @@ public final class AssignerTable extends VBox {
      * Recursively dismantles AssignerItems.
      */
     public void dismantle() {
-        getChildren().forEach(i -> ((AssignerTeam) i).dismantle());
+        getChildren().forEach(i -> {
+            if (i instanceof AssignerTeam) {
+                ((AssignerTeam) i).dismantle();
+            }
+        });
     }
 }

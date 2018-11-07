@@ -23,6 +23,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+
         // Ottengo le istanze singleton della finestra di Logging e della Scoreboard
         Logging logWindow = Logging.getInstance();
         Scoreboard scoreboard = Scoreboard.getInstance();

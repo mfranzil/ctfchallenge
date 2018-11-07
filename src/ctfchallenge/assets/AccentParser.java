@@ -17,7 +17,10 @@ public class AccentParser {
      * @return A Color with Opacity 1.
      */
     public static Color getAccentColor() {
-        Color output;
+        if (!System.getProperty("os.name").equals("Windows 10")) {
+            return Color.rgb(10, 10, 10);
+        }
+
         String value = null;
         try {
             value = new AccentParser().readRegistry("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\DWM",
@@ -39,13 +42,8 @@ public class AccentParser {
         int b = Integer.valueOf(value.substring(4, 6), 16);
         //     int a = Integer.valueOf(value.substring(6, 8), 16);
 
-        if (System.getProperty("os.name").equals("Windows 10")) {
-            output = Color.rgb(r, g, b, 1);
-        } else {
-            output = Color.rgb(10, 10, 10);
-        }
 
-        return output;
+        return Color.rgb(r, g, b, 1);
     }
 
     /**
