@@ -12,6 +12,8 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
+import java.util.Optional;
+
 /**
  * @author Matteo Franzil
  * @version 20181105v2
@@ -30,10 +32,10 @@ public class MainView extends Stage {
         mainPane.setCenter(assignerTable);
 
         setScene(mainScene);
-        initGUI();
+        initGUI(toolbar);
     }
 
-    private void initGUI() {
+    private void initGUI(Toolbar toolbar) {
         setMaximized(false);
         setWidth(1100);
         setHeight(600);
@@ -44,9 +46,11 @@ public class MainView extends Stage {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
                     "Do you really want to quit?",
                     ButtonType.OK, ButtonType.CANCEL);
-            alert.showAndWait()
-                    .filter(response -> response == ButtonType.OK)
-                    .ifPresent(response -> Platform.exit());
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                toolbar.stopBackupThread();
+                Platform.exit();
+            }
         });
 
         // Icona dell'applicazione

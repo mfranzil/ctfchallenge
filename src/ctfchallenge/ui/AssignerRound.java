@@ -53,7 +53,7 @@ public final class AssignerRound extends GridPane {
                 roundScore -= pts;
                 team.setScore(team.getScore() - pts);
             }
-            Logging.info("Team " + team.getName() + " completed round " + round + " - Score: " + roundScore);
+            Logging.info("Team " + team.getName() + " completed round " + round + "\nScore: " + roundScore);
             score.setText("Score: " + roundScore);
             Scoreboard.refreshScoreboard();
         });
@@ -67,7 +67,7 @@ public final class AssignerRound extends GridPane {
                 team.setScore(team.getScore() - Common.FIXED_BONUS);
             }
             Logging.info("Team " + team.getName() + " obtained fixed bonus for" +
-                    " round " + round + " - Score: " + roundScore);
+                    " round " + round + "\nScore: " + roundScore);
             score.setText("Score: " + roundScore);
             Scoreboard.refreshScoreboard();
         });
@@ -80,7 +80,7 @@ public final class AssignerRound extends GridPane {
                 bonusScore = min2 - Integer.parseInt(posBonus.getValue()) + 1;
                 team.setScore(team.getScore() + bonusScore);
                 Logging.info("Team " + team.getName() + " obtained variable bonus for" +
-                        " round " + round + " - Bonus: " + bonusScore);
+                        " round " + round + "\nBonus: " + bonusScore);
                 roundScore += bonusScore;
             } catch (NumberFormatException ex) {
                 bonusScore = 0;
