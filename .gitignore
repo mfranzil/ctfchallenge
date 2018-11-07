@@ -2,6 +2,9 @@ backup.txt
 logo.png
 log.txt
 /.idea/
+*.iml
+backup.json
+
 # Compiled class file
 *.class
 # Log file
