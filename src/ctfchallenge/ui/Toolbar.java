@@ -28,6 +28,7 @@ public final class Toolbar extends HBox {
             startGame, incrementFont, decrementFont;
     private final Slider backupSpeed;
     private Thread backupThr;
+    private volatile boolean backup;
 
     /**
      * Standard constructor for the Toolbar.
@@ -151,7 +152,7 @@ public final class Toolbar extends HBox {
         removeTeam.setDisable(true);
 
         backupThr = new Thread(() -> {
-            while (true) {
+            while (backup) {
                 BackupHandler.log(teamList);
                 try {
                     Thread.sleep((long) (1000 * backupSpeed.getValue()));
@@ -214,6 +215,7 @@ public final class Toolbar extends HBox {
     public void stopBackupThread() {
         if (backupThr != null && backupThr.isAlive()) {
             backupThr.interrupt();
+            backup = false;
         }
     }
 
