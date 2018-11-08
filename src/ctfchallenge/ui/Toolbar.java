@@ -182,9 +182,8 @@ public final class Toolbar extends HBox {
 
         backupSpeed.setShowTickMarks(true);
         backupSpeed.setShowTickLabels(true);
-        backupSpeed.valueProperty().addListener((ov, old_val, new_val) -> {
-            Logging.info("Backup speed set to " + new_val + " seconds");
-        });
+        backupSpeed.valueProperty().addListener((ov, old_val, new_val) ->
+                Logging.info("Backup speed set to " + new_val + " seconds"));
 
         assignerTable.setAssignerTable(teamList);
         getChildren().addAll(incrementFont, decrementFont, backupSpeed);
