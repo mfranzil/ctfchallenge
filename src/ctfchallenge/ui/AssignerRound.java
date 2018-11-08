@@ -12,11 +12,11 @@ import javafx.scene.text.Text;
 
 public final class AssignerRound extends GridPane {
 
-    private int roundScore;
-    private int oldBonusScore;
+    private final int SIZE = 3;
     private Text score;
     private CheckBox completed, fixedBonus;
     private ComboBox<String> posBonus;
+    private int[] roundScore;
 
     /**
      * AssignerRound is a class tasked with assigning points for a given team and a given round.
@@ -27,10 +27,9 @@ public final class AssignerRound extends GridPane {
      * @param round An integer representing the round.
      */
     public AssignerRound(Team team, int round) {
-        this.roundScore = team.getScore();
-        this.oldBonusScore = 0;
+        this.roundScore = new int[SIZE];
 
-        score = new Text("Score: " + roundScore);
+        score = new Text("Score: " + sum(roundScore));
         completed = new CheckBox("Comp.");
         fixedBonus = new CheckBox("Fixed");
         posBonus = new ComboBox<>();
@@ -47,47 +46,49 @@ public final class AssignerRound extends GridPane {
         completed.setOnAction(e -> {
             int pts = Common.getScore(round);
             if (completed.isSelected()) {
-                roundScore += pts;
+                roundScore[0] = pts;
                 team.setScore(team.getScore() + pts);
             } else {
-                roundScore -= pts;
+                roundScore[0] = 0;
                 team.setScore(team.getScore() - pts);
             }
-            Logging.info("Team " + team.getName() + " completed round " + round + "\nScore: " + roundScore);
-            score.setText("Score: " + roundScore);
+            Logging.info("Team " + team.getName() + " completed round " + round + "\nScore: " + sum(roundScore));
+            score.setText("Score: " + sum(roundScore));
+            ((AssignerTeam) getParent()).update();
             Scoreboard.refreshScoreboard();
         });
 
         fixedBonus.setOnAction(e -> {
             if (fixedBonus.isSelected()) {
-                roundScore += Common.FIXED_BONUS;
+                roundScore[1] = Common.FIXED_BONUS;
                 team.setScore(team.getScore() + Common.FIXED_BONUS);
             } else {
-                roundScore -= Common.FIXED_BONUS;
+                roundScore[1] = 0;
                 team.setScore(team.getScore() - Common.FIXED_BONUS);
             }
             Logging.info("Team " + team.getName() + " obtained fixed bonus for" +
-                    " round " + round + "\nScore: " + roundScore);
-            score.setText("Score: " + roundScore);
+                    " round " + round + "\nScore: " + sum(roundScore));
+            score.setText("Score: " + sum(roundScore));
+            ((AssignerTeam) getParent()).update();
             Scoreboard.refreshScoreboard();
         });
 
         posBonus.setOnAction(e -> {
             int min2 = Math.min(Common.MAX_TEAMS_BONUS, Common.teamNumber);
-            roundScore -= oldBonusScore;
             int bonusScore;
             try {
                 bonusScore = min2 - Integer.parseInt(posBonus.getValue()) + 1;
                 team.setScore(team.getScore() + bonusScore);
                 Logging.info("Team " + team.getName() + " obtained variable bonus for" +
                         " round " + round + "\nBonus: " + bonusScore);
-                roundScore += bonusScore;
+                roundScore[2] = bonusScore;
             } catch (NumberFormatException ex) {
-                bonusScore = 0;
+                team.setScore(team.getScore() - roundScore[2]);
+                roundScore[2] = 0;
                 Logging.info("No bonus points for team " + team.getName() + " round " + round);
             }
-            oldBonusScore = bonusScore;
-            score.setText("Score: " + roundScore);
+            score.setText("Score: " + sum(roundScore));
+            ((AssignerTeam) getParent()).update();
             Scoreboard.refreshScoreboard();
         });
 
@@ -108,5 +109,13 @@ public final class AssignerRound extends GridPane {
         completed.setDisable(true);
         fixedBonus.setDisable(true);
         posBonus.setDisable(true);
+    }
+
+    public int sum(int[] A) {
+        int res = 0;
+        for (int i = 0; i < SIZE; i++) {
+            res += A[i];
+        }
+        return res;
     }
 }

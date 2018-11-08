@@ -8,6 +8,7 @@ import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
@@ -16,7 +17,7 @@ import java.util.Optional;
 
 /**
  * @author Matteo Franzil
- * @version 20181105v2
+ * @version 20181108v1
  */
 public class MainView extends Stage {
     public MainView(Logging logWindow, TeamList teamList) {
@@ -24,12 +25,15 @@ public class MainView extends Stage {
         Scene mainScene = new Scene(mainPane);
 
         AssignerTable assignerTable = new AssignerTable();
+        ScrollPane scrollPane = new ScrollPane(assignerTable);
+        scrollPane.setFitToWidth(true);
+        scrollPane.setFitToHeight(true);
 
         Toolbar toolbar = new Toolbar(assignerTable, teamList);
 
         mainPane.setTop(toolbar);
         mainPane.setLeft(logWindow);
-        mainPane.setCenter(assignerTable);
+        mainPane.setCenter(scrollPane);
 
         setScene(mainScene);
         initGUI(toolbar);

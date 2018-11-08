@@ -9,7 +9,7 @@ import javafx.stage.Stage;
 
 /**
  * @author Matteo Franzil
- * @version 20181105v2
+ * @version 20181108v1
  */
 public class ScoreboardView extends Stage {
     public ScoreboardView(Scoreboard scoreboard) {

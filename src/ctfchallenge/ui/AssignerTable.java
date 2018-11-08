@@ -11,7 +11,7 @@ import javafx.scene.text.Text;
  * This class is a wrapper for single AssignerTeam instances.
  *
  * @author Matteo Franzil
- * @version 20181105v2
+ * @version 20181108v1
  */
 public final class AssignerTable extends VBox {
 

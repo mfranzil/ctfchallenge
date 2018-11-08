@@ -8,11 +8,10 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import java.io.*;
-import java.util.Scanner;
 
 /**
  * @author Matteo Franzil
- * @version 20181105v2
+ * @version 20181108v1
  */
 public class BackupHandler {
 
@@ -92,8 +91,8 @@ public class BackupHandler {
                 Logging.warning("No file chosen!");
             } else {
                 teamList.clear();
-                String jsonContent = new Scanner(file).nextLine();
-                JSONObject teams = (JSONObject) new JSONParser().parse(jsonContent);
+
+                JSONObject teams = (JSONObject) new JSONParser().parse(new FileReader(file));
 
                 for (Object a : teams.values()) {
                     String teamName = (String) ((JSONObject) a).get("Name");
@@ -113,6 +112,10 @@ public class BackupHandler {
         } catch (FileNotFoundException ex) {
             Logging.fatal("Backup file not found. Cannot recover from backup.");
         } catch (ParseException e) {
+            e.printStackTrace();
+            Logging.fatal("File is corrupted or has bad syntax.");
+        } catch (IOException e) {
+            Logging.fatal("Error while parsing file. Please try again.");
             e.printStackTrace();
         }
         return res;

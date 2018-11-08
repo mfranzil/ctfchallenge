@@ -3,6 +3,7 @@ package ctfchallenge.ui;
 import ctfchallenge.Team;
 import ctfchallenge.assets.*;
 import ctfchallenge.views.EditView;
+import ctfchallenge.views.RemoveView;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -19,7 +20,7 @@ import java.util.Optional;
 
 /**
  * @author Matteo Franzil
- * @version 20181105v2
+ * @version 20181108v1
  */
 public final class Toolbar extends HBox {
 
@@ -131,34 +132,7 @@ public final class Toolbar extends HBox {
 
     private void removeTeamActions(TeamList teamList) {
         if (teamList.size() > 0) {
-            VBox root = new VBox();
-            Scene scene = new Scene(root);
-            Stage stage = new Stage();
-
-            root.getChildren().add(new Text("Chooose the team to remove:"));
-            root.setPadding(new Insets(16));
-            root.setSpacing(16);
-
-            teamList.forEach(team -> root.getChildren().add(new Button(team.getName()) {{
-                setOnAction(e -> {
-                    Logging.info("Team with name " + team.getName() + " successfully removed");
-                    teamList.remove(team);
-                    root.getChildren().remove(this);
-
-                    if (teamList.size() <= 0) {
-                        stage.close();
-                        removeTeam.setDisable(true);
-                        editTeam.setDisable(true);
-                    }
-                });
-            }}));
-
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.initOwner(removeTeam.getScene().getWindow());
-            stage.setScene(scene);
-            stage.setResizable(false);
-            stage.setTitle("Choose the team");
-            stage.show();
+            RemoveView removeView = new RemoveView(teamList, removeTeam, editTeam);
         } else {
             Logging.error("No team to remove!");
         }

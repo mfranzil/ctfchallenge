@@ -3,7 +3,6 @@ package ctfchallenge.ui;
 import ctfchallenge.Team;
 import ctfchallenge.assets.Common;
 import javafx.geometry.Insets;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 
@@ -12,17 +11,19 @@ import javafx.scene.text.Text;
  * bonuses for a single team.
  *
  * @author Matteo Franzil
- * @version 20181105v2
+ * @version 20181108v1
  */
 public final class AssignerTeam extends HBox {
 
     private Text caption;
+    private Team team;
     /**
      * Standard constructor for the class.
      *
      * @param team The team to be associated with the AssignerTeam instance.
      */
     public AssignerTeam(Team team) {
+        this.team = team;
 
         caption = new Text("\n" + team.getName() + "\nPt. " + team.getScore());
         getChildren().add(caption);
@@ -31,9 +32,7 @@ public final class AssignerTeam extends HBox {
             AssignerRound rnd = new AssignerRound(team, i);
             getChildren().add(rnd);
         }
-
-        addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEvent ->
-                caption.setText("\n" + team.getName() + "\nPt. " + team.getScore()));
+        //addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEvent -> update());
 
         setPadding(new Insets(15));
         setSpacing(20);
@@ -48,5 +47,12 @@ public final class AssignerTeam extends HBox {
                 ((AssignerRound) i).dismantle();
             }
         });
+    }
+
+    /**
+     * Updates the score of the round.
+     */
+    public void update() {
+        caption.setText("\n" + team.getName() + "\nPt. " + team.getScore());
     }
 }
